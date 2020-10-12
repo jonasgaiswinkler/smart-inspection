@@ -1,0 +1,7 @@
+{
+  "name": "smart-inspection",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue"
+}
