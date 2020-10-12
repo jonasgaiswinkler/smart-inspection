@@ -19,6 +19,7 @@
               size-lg="5"
               size-xs="12"
             >
+              <ion-img class="fh-logo" src="assets/icon/fh-logo.png"></ion-img>
               <div class="ion-text-center">
                 <h3>{{ $t("welcomeText") }}</h3>
               </div>
@@ -69,6 +70,7 @@ import {
   IonItem,
   IonInput,
   IonButton,
+  IonImg,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
 
@@ -86,6 +88,7 @@ export default defineComponent({
     IonItem,
     IonInput,
     IonButton,
+    IonImg,
   },
   setup() {
     const email = ref("");
@@ -94,7 +97,7 @@ export default defineComponent({
     const submit = () => {
       //
     };
-    
+
     return { email, password, submit };
   },
 });
@@ -103,5 +106,12 @@ export default defineComponent({
 <style scoped>
 .height-100 {
   height: 100%;
+}
+
+.fh-logo {
+  height: 10em;
+  width: auto;
+  margin: auto;
+  display: block;
 }
 </style>
