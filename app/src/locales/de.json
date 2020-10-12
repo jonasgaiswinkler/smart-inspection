@@ -1,3 +1,6 @@
 {
-    "login": "Login"
+    "welcomeText": "Willkommen bei smart inspection!",
+    "login": "Anmelden",
+    "email": "E-Mail",
+    "password": "Passwort"
 }

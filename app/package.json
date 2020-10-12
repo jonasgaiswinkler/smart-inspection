@@ -2,7 +2,7 @@
   "name": "smart-inspection",
   "version": "0.0.1",
   "private": true,
-  "description": "An Ionic project",
+  "description": "smart-inspection",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
