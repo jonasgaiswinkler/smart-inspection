@@ -25,12 +25,20 @@ import './theme/variables.css';
 
 /* PWA elements */
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
+
+/* i18n */
+import { setupI18n } from './i18n';
+const i18n = setupI18n()
+
+/* vuex */
+import store from './store'
 defineCustomElements(window);
 
-const app = createApp(App)
+const app = createApp(App).use(store)
   .use(IonicVue)
-  .use(router);
-  
+  .use(router)
+  .use(i18n);
+
 router.isReady().then(() => {
   app.mount('#app');
 });
