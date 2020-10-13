@@ -35,7 +35,7 @@ import store from './store'
 defineCustomElements(window);
 
 const app = createApp(App).use(store)
-  .use(IonicVue)
+  .use(IonicVue, {mode: "md", animated: false})
   .use(router)
   .use(i18n);
 

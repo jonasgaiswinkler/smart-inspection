@@ -57,6 +57,7 @@
 </template>
 
 <script lang="ts">
+// Imports
 import { ref } from "vue";
 import {
   IonContent,
@@ -73,6 +74,7 @@ import {
   IonImg,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: "Home",
@@ -91,11 +93,16 @@ export default defineComponent({
     IonImg,
   },
   setup() {
+    // Define router
+    const router = useRouter();
+
+    // Define form values
     const email = ref("");
     const password = ref("");
 
+    // Define submit method
     const submit = () => {
-      //
+      router.push({name: 'Home'});
     };
 
     return { email, password, submit };
