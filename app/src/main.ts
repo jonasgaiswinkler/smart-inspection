@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router';
 
 import { IonicVue } from '@ionic/vue';
+import { Plugins } from '@capacitor/core';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/vue/css/core.css';
@@ -34,8 +35,11 @@ const i18n = setupI18n()
 import store from './store'
 defineCustomElements(window);
 
+/* set status bar color */
+Plugins.StatusBar.setBackgroundColor({ color: "#005096" });
+
 const app = createApp(App).use(store)
-  .use(IonicVue, {mode: "md", animated: false})
+  .use(IonicVue, { mode: "ios" })
   .use(router)
   .use(i18n);
 
