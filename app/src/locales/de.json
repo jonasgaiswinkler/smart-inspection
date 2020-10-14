@@ -2,5 +2,10 @@
     "welcomeText": "Willkommen bei smart inspection!",
     "login": "Anmelden",
     "email": "E-Mail",
-    "password": "Passwort"
+    "password": "Passwort",
+    "newObject": "Neues Objekt",
+    "existingObject": "Bestehendes Objekt",
+    "objectDirectory": "Objektverzeichnis",
+    "settings": "Einstellungen",
+    "profile": "Profil"
 }

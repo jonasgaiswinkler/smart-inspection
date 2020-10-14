@@ -36,10 +36,14 @@ import store from './store'
 defineCustomElements(window);
 
 /* set status bar color */
-Plugins.StatusBar.setBackgroundColor({ color: "#005096" });
+Plugins.Device.getInfo().then((info) => {
+  if (info.platform == "android") {
+    Plugins.StatusBar.setBackgroundColor({ color: "#005096" });
+  }
+});
 
 const app = createApp(App).use(store)
-  .use(IonicVue, { mode: "ios" })
+  .use(IonicVue, { mode: "md" })
   .use(router)
   .use(i18n);
 
