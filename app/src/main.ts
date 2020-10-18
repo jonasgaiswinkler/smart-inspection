@@ -28,12 +28,54 @@ import './theme/variables.css';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
 
 /* i18n */
-import { setupI18n } from './i18n';
+import { setupI18n } from '@/i18n';
 const i18n = setupI18n()
 
 /* vuex */
-import store from './store'
+import store from '@/store'
 defineCustomElements(window);
+
+/* firebase */
+import * as firebase from "firebase/app";
+import "firebase/auth";
+import firebaseConfig from "@/firebase.json";
+
+firebase.initializeApp(firebaseConfig);
+
+/* promise for initial auth state */
+let authPromise = new Promise((resolve, reject) => {
+  const unsubscribe = firebase.auth().onAuthStateChanged(user => {
+    unsubscribe();
+    resolve(user);
+  }, reject);
+}) as any;
+
+/* listen to auth state changes */
+firebase.auth().onAuthStateChanged(user => {
+  authPromise = user;
+  store.commit('setUser', user);
+});
+
+/* setup router */
+router.beforeEach(async function(to, from, next) {
+
+  // wait until auth state is loaded
+  let user;
+  if (authPromise instanceof Promise) {
+    user = await authPromise;
+  } else {
+    user = authPromise;
+  }
+
+  // redirect user depending on auth state
+  if (store.state.user === null && to.name != "Login") {
+    next({name: "Login"});
+  } else if (store.state.user !== null && to.name == "Login") {
+    next({name: "Home"});
+  } else {
+    next();
+  }
+});
 
 /* set status bar color */
 Plugins.Device.getInfo().then((info) => {

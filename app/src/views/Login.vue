@@ -75,6 +75,7 @@ import {
 } from "@ionic/vue";
 import { defineComponent } from "vue";
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex'
 
 export default defineComponent({
   name: "Home",
@@ -96,12 +97,16 @@ export default defineComponent({
     // Define router
     const router = useRouter();
 
+    // Define store
+    const store = useStore();
+
     // Define form values
     const email = ref("");
     const password = ref("");
 
     // Define submit method
-    const submit = () => {
+    const submit = async () => {
+      await store.dispatch("login", {email: email.value, password: password.value});
       router.push({name: 'Home'});
     };
 
