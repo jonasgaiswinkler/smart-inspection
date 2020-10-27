@@ -19,7 +19,7 @@
               size-lg="5"
               size-xs="12"
             >
-              <ion-img class="fh-logo" src="assets/icon/fh-logo.png"></ion-img>
+              <ion-img class="fh-logo" src="./assets/icon/fh-logo.png"></ion-img>
               <div class="ion-text-center">
                 <h3>{{ $t("welcomeText") }}</h3>
               </div>
@@ -43,11 +43,11 @@
                   ></ion-input>
                 </ion-item>
               </div>
-              <div class="ion-padding">
-                <ion-button type="submit" expand="block">{{
+              <ion-row class="ion-padding ion-float-right">
+                <ion-button type="submit">{{
                   $t("login")
                 }}</ion-button>
-              </div>
+              </ion-row>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -78,7 +78,7 @@ import { useRouter } from 'vue-router';
 import { useStore } from 'vuex'
 
 export default defineComponent({
-  name: "Home",
+  name: "Login",
   components: {
     IonContent,
     IonHeader,

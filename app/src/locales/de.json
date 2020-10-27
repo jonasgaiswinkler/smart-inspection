@@ -1,11 +1,62 @@
 {
     "welcomeText": "Willkommen bei smart inspection!",
     "login": "Anmelden",
+    "logout": "Abmelden",
     "email": "E-Mail",
     "password": "Passwort",
     "newObject": "Neues Objekt",
     "existingObject": "Bestehendes Objekt",
     "objectDirectory": "Objektverzeichnis",
     "settings": "Einstellungen",
-    "profile": "Profil"
+    "profile": "Profil",
+    "objectdata": "Objektdaten",
+    "pleasechoose": "Bitte auswählen",
+    "next": "Weiter",
+    "bridge": {
+        "materials": {
+            "name": "Baustoffe",
+            "data": {
+                "stone": "Stein",
+                "wood": "Holz",
+                "brickwork": "Mauerwerk",
+                "steel": "Stahl",
+                "reinforced_concrete": "Stahlbeton",
+                "prestressed_concrete": "Spannbeton",
+                "composite_construction": "Verbundkonstruktion"
+            }
+        },
+        "types": {
+            "name": "Brückenart",
+            "data": {
+                "railway_bridge": "Eisenbahnbrücke",
+                "road_bridge": "Straßenbrücke"
+            }
+        },
+        "systems": {
+            "name": "System",
+            "data": {
+                "single_span_beam": "Einfeldträger",
+                "continuous_beam": "Durchlaufträger",
+                "frame_structure": "Rahmentragwerk",
+                "arched_structure": "Bogentragwerk",
+                "truss_structure": "Fachwerktragwerk",
+                "suspension_bridge": "Hängebrücke",
+                "rope_bridge": "Seilbrücke",
+                "special_construction": "Sonderkonstruktion"
+            }
+        },
+        "construction_year": "Baujahr",
+        "line_street": "Strecke/Straße",
+        "chainage": "Kilometrierung [km]",
+        "coords": "Koordinaten",
+        "span_length": "Stützweite [m]",
+        "superstructures": {
+            "name": "Oberbau",
+            "data": {
+                "ballasted_track": "Schotteroberbau"
+            }
+        },
+        "traffic_routes": "Anzahl Verkehrswege",
+        "short_description": "Kurzbeschreibung"
+    }
 }

@@ -2,6 +2,9 @@ import { createStore } from 'vuex'
 import * as firebase from "firebase/app";
 import "firebase/auth";
 
+// import modules
+import newBridge from './newBridge';
+
 export default createStore({
   state: {
     user: null
@@ -21,5 +24,6 @@ export default createStore({
     }
   },
   modules: {
+    newBridge: newBridge
   }
 })

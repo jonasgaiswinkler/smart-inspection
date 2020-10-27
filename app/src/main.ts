@@ -26,6 +26,7 @@ import './theme/variables.css';
 
 /* PWA elements */
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
+import './registerServiceWorker'
 
 /* i18n */
 import { setupI18n } from '@/i18n';

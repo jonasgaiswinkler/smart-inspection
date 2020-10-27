@@ -102,6 +102,7 @@ export default defineComponent({
       {
         name: "settings",
         icon: settings,
+        route: "Settings"
       },
       {
         name: "profile",

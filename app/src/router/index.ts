@@ -3,6 +3,10 @@ import { RouteRecordRaw } from 'vue-router';
 import Login from '@/views/Login.vue';
 import Home from '@/views/Home.vue';
 import NewObjectData from '@/views/NewObjectData.vue';
+import NewObjectDocuments from '@/views/NewObjectDocuments.vue';
+import Settings from '@/views/Settings.vue';
+
+const base = '/smart-inspection/';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -20,15 +24,26 @@ const routes: Array<RouteRecordRaw> = [
     component: Home
   },
   {
-    path: '/newObjectData',
+    path: '/new-object-data',
     name: 'NewObjectData',
     component: NewObjectData
+  },
+  {
+    path: '/new-object-documents',
+    name: 'NewObjectDocuments',
+    component: NewObjectDocuments
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: Settings
   }
 ]
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  routes
+  history: createWebHistory(base),
+  routes,
+  
 })
 
 export default router
