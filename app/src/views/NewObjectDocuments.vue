@@ -249,6 +249,7 @@ import {
   IonBackButton,
   IonButtons,
   IonTextarea,
+  IonSpinner
 } from "@ionic/vue";
 import { computed, defineComponent, reactive, ref } from "vue";
 import { useI18n } from "vue-i18n";
@@ -276,6 +277,7 @@ export default defineComponent({
     IonIcon,
     IonBackButton,
     IonButtons,
+    IonSpinner
     //IonTextarea
   },
   setup() {

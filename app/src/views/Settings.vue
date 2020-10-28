@@ -13,7 +13,9 @@
       <ion-grid class="height-100">
         <ion-row color="primary" class="ion-justify-content-center height-100">
           <ion-col size-md="6" size-lg="6" size-xs="12">
-            <ion-button @click="logout" expand="block">{{ $t("logout") }}</ion-button>
+            <ion-button @click="logout" expand="block">{{
+              $t("logout")
+            }}</ion-button>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -33,9 +35,11 @@ import {
   IonGrid,
   IonCol,
   IonButton,
+  IonButtons,
+  IonBackButton,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
-import store from '@/store';
+import store from "@/store";
 import { useRouter } from "vue-router";
 
 export default defineComponent({
@@ -50,6 +54,8 @@ export default defineComponent({
     IonGrid,
     IonCol,
     IonButton,
+    IonButtons,
+    IonBackButton,
   },
   setup() {
     // Define router
@@ -57,7 +63,7 @@ export default defineComponent({
 
     // logout function
     const logout = async () => {
-      await store.dispatch('logout');
+      await store.dispatch("logout");
       router.replace({ name: "Login" });
     };
 
