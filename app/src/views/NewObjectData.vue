@@ -3,7 +3,7 @@
     <ion-header>
       <ion-toolbar color="primary">
         <ion-buttons slot="start">
-          <ion-back-button></ion-back-button>
+          <ion-back-button default-href="home"></ion-back-button>
         </ion-buttons>
         <ion-title>smart inspection – {{ $t("newObject") }}</ion-title>
       </ion-toolbar>
@@ -18,7 +18,7 @@
           >
             <ion-col size-md="6" size-lg="6" size-xs="12">
               <h1>{{ $t("objectdata") }}</h1>
-              <ion-item>
+              <ion-item :disabled="isLoading">
                 <ion-label>{{ $t("bridge.materials.name") }}</ion-label>
                 <ion-select
                   :value="newBridgeParams.material"
@@ -36,7 +36,7 @@
                   >
                 </ion-select>
               </ion-item>
-              <ion-item>
+              <ion-item :disabled="isLoading">
                 <ion-label>{{ $t("bridge.types.name") }}</ion-label>
                 <ion-select
                   :value="newBridgeParams.type"
@@ -52,7 +52,7 @@
                   >
                 </ion-select>
               </ion-item>
-              <ion-item>
+              <ion-item :disabled="isLoading">
                 <ion-label>{{ $t("bridge.systems.name") }}</ion-label>
                 <ion-select
                   :value="newBridgeParams.system"
@@ -68,8 +68,8 @@
                   >
                 </ion-select>
               </ion-item>
-              <ion-item>
-                <ion-label>{{ $t("bridge.construction_year") }}</ion-label>
+              <ion-item :disabled="isLoading">
+                <ion-label>{{ $t("bridge.constructionYear") }}</ion-label>
                 <ion-input
                   @ionChange="
                     setNewBridgeParam('constructionYear', $event.target.value)
@@ -79,8 +79,8 @@
                   class="ion-text-right"
                 ></ion-input>
               </ion-item>
-              <ion-item>
-                <ion-label>{{ $t("bridge.line_street") }}</ion-label>
+              <ion-item :disabled="isLoading">
+                <ion-label>{{ $t("bridge.lineStreet") }}</ion-label>
                 <ion-input
                   @ionChange="
                     setNewBridgeParam('lineStreet', $event.target.value)
@@ -89,7 +89,7 @@
                   class="ion-text-right"
                 ></ion-input>
               </ion-item>
-              <ion-item>
+              <ion-item :disabled="isLoading">
                 <ion-label>{{ $t("bridge.chainage") }}</ion-label>
                 <ion-input
                   @ionChange="
@@ -100,19 +100,24 @@
                   class="ion-text-right"
                 ></ion-input>
               </ion-item>
-              <ion-item>
+              <ion-item :disabled="isLoading">
                 <ion-label>{{ $t("bridge.coords") }}</ion-label>
                 <ion-input
                   readonly
                   :value="newBridgeCoords"
                   class="ion-text-right"
                 ></ion-input>
-                <ion-button @click="getLocation" slot="end" fill="clear">
+                <ion-button
+                  @click="getLocation"
+                  slot="end"
+                  fill="clear"
+                  :disabled="isLoading"
+                >
                   <ion-icon slot="icon-only" :icon="locate"></ion-icon>
                 </ion-button>
               </ion-item>
-              <ion-item>
-                <ion-label>{{ $t("bridge.span_length") }}</ion-label>
+              <ion-item :disabled="isLoading">
+                <ion-label>{{ $t("bridge.spanLength") }}</ion-label>
                 <ion-input
                   @ionChange="
                     setNewBridgeParam('spanLength', $event.target.value)
@@ -122,7 +127,7 @@
                   class="ion-text-right"
                 ></ion-input>
               </ion-item>
-              <ion-item>
+              <ion-item :disabled="isLoading">
                 <ion-label>{{ $t("bridge.superstructures.name") }}</ion-label>
                 <ion-select
                   :value="newBridgeParams.superstructure"
@@ -142,8 +147,8 @@
                   >
                 </ion-select>
               </ion-item>
-              <ion-item>
-                <ion-label>{{ $t("bridge.traffic_routes") }}</ion-label>
+              <ion-item :disabled="isLoading">
+                <ion-label>{{ $t("bridge.trafficRoutes") }}</ion-label>
                 <ion-input
                   @ionChange="
                     setNewBridgeParam('trafficRoutes', $event.target.value)
@@ -153,8 +158,8 @@
                   class="ion-text-right"
                 ></ion-input>
               </ion-item>
-              <ion-item>
-                <ion-label>{{ $t("bridge.short_description") }}</ion-label>
+              <ion-item :disabled="isLoading">
+                <ion-label>{{ $t("bridge.shortDescription") }}</ion-label>
                 <ion-textarea
                   @ionChange="
                     setNewBridgeParam('shortDescription', $event.target.value)
@@ -164,7 +169,9 @@
                 ></ion-textarea>
               </ion-item>
               <ion-row class="ion-float-right">
-                <ion-button router-link="/new-object-documents">{{ $t("next") }}</ion-button>
+                <ion-button router-link="/new-object-documents">{{
+                  $t("next")
+                }}</ion-button>
               </ion-row>
             </ion-col>
           </ion-row>
@@ -194,7 +201,7 @@ import {
   IonIcon,
   IonBackButton,
   IonButtons,
-  IonTextarea
+  IonTextarea,
 } from "@ionic/vue";
 import { computed, defineComponent, reactive } from "vue";
 import { useI18n } from "vue-i18n";
@@ -222,7 +229,7 @@ export default defineComponent({
     IonIcon,
     IonBackButton,
     IonButtons,
-    IonTextarea
+    IonTextarea,
   },
   setup() {
     // Define store
@@ -238,11 +245,14 @@ export default defineComponent({
     // define bridge options
     const bridgeOptions = messages.bridge;
     // define bridge params from store
-    const newBridgeParams = reactive(store.state.newBridge.params);
+    const newBridgeParams = computed(() => store.state.newBridge.params);
     // define bridge params setter
     const setNewBridgeParam = function (key, value) {
       store.commit("newBridge/setParam", { key: key, value: value });
     };
+
+    // get loading status from store
+    const isLoading = computed(() => store.state.newBridge.isLoading);
 
     // define geolocation method
     const getLocation = function () {
@@ -267,6 +277,7 @@ export default defineComponent({
       setNewBridgeParam,
       getLocation,
       newBridgeCoords,
+      isLoading,
     };
   },
 });

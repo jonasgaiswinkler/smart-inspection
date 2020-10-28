@@ -10,8 +10,13 @@
     "settings": "Einstellungen",
     "profile": "Profil",
     "objectdata": "Objektdaten",
+    "objectdocuments": "Objektdokumente",
+    "plans": "Pläne/technische Unterlagen",
+    "additionalResources": "Detailpläne/zusätzliche Unterlagen/Bescheide",
     "pleasechoose": "Bitte auswählen",
+    "filesAmount": "Keine Datei gewählt | Eine Datei gewählt | {n} Dateien gewählt",
     "next": "Weiter",
+    "save": "Speichern",
     "bridge": {
         "materials": {
             "name": "Baustoffe",
@@ -20,43 +25,50 @@
                 "wood": "Holz",
                 "brickwork": "Mauerwerk",
                 "steel": "Stahl",
-                "reinforced_concrete": "Stahlbeton",
-                "prestressed_concrete": "Spannbeton",
-                "composite_construction": "Verbundkonstruktion"
+                "reinforcedConcrete": "Stahlbeton",
+                "prestressedConcrete": "Spannbeton",
+                "compositeConstruction": "Verbundkonstruktion"
             }
         },
         "types": {
             "name": "Brückenart",
             "data": {
-                "railway_bridge": "Eisenbahnbrücke",
-                "road_bridge": "Straßenbrücke"
+                "railwayBridge": "Eisenbahnbrücke",
+                "roadBridge": "Straßenbrücke"
             }
         },
         "systems": {
             "name": "System",
             "data": {
-                "single_span_beam": "Einfeldträger",
-                "continuous_beam": "Durchlaufträger",
-                "frame_structure": "Rahmentragwerk",
-                "arched_structure": "Bogentragwerk",
-                "truss_structure": "Fachwerktragwerk",
-                "suspension_bridge": "Hängebrücke",
-                "rope_bridge": "Seilbrücke",
-                "special_construction": "Sonderkonstruktion"
+                "singleSpanBeam": "Einfeldträger",
+                "continuousBeam": "Durchlaufträger",
+                "frameStructure": "Rahmentragwerk",
+                "archedStructure": "Bogentragwerk",
+                "trussStructure": "Fachwerktragwerk",
+                "suspensionBridge": "Hängebrücke",
+                "ropeBridge": "Seilbrücke",
+                "specialConstruction": "Sonderkonstruktion"
             }
         },
-        "construction_year": "Baujahr",
-        "line_street": "Strecke/Straße",
+        "constructionYear": "Baujahr",
+        "lineStreet": "Strecke/Straße",
         "chainage": "Kilometrierung [km]",
         "coords": "Koordinaten",
-        "span_length": "Stützweite [m]",
+        "spanLength": "Stützweite [m]",
         "superstructures": {
             "name": "Oberbau",
             "data": {
-                "ballasted_track": "Schotteroberbau"
+                "ballastedTrack": "Schotteroberbau"
             }
         },
-        "traffic_routes": "Anzahl Verkehrswege",
-        "short_description": "Kurzbeschreibung"
+        "trafficRoutes": "Anzahl Verkehrswege",
+        "shortDescription": "Kurzbeschreibung",
+        "photo": "Foto",
+        "groundPlan": "Grundriss",
+        "longitudinalSection": "Längsschnitt",
+        "crossSection": "Querschnitt",
+        "techDescription": "Techn. Beschreibung",
+        "model": "3D-Modell",
+        "files": "Dateien"
     }
 }
