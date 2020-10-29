@@ -5,18 +5,24 @@
     "email": "E-Mail",
     "password": "Passwort",
     "newObject": "Neues Objekt",
-    "existingObject": "Bestehendes Objekt",
-    "objectDirectory": "Objektverzeichnis",
+    "newInspection": "Neue Inspektion",
+    "objectList": "Objektverzeichnis",
+    "bridgeObject": "Brückenobjekt",
     "settings": "Einstellungen",
     "profile": "Profil",
     "objectdata": "Objektdaten",
     "objectdocuments": "Objektdokumente",
     "plans": "Pläne/technische Unterlagen",
     "additionalResources": "Detailpläne/zusätzliche Unterlagen/Bescheide",
+    "generateReport": "Bericht generieren/freigeben",
+    "objectAssessment": "Objektbewertung",
+    "editObject": "Objekt bearbeiten",
     "pleasechoose": "Bitte auswählen",
     "filesAmount": "Keine Datei gewählt | Eine Datei gewählt | {n} Dateien gewählt",
     "next": "Weiter",
     "save": "Speichern",
+    "objectSaved": "Objekt gespeichert!",
+    "inspectionSaved": "Inspektion gespeichert!",
     "bridge": {
         "materials": {
             "name": "Baustoffe",
@@ -70,5 +76,26 @@
         "techDescription": "Techn. Beschreibung",
         "model": "3D-Modell",
         "files": "Dateien"
+    },
+    "inspection": {
+        "inspector": "Objektprüfer",
+        "date": "Datum",
+        "inspectionTypes": {
+            "name": "Art der Inspection",
+            "data": {
+                "rvs": "Prüfung (lt. RVS 13.03.11)"
+            }
+        },
+        "weather": {
+            "name": "Wetter",
+            "data": {
+                "dry": "trocken",
+                "wet": "feucht",
+                "snow": "Schnee"
+            }
+        },
+        "temperature": "Temperatur [°C]",
+        "photo": "Übersichtsfoto",
+        "additionalInfo": "Zusätzliche Infos"
     }
 }

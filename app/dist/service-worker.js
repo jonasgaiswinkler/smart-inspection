@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/smart-inspection/precache-manifest.6ef38ca9e92cb2ef13e1ef4cd1c7bd9e.js"
+  "/smart-inspection/precache-manifest.90f5c42404f84469b8c2bb7b40209bef.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "smart-inspection"});

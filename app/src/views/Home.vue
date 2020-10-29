@@ -17,11 +17,9 @@
           >
             <ion-row class="height-100">
               <ion-col
-                v-for="(button, i) in buttons"
+                v-for="(button) in buttons"
                 :key="button.name"
-                :size-lg="i > 1 ? 4 : 6"
-                :size-md="i > 1 ? 4 : 6"
-                size-xs="6"
+                size="6"
               >
                 <div class="tile height-100">
                   <ion-button
@@ -30,12 +28,10 @@
                     fill="outline"
                     expand="block"
                   >
-                    <ion-icon
-                      class="button-icon"
-                      size="large"
-                      slot="icon-only"
-                      :icon="button.icon"
-                    ></ion-icon>
+                    <font-awesome-icon
+                        class="button-icon"
+                        :icon="button.icon"
+                      ></font-awesome-icon>
                   </ion-button>
                   <h1>{{ $t(button.name) }}</h1>
                 </div>
@@ -50,7 +46,6 @@
 
 <script lang="ts">
 // Imports
-import { add, refresh, list, settings, person } from "ionicons/icons";
 import {
   IonContent,
   IonHeader,
@@ -60,11 +55,12 @@ import {
   IonRow,
   IonGrid,
   IonCol,
-  IonIcon,
   IonButton,
 } from "@ionic/vue";
 import { defineComponent, reactive } from "vue";
 import { useRouter } from "vue-router";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faPlus, faList, faCog, faUser } from "@fortawesome/free-solid-svg-icons";
 
 export default defineComponent({
   name: "Home",
@@ -77,8 +73,8 @@ export default defineComponent({
     IonRow,
     IonGrid,
     IonCol,
-    IonIcon,
     IonButton,
+    "font-awesome-icon": FontAwesomeIcon,
   },
   setup() {
     // Define router
@@ -88,25 +84,22 @@ export default defineComponent({
     const buttons = reactive([
       {
         name: "newObject",
-        icon: add,
+        icon: faPlus,
         route: "NewObjectData",
       },
       {
-        name: "existingObject",
-        icon: refresh,
-      },
-      {
-        name: "objectDirectory",
-        icon: list,
+        name: "objectList",
+        icon: faList,
+        route: "ObjectList"
       },
       {
         name: "settings",
-        icon: settings,
+        icon: faCog,
         route: "Settings"
       },
       {
         name: "profile",
-        icon: person,
+        icon: faUser,
       },
     ]);
 

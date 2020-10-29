@@ -3,7 +3,7 @@
     <ion-header>
       <ion-toolbar color="primary">
         <ion-buttons slot="start">
-          <ion-back-button default-href="new-object-data"></ion-back-button>
+          <ion-back-button default-href="/new-object-data"></ion-back-button>
         </ion-buttons>
         <ion-title>smart inspection – {{ $t("newObject") }}</ion-title>
       </ion-toolbar>
@@ -24,8 +24,8 @@
                 <ion-input
                   readonly
                   :value="
-                    newBridgeParams.photo != null
-                      ? newBridgeParams.photo.name
+                    newObjectParams.photo != null
+                      ? newObjectParams.photo.name
                       : null
                   "
                   class="ion-text-right"
@@ -36,10 +36,14 @@
                   fill="clear"
                   :disabled="isLoading"
                 >
-                  <ion-icon slot="icon-only" :icon="document"></ion-icon>
+                  <font-awesome-icon
+                    slot="icon-only"
+                    :icon="faFile"
+                    size="lg"
+                  ></font-awesome-icon>
                 </ion-button>
                 <input
-                  @change="setNewBridgeParam('photo', $event.target.files[0])"
+                  @change="setNewObjectParam('photo', $event.target.files[0])"
                   type="file"
                   ref="inputPhoto"
                   style="display: none"
@@ -50,8 +54,8 @@
                 <ion-input
                   readonly
                   :value="
-                    newBridgeParams.groundPlan != null
-                      ? newBridgeParams.groundPlan.name
+                    newObjectParams.groundPlan != null
+                      ? newObjectParams.groundPlan.name
                       : null
                   "
                   class="ion-text-right"
@@ -62,11 +66,15 @@
                   fill="clear"
                   :disabled="isLoading"
                 >
-                  <ion-icon slot="icon-only" :icon="document"></ion-icon>
+                  <font-awesome-icon
+                    slot="icon-only"
+                    :icon="faFile"
+                    size="lg"
+                  ></font-awesome-icon>
                 </ion-button>
                 <input
                   @change="
-                    setNewBridgeParam('groundPlan', $event.target.files[0])
+                    setNewObjectParam('groundPlan', $event.target.files[0])
                   "
                   type="file"
                   ref="inputGroundPlan"
@@ -78,8 +86,8 @@
                 <ion-input
                   readonly
                   :value="
-                    newBridgeParams.longitudinalSection != null
-                      ? newBridgeParams.longitudinalSection.name
+                    newObjectParams.longitudinalSection != null
+                      ? newObjectParams.longitudinalSection.name
                       : null
                   "
                   class="ion-text-right"
@@ -90,11 +98,15 @@
                   fill="clear"
                   :disabled="isLoading"
                 >
-                  <ion-icon slot="icon-only" :icon="document"></ion-icon>
+                  <font-awesome-icon
+                    slot="icon-only"
+                    :icon="faFile"
+                    size="lg"
+                  ></font-awesome-icon>
                 </ion-button>
                 <input
                   @change="
-                    setNewBridgeParam(
+                    setNewObjectParam(
                       'longitudinalSection',
                       $event.target.files[0]
                     )
@@ -109,8 +121,8 @@
                 <ion-input
                   readonly
                   :value="
-                    newBridgeParams.crossSection != null
-                      ? newBridgeParams.crossSection.name
+                    newObjectParams.crossSection != null
+                      ? newObjectParams.crossSection.name
                       : null
                   "
                   class="ion-text-right"
@@ -121,11 +133,15 @@
                   fill="clear"
                   :disabled="isLoading"
                 >
-                  <ion-icon slot="icon-only" :icon="document"></ion-icon>
+                  <font-awesome-icon
+                    slot="icon-only"
+                    :icon="faFile"
+                    size="lg"
+                  ></font-awesome-icon>
                 </ion-button>
                 <input
                   @change="
-                    setNewBridgeParam('crossSection', $event.target.files[0])
+                    setNewObjectParam('crossSection', $event.target.files[0])
                   "
                   type="file"
                   ref="inputCrossSection"
@@ -137,8 +153,8 @@
                 <ion-input
                   readonly
                   :value="
-                    newBridgeParams.techDescription != null
-                      ? newBridgeParams.techDescription.name
+                    newObjectParams.techDescription != null
+                      ? newObjectParams.techDescription.name
                       : null
                   "
                   class="ion-text-right"
@@ -149,11 +165,15 @@
                   fill="clear"
                   :disabled="isLoading"
                 >
-                  <ion-icon slot="icon-only" :icon="document"></ion-icon>
+                  <font-awesome-icon
+                    slot="icon-only"
+                    :icon="faFile"
+                    size="lg"
+                  ></font-awesome-icon>
                 </ion-button>
                 <input
                   @change="
-                    setNewBridgeParam('techDescription', $event.target.files[0])
+                    setNewObjectParam('techDescription', $event.target.files[0])
                   "
                   type="file"
                   ref="inputTechDescription"
@@ -165,8 +185,8 @@
                 <ion-input
                   readonly
                   :value="
-                    newBridgeParams.model != null
-                      ? newBridgeParams.model.name
+                    newObjectParams.model != null
+                      ? newObjectParams.model.name
                       : null
                   "
                   class="ion-text-right"
@@ -177,10 +197,14 @@
                   fill="clear"
                   :disabled="isLoading"
                 >
-                  <ion-icon slot="icon-only" :icon="document"></ion-icon>
+                  <font-awesome-icon
+                    slot="icon-only"
+                    :icon="faFile"
+                    size="lg"
+                  ></font-awesome-icon>
                 </ion-button>
                 <input
-                  @change="setNewBridgeParam('model', $event.target.files[0])"
+                  @change="setNewObjectParam('model', $event.target.files[0])"
                   type="file"
                   ref="inputModel"
                   style="display: none"
@@ -192,8 +216,8 @@
                 <ion-input
                   readonly
                   :value="
-                    newBridgeParams.files != null
-                      ? $t('filesAmount', newBridgeParams.files.length)
+                    newObjectParams.files != null
+                      ? $t('filesAmount', newObjectParams.files.length)
                       : null
                   "
                   class="ion-text-right"
@@ -204,10 +228,14 @@
                   fill="clear"
                   :disabled="isLoading"
                 >
-                  <ion-icon slot="icon-only" :icon="document"></ion-icon>
+                  <font-awesome-icon
+                    slot="icon-only"
+                    :icon="faFile"
+                    size="lg"
+                  ></font-awesome-icon>
                 </ion-button>
                 <input
-                  @change="setNewBridgeParam('files', $event.target.files)"
+                  @change="setNewObjectParam('files', $event.target.files)"
                   multiple
                   type="file"
                   ref="inputFiles"
@@ -216,9 +244,12 @@
               </ion-item>
               <ion-row class="ion-float-right ion-align-items-center">
                 <ion-spinner v-if="isLoading" color="primary"></ion-spinner>
-                <ion-button :disabled="isLoading" @click="saveNewBridge" class="ion-margin-start">{{
-                  $t("save")
-                }}</ion-button>
+                <ion-button
+                  :disabled="isLoading"
+                  @click="saveNewObject"
+                  class="ion-margin-start"
+                  >{{ $t("save") }}</ion-button
+                >
               </ion-row>
             </ion-col>
           </ion-row>
@@ -245,17 +276,18 @@ import {
   IonSelect,
   IonSelectOption,
   IonLabel,
-  IonIcon,
   IonBackButton,
   IonButtons,
   IonTextarea,
-  IonSpinner
+  IonSpinner,
+  toastController,
 } from "@ionic/vue";
 import { computed, defineComponent, reactive, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useStore } from "vuex";
 import { Plugins } from "@capacitor/core";
-import { document } from "ionicons/icons";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faFile } from "@fortawesome/free-solid-svg-icons";
 
 export default defineComponent({
   name: "NewObjectData",
@@ -274,10 +306,10 @@ export default defineComponent({
     IonInput,
     IonButton,
     IonLabel,
-    IonIcon,
     IonBackButton,
     IonButtons,
-    IonSpinner
+    IonSpinner,
+    "font-awesome-icon": FontAwesomeIcon,
     //IonTextarea
   },
   setup() {
@@ -287,32 +319,47 @@ export default defineComponent({
     // define i18n
     const i18n = useI18n();
 
-    // get bridge params from store
-    const newBridgeParams = computed(() => store.state.newBridge.params);
-    // define bridge params setter
-    const setNewBridgeParam = function (key, value) {
-      store.commit("newBridge/setParam", { key: key, value: value });
+    // define object params from store
+    const newObjectParams = computed(() => store.state.newObject.params);
+    // define object params setter
+    const setNewObjectParam = function (key, value) {
+      store.commit("newObject/setParam", { key: key, value: value });
     };
 
     // get loading status from store
-    const isLoading = computed(() => store.state.newBridge.isLoading);
+    const isLoading = computed(() => store.state.newObject.isLoading);
 
-    // save new bridge function
-    const saveNewBridge = async function () {
-      store.commit("newBridge/setIsLoading", true);
+    // save new object function
+    const saveNewObject = async function () {
+      store.commit("newObject/setIsLoading", true);
       try {
-          await store.dispatch("newBridge/save");
+        await store.dispatch("newObject/save");
+        const toast = await toastController.create({
+          message: i18n.t("objectSaved"),
+          duration: 2000,
+          color: "success",
+        });
+        toast.present();
       } catch (error) {
-          console.error(error);
+        console.error(error);
+        toastController
+          .create({
+            message: error,
+            duration: 2000,
+            color: "danger",
+          })
+          .then((toast) => {
+            toast.present();
+          });
       }
-      store.commit("newBridge/setIsLoading", false);
+      store.commit("newObject/setIsLoading", false);
     };
 
     return {
-      document,
-      newBridgeParams,
-      setNewBridgeParam,
-      saveNewBridge,
+      faFile,
+      newObjectParams,
+      setNewObjectParam,
+      saveNewObject,
       isLoading,
     };
   },

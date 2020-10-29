@@ -3,7 +3,7 @@
     <ion-header>
       <ion-toolbar color="primary">
         <ion-buttons slot="start">
-          <ion-back-button default-href="home"></ion-back-button>
+          <ion-back-button default-href="/home"></ion-back-button>
         </ion-buttons>
         <ion-title>smart inspection – {{ $t("settings") }}</ion-title>
       </ion-toolbar>

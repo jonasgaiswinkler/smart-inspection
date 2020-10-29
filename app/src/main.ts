@@ -58,7 +58,7 @@ firebase.auth().onAuthStateChanged(user => {
 });
 
 /* setup router */
-router.beforeEach(async function(to, from, next) {
+router.beforeEach(async function (to, from, next) {
 
   // wait until auth state is loaded
   let user;
@@ -70,9 +70,17 @@ router.beforeEach(async function(to, from, next) {
 
   // redirect user depending on auth state
   if (store.state.user === null && to.name != "Login") {
-    next({name: "Login"});
+    next({ name: "Login" });
   } else if (store.state.user !== null && to.name == "Login") {
-    next({name: "Home"});
+    next({ name: "Home" });
+  } else if (to.params.oid != undefined) {
+    store.commit("object/setOid", to.params.oid);
+    const loadObject = await store.dispatch("object/loadObject");
+    if (loadObject.status !== 200) {
+      next({ name: "Home" });
+    } else {
+      next();
+    }
   } else {
     next();
   }
