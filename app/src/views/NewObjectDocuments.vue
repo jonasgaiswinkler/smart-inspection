@@ -288,6 +288,7 @@ import { useStore } from "vuex";
 import { Plugins } from "@capacitor/core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faFile } from "@fortawesome/free-solid-svg-icons";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "NewObjectData",
@@ -316,6 +317,9 @@ export default defineComponent({
     // Define store
     const store = useStore();
 
+    // Define router
+    const router = useRouter();
+
     // define i18n
     const i18n = useI18n();
 
@@ -333,13 +337,14 @@ export default defineComponent({
     const saveNewObject = async function () {
       store.commit("newObject/setIsLoading", true);
       try {
-        await store.dispatch("newObject/save");
+        const result = await store.dispatch("newObject/save");
         const toast = await toastController.create({
           message: i18n.t("objectSaved"),
           duration: 2000,
           color: "success",
         });
         toast.present();
+        router.push({name: "Object", params: {oid: result.oid}});
       } catch (error) {
         console.error(error);
         toastController

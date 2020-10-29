@@ -180,6 +180,7 @@ import {
   IonBackButton,
   IonButtons,
   IonTextarea,
+  IonSpinner,
   toastController,
 } from "@ionic/vue";
 import { computed, defineComponent, reactive } from "vue";
@@ -208,6 +209,7 @@ export default defineComponent({
     IonBackButton,
     IonButtons,
     IonTextarea,
+    IonSpinner,
     "font-awesome-icon": FontAwesomeIcon,
   },
   setup() {

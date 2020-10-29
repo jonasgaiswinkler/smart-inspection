@@ -94,6 +94,7 @@ export default {
 
             await Promise.all(promises);
             context.commit("clearParams");
+            return { status: 200, oid: objectDoc.id};
         }
     }
 }
