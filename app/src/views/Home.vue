@@ -85,7 +85,7 @@ export default defineComponent({
       {
         name: "newObject",
         icon: faPlus,
-        route: "NewObjectData",
+        route: "NewObject",
       },
       {
         name: "objectList",

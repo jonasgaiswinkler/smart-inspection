@@ -2,6 +2,7 @@
 import * as firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/storage";
+import "firebase/functions";
 
 export default {
     namespaced: true,
@@ -18,10 +19,10 @@ export default {
         }
     },
     getters: {
-        
+
     },
     actions: {
-        async loadObject(context: any) {
+        async load(context: any) {
             const oid = context.state.oid;
             if (oid != null) {
                 const db = firebase.firestore();
@@ -34,6 +35,13 @@ export default {
                 }
             } else {
                 return { status: 400 };
+            }
+        },
+        delete(context: any) {
+            const oid = context.state.oid;
+            if (oid != null) {
+                const functions = firebase.functions();
+                return functions.httpsCallable('deleteObject')({oid: oid});
             }
         }
     }

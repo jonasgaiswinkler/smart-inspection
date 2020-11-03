@@ -19,7 +19,10 @@
               size-lg="5"
               size-xs="12"
             >
-              <ion-img class="fh-logo" src="./assets/icon/fh-logo.png"></ion-img>
+              <ion-img
+                class="fh-logo"
+                src="./assets/icon/fh-logo.png"
+              ></ion-img>
               <div class="ion-text-center">
                 <h3>{{ $t("welcomeText") }}</h3>
               </div>
@@ -33,7 +36,7 @@
                     required
                   ></ion-input>
                 </ion-item>
-                <ion-item>
+                <ion-item v-if="!showResetPassword">
                   <ion-input
                     v-model="password"
                     name="password"
@@ -43,9 +46,34 @@
                   ></ion-input>
                 </ion-item>
               </div>
-              <ion-row class="ion-padding ion-float-right">
-                <ion-button type="submit">{{
-                  $t("login")
+              <ion-row
+                v-if="!showResetPassword"
+                class="ion-padding ion-float-right"
+              >
+                <ion-button type="submit">{{ $t("login") }}</ion-button>
+              </ion-row>
+              <ion-row
+                v-if="!showResetPassword"
+                class="ion-padding ion-float-right"
+              >
+                <ion-button @click="showResetPassword = true" fill="clear">{{
+                  $t("resetPassword")
+                }}</ion-button>
+              </ion-row>
+              <ion-row
+                v-if="showResetPassword"
+                class="ion-padding ion-float-right"
+              >
+                <ion-button @click="resetPassword">{{
+                  $t("resetPassword")
+                }}</ion-button>
+              </ion-row>
+              <ion-row
+                v-if="showResetPassword"
+                class="ion-padding ion-float-right"
+              >
+                <ion-button @click="showResetPassword = false" fill="clear">{{
+                  $t("back")
                 }}</ion-button>
               </ion-row>
             </ion-col>
@@ -72,10 +100,12 @@ import {
   IonInput,
   IonButton,
   IonImg,
+  toastController,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
-import { useRouter } from 'vue-router';
-import { useStore } from 'vuex'
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+import { useI18n } from "vue-i18n";
 
 export default defineComponent({
   name: "Login",
@@ -100,17 +130,58 @@ export default defineComponent({
     // Define store
     const store = useStore();
 
+    // define i18n
+    const i18n = useI18n();
+
     // Define form values
     const email = ref("");
     const password = ref("");
 
-    // Define submit method
-    const submit = async () => {
-      await store.dispatch("login", {email: email.value, password: password.value});
-      router.push({name: 'Home'});
+    // Define reset password state
+    const showResetPassword = ref(false);
+
+    // Define reset password method
+    const resetPassword = async function () {
+      if (email.value !== "") {
+        try {
+          await store.dispatch("resetPassword", email.value);
+          const toast = await toastController.create({
+            message: i18n.t("resetEmailSend"),
+            duration: 3000,
+            color: "success",
+          });
+          toast.present();
+          showResetPassword.value = false;
+        } catch (error) {
+          const toast = await toastController.create({
+            message: error,
+            duration: 3000,
+            color: "danger",
+          });
+          toast.present();
+        }
+      } else {
+        const toast = await toastController.create({
+          message: i18n.t("noEmailAddress"),
+          duration: 3000,
+          color: "danger",
+        });
+        toast.present();
+      }
     };
 
-    return { email, password, submit };
+    // Define submit method
+    const submit = async () => {
+      if (showResetPassword.value === false) {
+        await store.dispatch("login", {
+          email: email.value,
+          password: password.value,
+        });
+        router.push({ name: "Home" });
+      }
+    };
+
+    return { email, password, submit, showResetPassword, resetPassword };
   },
 });
 </script>
@@ -118,6 +189,10 @@ export default defineComponent({
 <style scoped>
 .height-100 {
   height: 100%;
+}
+
+.width-100 {
+  width: 100%;
 }
 
 .fh-logo {

@@ -2,8 +2,7 @@ import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
 import Login from '@/views/Login.vue';
 import Home from '@/views/Home.vue';
-import NewObjectData from '@/views/NewObjectData.vue';
-import NewObjectDocuments from '@/views/NewObjectDocuments.vue';
+import ObjectForm from '@/views/ObjectForm.vue';
 import ObjectList from '@/views/ObjectList.vue';
 import Object from '@/views/Object.vue';
 import NewInspection from '@/views/NewInspection.vue';
@@ -27,14 +26,9 @@ const routes: Array<RouteRecordRaw> = [
     component: Home
   },
   {
-    path: '/new-object-data',
-    name: 'NewObjectData',
-    component: NewObjectData
-  },
-  {
-    path: '/new-object-documents',
-    name: 'NewObjectDocuments',
-    component: NewObjectDocuments
+    path: '/new-object',
+    name: 'NewObject',
+    component: ObjectForm,
   },
   {
     path: '/object-list',
@@ -45,6 +39,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/object/:oid',
     name: 'Object',
     component: Object
+  },
+  {
+    path: '/object/:oid/edit',
+    name: 'EditObject',
+    component: ObjectForm
   },
   {
     path: '/object/:oid/new-inspection',

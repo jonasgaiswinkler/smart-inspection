@@ -55,6 +55,7 @@ let authPromise = new Promise((resolve, reject) => {
 firebase.auth().onAuthStateChanged(user => {
   authPromise = user;
   store.commit('setUser', user);
+  user?.getIdTokenResult().then((result) => store.commit('setUserRole', result.claims.role));
 });
 
 /* setup router */
@@ -75,7 +76,7 @@ router.beforeEach(async function (to, from, next) {
     next({ name: "Home" });
   } else if (to.params.oid != undefined) {
     store.commit("object/setOid", to.params.oid);
-    const loadObject = await store.dispatch("object/loadObject");
+    const loadObject = await store.dispatch("object/load");
     if (loadObject.status !== 200) {
       next({ name: "Home" });
     } else {
@@ -94,7 +95,7 @@ Plugins.Device.getInfo().then((info) => {
 });
 
 const app = createApp(App).use(store)
-  .use(IonicVue, { mode: "md" })
+  .use(IonicVue, { mode: "md", animated: false })
   .use(router)
   .use(i18n);
 

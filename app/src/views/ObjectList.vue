@@ -17,7 +17,11 @@
             class="ion-justify-content-center height-100"
           >
             <ion-col size-md="6" size-lg="6" size-xs="12">
-              
+              <ion-list v-for="doc in objects" :key="doc.id">
+                <ion-item button @click="$router.push({name: 'Object', params: {oid: doc.id}})">
+                  <ion-label>{{$t("object.name") + " " + doc.id + ": " + doc.data().shortDescription }}</ion-label>
+                </ion-item>
+              </ion-list>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -46,18 +50,21 @@ import {
   IonIcon,
   IonBackButton,
   IonButtons,
+  IonList,
   IonTextarea,
   IonSpinner,
   toastController,
 } from "@ionic/vue";
-import { computed, defineComponent, reactive, ref } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useStore } from "vuex";
 import { Plugins } from "@capacitor/core";
 import { document } from "ionicons/icons";
+import * as firebase from "firebase/app";
+import "firebase/firestore";
 
 export default defineComponent({
-  name: "NewObjectData",
+  name: "ObjectList",
   components: {
     IonContent,
     IonHeader,
@@ -67,12 +74,13 @@ export default defineComponent({
     IonRow,
     IonGrid,
     IonCol,
-    //IonItem,
+    IonItem,
     //IonSelect,
     //IonSelectOption,
     //IonInput,
     //IonButton,
-    //IonLabel,
+    IonLabel,
+    IonList,
     //IonIcon,
     IonBackButton,
     IonButtons,
@@ -86,8 +94,21 @@ export default defineComponent({
     // define i18n
     const i18n = useI18n();
 
-    return {
+    // define firestore
+    const db = firebase.firestore();
 
+    const objects = ref([]);
+
+    db.collection("objects")
+      .get()
+      .then((snapshot) => {
+        for (const doc of snapshot.docs) {
+          objects.value.push(doc);
+        }
+      });
+
+    return {
+      objects,
     };
   },
 });
