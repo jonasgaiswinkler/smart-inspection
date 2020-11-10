@@ -10,6 +10,6 @@ The aim of this project is to make inspections of bridges easier by creating an 
 
 ## General information
 
-This project is based on a master's thesis by former student Alexander Geiger and currently developed by the [Carl Ritter von Ghega Institut](https://research.fhstp.ac.at/projekte/smart-inspection-fuer-eine-zustandsorientierte-instandhaltung-von-bruecken).
+This project is based on a master's thesis by former student Alexander Geiger and currently developed by the [Carl Ritter von Ghega Institute](https://research.fhstp.ac.at/projekte/smart-inspection-fuer-eine-zustandsorientierte-instandhaltung-von-bruecken).
 
 Made with Ionic, Vue and Firebase.
