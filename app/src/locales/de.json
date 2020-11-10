@@ -7,11 +7,13 @@
     "newObject": "Neues Objekt",
     "newInspection": "Neue Inspektion",
     "objectList": "Objektverzeichnis",
+    "inspectionList": "Inspektionsverzeichnis",
     "bridgeObject": "Brückenobjekt",
     "settings": "Einstellungen",
     "profile": "Profil",
     "objectdata": "Objektdaten",
     "objectdocuments": "Objektdokumente",
+    "inspectionData": "Inspektionsdaten",
     "plans": "Pläne/technische Unterlagen",
     "additionalResources": "Detailpläne/zusätzliche Unterlagen/Bescheide",
     "generateReport": "Bericht generieren/&#8203;freigeben",
@@ -25,11 +27,14 @@
     "resetEmailSend": "Eine E-Mail mit Informationen zur Passwortzurücksetzung wurde an die angegebene E-Mail-Adresse gesendet.",
     "noEmailAddress": "Bitte geben Sie eine E-Mail-Adresse ein.",
     "filesAmount": "Keine Datei gewählt | Eine Datei gewählt | {n} Dateien gewählt",
+    "wrongFileType": "Falscher Dateityp!",
+    "pleaseChooseOption": "Bitte eine Option auswählen.",
     "next": "Weiter",
     "back": "Zurück",
     "save": "Speichern",
     "cancel": "Abbrechen",
     "delete": "Löschen",
+    "search": "Suchen",
     "objectSaved": "Objekt gespeichert!",
     "objectDeleted": "Objekt gelöscht!",
     "inspectionSaved": "Inspektion gespeichert!",
@@ -37,7 +42,7 @@
         "name": "Objekt",
         "id": "ID",
         "materials": {
-            "name": "Baustoffe",
+            "name": "Baustoff",
             "data": {
                 "stone": "Stein",
                 "wood": "Holz",
@@ -56,7 +61,7 @@
             }
         },
         "systems": {
-            "name": "System",
+            "name": "Statisches System",
             "data": {
                 "singleSpanBeam": "Einfeldträger",
                 "continuousBeam": "Durchlaufträger",
@@ -66,6 +71,18 @@
                 "suspensionBridge": "Hängebrücke",
                 "ropeBridge": "Seilbrücke",
                 "specialConstruction": "Sonderkonstruktion"
+            }
+        },
+        "crossSectionShapes": {
+            "name": "Querschnittsform",
+            "data": {
+                "slabs": "Platten",
+                "beams": "Balken",
+                "slabBeams": "Plattenbalken",
+                "boxGirder": "Hohlkasten",
+                "frame": "Rahmen",
+                "rolledBeams": "WIB – Walzträger in Beton",
+                "trough": "Trog"
             }
         },
         "constructionYear": "Baujahr",
@@ -90,6 +107,7 @@
         "files": "Dateien"
     },
     "inspection": {
+        "name": "Inspektion",
         "inspector": "Objektprüfer",
         "date": "Datum",
         "inspectionTypes": {

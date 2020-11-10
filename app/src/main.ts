@@ -75,10 +75,26 @@ router.beforeEach(async function (to, from, next) {
   } else if (store.state.user !== null && to.name == "Login") {
     next({ name: "Home" });
   } else if (to.params.oid != undefined) {
-    store.commit("object/setOid", to.params.oid);
-    const loadObject = await store.dispatch("object/load");
-    if (loadObject.status !== 200) {
-      next({ name: "Home" });
+    // @ts-ignore
+    if (store.state.object.oid !== to.params.oid) {
+      store.commit("object/setOid", to.params.oid);
+      const loadObject = await store.dispatch("object/load");
+      if (loadObject.status !== 200) {
+        next({ name: "Home" });
+      } else {
+        // @ts-ignore
+        if (to.params.iid != undefined && store.state.inspection.iid !== to.params.iid) {
+          store.commit("inspection/setIid", to.params.iid);
+          const loadInspection = await store.dispatch("inspection/load");
+          if (loadInspection.status !== 200) {
+            next({ name: "Home" });
+          } else {
+            next();
+          }
+        } else {
+          next();
+        }
+      }
     } else {
       next();
     }

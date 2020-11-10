@@ -16,11 +16,7 @@
             size-xs="12"
           >
             <ion-row class="height-100">
-              <ion-col
-                v-for="(button) in buttons"
-                :key="button.name"
-                size="6"
-              >
+              <ion-col v-for="button in buttons" :key="button.name" size="6">
                 <div class="tile height-100">
                   <ion-button
                     @click="push(button.route)"
@@ -29,11 +25,16 @@
                     expand="block"
                   >
                     <font-awesome-icon
-                        class="button-icon"
-                        :icon="button.icon"
-                      ></font-awesome-icon>
+                      class="button-icon"
+                      :icon="button.icon"
+                    ></font-awesome-icon>
                   </ion-button>
-                  <h1>{{ $t(button.name) }}</h1>
+                  <div class="ion-hide-sm-down text-overflow">
+                    <h1>{{ $t(button.name) }}</h1>
+                  </div>
+                  <div class="ion-hide-md-up text-overflow">
+                    {{ $t(button.name) }}
+                  </div>
                 </div>
               </ion-col>
             </ion-row>
@@ -44,7 +45,7 @@
   </ion-page>
 </template>
 
-<script lang="ts">
+<script>
 // Imports
 import {
   IonContent,
@@ -60,7 +61,12 @@ import {
 import { defineComponent, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faPlus, faList, faCog, faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPlus,
+  faList,
+  faCog,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 
 export default defineComponent({
   name: "Home",
@@ -90,12 +96,12 @@ export default defineComponent({
       {
         name: "objectList",
         icon: faList,
-        route: "ObjectList"
+        route: "ObjectList",
       },
       {
         name: "settings",
         icon: faCog,
-        route: "Settings"
+        route: "Settings",
       },
       {
         name: "profile",
@@ -104,7 +110,7 @@ export default defineComponent({
     ]);
 
     // push function
-    const push = (route: string) => {
+    const push = (route) => {
       router.push({ name: route });
     };
 
@@ -135,5 +141,12 @@ export default defineComponent({
 .button-icon {
   width: 100% !important;
   height: 65% !important;
+}
+
+.text-overflow {
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>

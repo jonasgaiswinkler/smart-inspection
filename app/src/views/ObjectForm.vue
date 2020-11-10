@@ -3,14 +3,13 @@
     <ion-header>
       <ion-toolbar color="primary">
         <ion-buttons slot="start">
-          <ion-back-button default-href="/home"></ion-back-button>
+          <ion-button @click="$router.push({name: $route.name === 'NewObject' ? 'Home' : 'Object'})">
+            <ion-icon slot="icon-only" :icon="arrowBack"></ion-icon>
+          </ion-button>
         </ion-buttons>
-        <ion-title
-          >smart inspection –
-          {{
-            $route.name === "NewObject" ? $t("newObject") : $t("editObject")
-          }}</ion-title
-        >
+        <ion-title>{{
+          $route.name === "NewObject" ? $t("newObject") : $t("editObject")
+        }}</ion-title>
       </ion-toolbar>
     </ion-header>
 
@@ -18,9 +17,7 @@
       <ion-grid class="height-100">
         <ion-row color="primary" class="ion-justify-content-center height-100">
           <ion-col size-md="6" size-lg="6" size-xs="12">
-            <ion-segment
-              :value="selectedSegment"
-            >
+            <ion-segment :value="selectedSegment">
               <ion-segment-button disabled value="objectData">
                 <ion-label>{{ $t("objectdata") }}</ion-label>
               </ion-segment-button>
@@ -74,12 +71,12 @@ import { useI18n } from "vue-i18n";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { Plugins } from "@capacitor/core";
-import { document } from "ionicons/icons";
+import { arrowBack } from "ionicons/icons";
 import ObjectData from "@/components/ObjectData";
 import ObjectDocuments from "@/components/ObjectDocuments";
 
 export default defineComponent({
-  name: "NewObjectData",
+  name: "NewObject",
   components: {
     IonContent,
     IonHeader,
@@ -93,10 +90,10 @@ export default defineComponent({
     //IonSelect,
     //IonSelectOption,
     //IonInput,
-    //IonButton,
+    IonButton,
     IonLabel,
-    //IonIcon,
-    IonBackButton,
+    IonIcon,
+    //IonBackButton,
     IonButtons,
     //IonSpinner,
     //IonTextarea
@@ -128,6 +125,7 @@ export default defineComponent({
     return {
       segmentChanged,
       selectedSegment,
+      arrowBack
     };
   },
 });

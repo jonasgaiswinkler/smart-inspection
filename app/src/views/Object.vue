@@ -3,14 +3,16 @@
     <ion-header>
       <ion-toolbar color="primary">
         <ion-buttons slot="start">
-          <ion-back-button default-href="/object-list"></ion-back-button>
+          <ion-button @click="$router.push({name: 'Home'})">
+            <ion-icon slot="icon-only" :icon="arrowBack"></ion-icon>
+          </ion-button>
         </ion-buttons>
-        <ion-title>smart inspection – {{ $t("bridgeObject") }}</ion-title>
+        <ion-title>{{ $t("bridgeObject") }}</ion-title>
       </ion-toolbar>
     </ion-header>
 
     <ion-content :fullscreen="true">
-      <form class="height-100" id="login" @submit.stop.prevent="submit">
+      <form class="height-100" id="object" @submit.stop.prevent="submit">
         <ion-grid class="height-100">
           <ion-row
             color="primary"
@@ -18,47 +20,149 @@
           >
             <ion-col size-md="6" size-lg="6" size-xs="12">
               <ion-row class="height-100">
-                <ion-col size="8"></ion-col>
-                <ion-col size="4" class="flex-column"
-                  ><div
-                    class="tile flex-grow-1"
-                    v-for="button in buttons"
-                    :key="button.name"
-                  >
-                    <ion-button
-                      @click="push(button.route)"
-                      class="flex-grow-1 width-100"
-                      fill="outline"
-                      expand="block"
-                      :disabled="isDeleting"
+                <ion-col size-lg="8" size-md="8" size-xs="12">
+                  <ion-img
+                    v-if="objectPhotoUrl != null"
+                    :src="objectPhotoUrl"
+                  ></ion-img>
+                  <template v-if="objectData != null">
+                    <p>{{ objectData.shortDescription }}</p>
+                    <ul>
+                      <li>
+                        {{
+                          $t("object.id") +
+                          ": " +
+                          oid
+                        }}
+                      </li>
+                      <li v-if="objectData.material != null">
+                        {{
+                          $t("object.materials.name") +
+                          ": " +
+                          $t("object.materials.data." + objectData.material)
+                        }}
+                      </li>
+                      <li v-if="objectData.type != null">
+                        {{
+                          $t("object.types.name") +
+                          ": " +
+                          $t("object.types.data." + objectData.type)
+                        }}
+                      </li>
+                      <li v-if="objectData.system != null">
+                        {{
+                          $t("object.systems.name") +
+                          ": " +
+                          $t("object.systems.data." + objectData.system)
+                        }}
+                      </li>
+                      <li v-if="objectData.crossSectionShape != null">
+                        {{
+                          $t("object.crossSectionShapes.name") +
+                          ": " +
+                          $t("object.crossSectionShapes.data." + objectData.crossSectionShape)
+                        }}
+                      </li>
+                      <li v-if="objectData.constructionYear != null">
+                        {{
+                          $t("object.constructionYear") +
+                          ": " +
+                          objectData.constructionYear
+                        }}
+                      </li>
+                      <li v-if="objectData.lineStreet != null">
+                        {{
+                          $t("object.lineStreet") +
+                          ": " +
+                          objectData.lineStreet
+                        }}
+                      </li>
+                      <li v-if="objectData.chainage != null">
+                        {{
+                          $t("object.chainage") +
+                          ": " +
+                          objectData.chainage
+                        }}
+                      </li>
+                      <li v-if="objectData.spanLength != null">
+                        {{
+                          $t("object.spanLength") +
+                          ": " +
+                          objectData.spanLength
+                        }}
+                      </li>
+                      <li v-if="objectData.superstructure != null">
+                        {{
+                          $t("object.superstructures.name") +
+                          ": " +
+                          $t("object.superstructures.data." + objectData.superstructure)
+                        }}
+                      </li>
+                      <li v-if="objectData.trafficRoutes != null">
+                        {{
+                          $t("object.trafficRoutes") +
+                          ": " +
+                          objectData.trafficRoutes
+                        }}
+                      </li>
+                    </ul>
+                  </template>
+                </ion-col>
+                <ion-col
+                  size-lg="4"
+                  size-md="4"
+                  size-xs="12"
+                  class="flex-column"
+                >
+                  <ion-row class="height-100">
+                    <ion-col
+                      size-md="12"
+                      size-lg="12"
+                      size-xs="6"
+                      class="tile flex-grow-1"
+                      v-for="button in buttons"
+                      :key="button.name"
                     >
-                      <font-awesome-icon
-                        class="button-icon"
-                        :icon="button.icon"
-                      ></font-awesome-icon>
-                    </ion-button>
-                    <h1 v-html="$t(button.name)"></h1>
-                  </div>
-                  <div
-                    v-if="$store.state.userRole === 'admin'"
-                    class="tile flex-grow-1"
-                  >
-                    <ion-button
-                      @click="deleteObject"
-                      class="flex-grow-1 width-100"
-                      fill="outline"
-                      expand="block"
-                      :disabled="isDeleting"
+                      <ion-button
+                        @click="push(button.route)"
+                        class="flex-grow-1 width-100"
+                        fill="outline"
+                        expand="block"
+                        :disabled="isDeleting"
+                      >
+                        <font-awesome-icon
+                          class="button-icon"
+                          :icon="button.icon"
+                        ></font-awesome-icon>
+                      </ion-button>
+                      <div class="text-overflow" v-html="$t(button.name)"></div>
+                    </ion-col>
+                    <ion-col
+                      size-md="12"
+                      size-lg="12"
+                      size-xs="6"
+                      v-if="$store.state.userRole === 'admin'"
+                      class="tile flex-grow-1"
                     >
-                      <font-awesome-icon
-                        v-if="!isDeleting"
-                        class="button-icon"
-                        :icon="faTrash"
-                      ></font-awesome-icon>
-                      <ion-spinner v-if="isDeleting"></ion-spinner>
-                    </ion-button>
-                    <h1 v-html="$t('deleteObject')"></h1>
-                  </div>
+                      <ion-button
+                        @click="deleteObject"
+                        class="flex-grow-1 width-100"
+                        fill="outline"
+                        expand="block"
+                        :disabled="isDeleting"
+                      >
+                        <font-awesome-icon
+                          v-if="!isDeleting"
+                          class="button-icon"
+                          :icon="faTrash"
+                        ></font-awesome-icon>
+                        <ion-spinner v-if="isDeleting"></ion-spinner>
+                      </ion-button>
+                      <div
+                        class="text-overflow"
+                        v-html="$t('deleteObject')"
+                      ></div> </ion-col
+                  ></ion-row>
                 </ion-col>
               </ion-row>
             </ion-col>
@@ -91,6 +195,7 @@ import {
   IonButtons,
   IonTextarea,
   IonSpinner,
+  IonImg,
   alertController,
   toastController,
 } from "@ionic/vue";
@@ -98,8 +203,7 @@ import { computed, defineComponent, reactive, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
-import { Plugins } from "@capacitor/core";
-import { add, document } from "ionicons/icons";
+import { arrowBack } from "ionicons/icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import {
   faTrafficLight,
@@ -107,6 +211,7 @@ import {
   faFile,
   faTools,
   faTrash,
+  faList
 } from "@fortawesome/free-solid-svg-icons";
 
 export default defineComponent({
@@ -120,14 +225,15 @@ export default defineComponent({
     IonRow,
     IonGrid,
     IonCol,
+    IonImg,
     //IonItem,
     //IonSelect,
     //IonSelectOption,
     //IonInput,
     IonButton,
     //IonLabel,
-    //IonIcon,
-    IonBackButton,
+    IonIcon,
+    //IonBackButton,
     IonButtons,
     IonSpinner,
     //IonSpinner,
@@ -144,11 +250,26 @@ export default defineComponent({
     // define i18n
     const i18n = useI18n();
 
+    // define object data
+    const objectData = computed(() => store.state.object.data);
+
+    //define oid
+    const oid = computed(() => store.state.object.oid);
+
+    // define object photo url
+    const objectPhotoUrl = computed(() => store.state.object.photoUrl);
+
     // Array of buttons
     const buttons = reactive([
       {
         name: "newInspection",
         icon: faPlus,
+        route: "NewInspection",
+      },
+      {
+        name: "inspectionList",
+        icon: faList,
+        route: "InspectionList"
       },
       {
         name: "generateReport",
@@ -221,6 +342,10 @@ export default defineComponent({
       faTrash,
       deleteObject,
       isDeleting,
+      objectData,
+      objectPhotoUrl,
+      oid,
+      arrowBack
     };
   },
 });
@@ -253,5 +378,12 @@ export default defineComponent({
 .button-icon {
   width: 100% !important;
   height: 65% !important;
+}
+
+.text-overflow {
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>

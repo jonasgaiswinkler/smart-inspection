@@ -14,6 +14,9 @@
         :disabled="routeName === 'EditObject'"
       ></ion-input>
     </ion-item>
+    <ion-item v-if="errorMaterial" color="danger">
+      <ion-label>{{ $t("pleaseChooseOption") }}</ion-label>
+    </ion-item>
     <ion-item :disabled="isLoading">
       <ion-label>{{ $t("object.materials.name") }}</ion-label>
       <ion-select
@@ -31,6 +34,9 @@
         >
       </ion-select>
     </ion-item>
+    <ion-item v-if="errorType" color="danger">
+      <ion-label>{{ $t("pleaseChooseOption") }}</ion-label>
+    </ion-item>
     <ion-item :disabled="isLoading">
       <ion-label>{{ $t("object.types.name") }}</ion-label>
       <ion-select
@@ -46,6 +52,9 @@
           >{{ $t("object.types.data." + key) }}</ion-select-option
         >
       </ion-select>
+    </ion-item>
+    <ion-item v-if="errorSystem" color="danger">
+      <ion-label>{{ $t("pleaseChooseOption") }}</ion-label>
     </ion-item>
     <ion-item :disabled="isLoading">
       <ion-label>{{ $t("object.systems.name") }}</ion-label>
@@ -63,6 +72,25 @@
         >
       </ion-select>
     </ion-item>
+    <ion-item v-if="errorCrossSectionShape" color="danger">
+      <ion-label>{{ $t("pleaseChooseOption") }}</ion-label>
+    </ion-item>
+    <ion-item :disabled="isLoading">
+      <ion-label>{{ $t("object.crossSectionShapes.name") }}</ion-label>
+      <ion-select
+        :value="objectParams.crossSectionShape"
+        @ionChange="setObjectParam('crossSectionShape', $event.target.value)"
+        :placeholder="$t('pleasechoose')"
+        interface="popover"
+      >
+        <ion-select-option
+          v-for="(type, key) in objectOptions.crossSectionShapes.data"
+          :key="key"
+          :value="key"
+          >{{ $t("object.crossSectionShapes.data." + key) }}</ion-select-option
+        >
+      </ion-select>
+    </ion-item>
     <ion-item :disabled="isLoading">
       <ion-label>{{ $t("object.constructionYear") }}</ion-label>
       <ion-input
@@ -70,6 +98,7 @@
         type="number"
         :value="objectParams.constructionYear"
         class="ion-text-right"
+        required
       ></ion-input>
     </ion-item>
     <ion-item :disabled="isLoading">
@@ -78,6 +107,7 @@
         @ionChange="setObjectParam('lineStreet', $event.target.value)"
         :value="objectParams.lineStreet"
         class="ion-text-right"
+        required
       ></ion-input>
     </ion-item>
     <ion-item :disabled="isLoading">
@@ -88,6 +118,7 @@
         step="any"
         :value="objectParams.chainage"
         class="ion-text-right"
+        required
       ></ion-input>
     </ion-item>
     <ion-item :disabled="isLoading">
@@ -114,7 +145,11 @@
         step="any"
         :value="objectParams.spanLength"
         class="ion-text-right"
+        required
       ></ion-input>
+    </ion-item>
+    <ion-item v-if="errorSuperstructure" color="danger">
+      <ion-label>{{ $t("pleaseChooseOption") }}</ion-label>
     </ion-item>
     <ion-item :disabled="isLoading">
       <ion-label>{{ $t("object.superstructures.name") }}</ion-label>
@@ -268,23 +303,32 @@ export default defineComponent({
       }
     });
 
-    // error ID assigned
+    // missing fields errors
     const errorID = ref(false);
+    const errorMaterial = ref(false);
+    const errorType = ref(false);
+    const errorSystem = ref(false);
+    const errorCrossSectionShape = ref(false);
+    const errorSuperstructure = ref(false);
 
     // define next function
     const next = async function () {
       store.commit("objectParams/setIsLoading", true);
       if (routeName === "NewObject") {
         const objectExists = await store.dispatch("objectParams/exists");
-        if (objectExists) {
-            errorID.value = true
-        } else {
-            errorID.value = false
-            emit("next");
+        errorID.value = objectExists;
+        errorMaterial.value = objectParams.value.material == null;
+        errorType.value = objectParams.value.type == null;
+        errorSystem.value = objectParams.value.system == null;
+        errorCrossSectionShape.value = objectParams.value.crossSectionShape == null;
+        errorSuperstructure.value = objectParams.value.superstructure == null;
+
+        if (!errorID.value && !errorMaterial.value && !errorType.value && !errorSystem.value && !errorSuperstructure.value && !errorCrossSectionShape.value) {
+          emit("next");
         }
       } else {
-          errorID.value = false
-          emit("next");
+        errorID.value = false;
+        emit("next");
       }
       store.commit("objectParams/setIsLoading", false);
     };
@@ -299,7 +343,12 @@ export default defineComponent({
       isLoading,
       routeName,
       next,
-      errorID
+      errorID,
+      errorMaterial,
+      errorType,
+      errorSystem,
+      errorCrossSectionShape,
+      errorSuperstructure
     };
   },
 });

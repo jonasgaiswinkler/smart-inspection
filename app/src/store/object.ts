@@ -8,7 +8,8 @@ export default {
     namespaced: true,
     state: () => ({
         oid: null,
-        data: null
+        data: null,
+        photoUrl: null
     }),
     mutations: {
         setOid(state: any, oid: string) {
@@ -16,6 +17,13 @@ export default {
         },
         setData(state: any, data: any) {
             state.data = data;
+        },
+        setPhotoUrl(state: any, photoUrl: string) {
+            state.photoUrl = photoUrl;
+        },
+        clear(state: any) {
+            state.data = null;
+            state.photoUrl = null;
         }
     },
     getters: {
@@ -23,12 +31,19 @@ export default {
     },
     actions: {
         async load(context: any) {
+            context.commit("clear");
             const oid = context.state.oid;
             if (oid != null) {
                 const db = firebase.firestore();
                 const objectDoc = await db.collection("objects").doc(oid).get();
                 if (objectDoc.exists) {
-                    context.commit("setData", objectDoc.data());
+                    const data = objectDoc.data();
+                    context.commit("setData", data);
+                    if (data != undefined && data.photo != null) {
+                        const storage = firebase.storage();
+                        const photoUrl = await storage.ref("/objects/" + oid + "/" + data.photo).getDownloadURL();
+                        context.commit("setPhotoUrl", photoUrl);
+                    }
                     return { status: 200 }
                 } else {
                     return { status: 404 };
@@ -41,7 +56,7 @@ export default {
             const oid = context.state.oid;
             if (oid != null) {
                 const functions = firebase.functions();
-                return functions.httpsCallable('deleteObject')({oid: oid});
+                return functions.httpsCallable('deleteObject')({ oid: oid });
             }
         }
     }

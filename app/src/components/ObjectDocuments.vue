@@ -4,30 +4,35 @@
     :disabled="isLoading"
     :label="$t('object.photo')"
     :value="objectParams.photo"
+    accept="image/png, image/jpeg"
     @select="setObjectParam('photo', $event)"
   ></file-input>
   <file-input
     :disabled="isLoading"
     :label="$t('object.groundPlan')"
     :value="objectParams.groundPlan"
+    accept="image/png, image/jpeg, application/pdf"
     @select="setObjectParam('groundPlan', $event)"
   ></file-input>
   <file-input
     :disabled="isLoading"
     :label="$t('object.longitudinalSection')"
     :value="objectParams.longitudinalSection"
+    accept="image/png, image/jpeg, application/pdf"
     @select="setObjectParam('longitudinalSection', $event)"
   ></file-input>
   <file-input
     :disabled="isLoading"
     :label="$t('object.crossSection')"
     :value="objectParams.crossSection"
+    accept="image/png, image/jpeg, application/pdf"
     @select="setObjectParam('crossSection', $event)"
   ></file-input>
   <file-input
     :disabled="isLoading"
     :label="$t('object.techDescription')"
     :value="objectParams.techDescription"
+    accept="image/png, image/jpeg, application/pdf"
     @select="setObjectParam('techDescription', $event)"
   ></file-input>
   <file-input
@@ -86,7 +91,7 @@
     />
   </ion-item>
   <ion-row class="ion-align-items-center">
-    <ion-button @click="$emit('back')">{{ $t("back") }}</ion-button>
+    <ion-button @click="$emit('back')" fill="clear">{{ $t("back") }}</ion-button>
     <div style="flex: 1"></div>
     <ion-spinner
       v-if="isLoading"

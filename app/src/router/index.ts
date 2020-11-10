@@ -5,7 +5,9 @@ import Home from '@/views/Home.vue';
 import ObjectForm from '@/views/ObjectForm.vue';
 import ObjectList from '@/views/ObjectList.vue';
 import Object from '@/views/Object.vue';
-import NewInspection from '@/views/NewInspection.vue';
+import InspectionForm from '@/views/InspectionForm.vue';
+import Inspection from '@/views/Inspection.vue';
+import InspectionList from '@/views/InspectionList.vue';
 import Settings from '@/views/Settings.vue';
 
 const base = '/smart-inspection/';
@@ -48,7 +50,17 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/object/:oid/new-inspection',
     name: 'NewInspection',
-    component: NewInspection
+    component: InspectionForm
+  },
+  {
+    path: '/object/:oid/inspection-list',
+    name: 'InspectionList',
+    component: InspectionList
+  },
+  {
+    path: '/object/:oid/inspection/:iid',
+    name: 'Inspection',
+    component: Inspection
   },
   {
     path: '/settings',

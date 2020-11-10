@@ -3,17 +3,33 @@
     <ion-label>{{ label }}</ion-label>
     <ion-input
       readonly
+      v-if="value != null && value.same !== true"
       :value="value != null ? value.name : null"
       class="ion-text-right"
-      style="margin-right: 16px;"
+      style="margin-right: 16px"
     ></ion-input>
+    <ion-button
+      v-if="value != null && value.same === true"
+      :href="value.url"
+      target="_blank"
+      fill="clear"
+      :disabled="disabled"
+      slot="end"
+      style="margin-right: 10px; margin-left: 0px"
+    >
+      <font-awesome-icon
+        slot="icon-only"
+        :icon="faDownload"
+        size="lg"
+      ></font-awesome-icon>
+    </ion-button>
     <ion-button
       v-if="value != null"
       @click="$emit('select', null)"
       fill="clear"
       :disabled="disabled"
       slot="end"
-      style="margin-right: 10px; margin-left: 0px;"
+      style="margin-right: 10px; margin-left: 0px"
     >
       <font-awesome-icon
         slot="icon-only"
@@ -26,7 +42,7 @@
       fill="clear"
       :disabled="disabled"
       slot="end"
-      style="margin-left: 0px;"
+      style="margin-left: 0px"
     >
       <font-awesome-icon
         slot="icon-only"
@@ -35,20 +51,32 @@
       ></font-awesome-icon>
     </ion-button>
     <input
-      @change="$emit('select', $event.target.files[0])"
+      @change="select($event.target.files[0])"
       type="file"
       ref="fileInput"
       style="display: none"
+      :accept="accept"
     />
   </ion-item>
 </template>
 
 <script>
 // Imports
-import { IonItem, IonInput, IonButton, IonLabel } from "@ionic/vue";
+import {
+  IonItem,
+  IonInput,
+  IonButton,
+  IonLabel,
+  toastController,
+} from "@ionic/vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faFileUpload, faTimes } from "@fortawesome/free-solid-svg-icons";
+import {
+  faFileUpload,
+  faTimes,
+  faDownload,
+} from "@fortawesome/free-solid-svg-icons";
 import { defineComponent, ref } from "vue";
+import { useI18n } from "vue-i18n";
 
 export default defineComponent({
   name: "FileInput",
@@ -59,11 +87,32 @@ export default defineComponent({
     IonButton,
     "font-awesome-icon": FontAwesomeIcon,
   },
-  props: ["disabled", "label", "value"],
+  props: ["disabled", "label", "value", "accept"],
   emits: ["select"],
-  setup() {
-      const fileInput = ref(null);
-    return { faFileUpload, faTimes, fileInput };
+  setup(props, { emit }) {
+    // define i18n
+    const i18n = useI18n();
+
+    const fileInput = ref(null);
+
+    const select = async function (file) {
+      if (props.accept != undefined) {
+        const types = props.accept.split(", ");
+        if (types.includes(file.type)) {
+          emit("select", file);
+        } else {
+          const toast = await toastController.create({
+            message: i18n.t("wrongFileType"),
+            duration: 2000,
+            color: "danger",
+          });
+          toast.present();
+        }
+      } else {
+        emit("select", file);
+      }
+    };
+    return { faFileUpload, faTimes, fileInput, faDownload, select };
   },
 });
 </script>

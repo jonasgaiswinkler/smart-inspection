@@ -59,6 +59,7 @@ export default {
                 material: params.material,
                 type: params.type,
                 system: params.system,
+                crossSectionShape: params.crossSectionShape,
                 constructionYear: params.constructionYear != null ? parseInt(params.constructionYear) : null,
                 lineStreet: params.lineStreet,
                 chainage: params.chainage != null ? parseFloat(params.chainage) : null,
@@ -125,6 +126,7 @@ export default {
                 material: params.material,
                 type: params.type,
                 system: params.system,
+                crossSectionShape: params.crossSectionShape,
                 constructionYear: params.constructionYear != null ? parseInt(params.constructionYear) : null,
                 lineStreet: params.lineStreet,
                 chainage: params.chainage != null ? parseFloat(params.chainage) : null,
@@ -173,16 +175,29 @@ export default {
 
             await Promise.all(promises);
             context.commit("clearNewParams");
+            await context.dispatch("object/load", null, {root: true});
             return { status: 200, oid: oid };
         },
-        load(context) {
+        async load(context) {
             const params = context.rootState.object.data;
             const editParams = BridgeParams();
+            const oid = context.rootState.object.oid;
+            const storage = firebase.storage();
 
-            editParams.id = context.rootState.object.oid;
+            const getFile = async function (key) {
+                if (params[key] != null) {
+                    const url = await storage.ref("/objects/" + oid + "/" + params[key]).getDownloadURL();
+                    editParams[key] = { name: params[key], same: true, url: url };
+                } else {
+                    editParams[key] = null;
+                }
+            };
+
+            editParams.id = oid;
             editParams.material = params.material;
             editParams.type = params.type;
             editParams.system = params.system;
+            editParams.crossSectionShape = params.crossSectionShape;
             editParams.constructionYear = params.constructionYear != null ? params.constructionYear.toString() : null;
             editParams.lineStreet = params.lineStreet;
             editParams.chainage = params.chainage != null ? params.chainage.toString() : null;
@@ -191,12 +206,14 @@ export default {
             editParams.superstructure = params.superstructure;
             editParams.trafficRoutes = params.trafficRoutes != null ? params.trafficRoutes.toString() : null;
             editParams.shortDescription = params.shortDescription;
-            editParams.photo = params.photo != null ? { name: params.photo, same: true } : null;
-            editParams.groundPlan = params.groundPlan != null ? { name: params.groundPlan, same: true } : null;
-            editParams.longitudinalSection = params.longitudinalSection != null ? { name: params.longitudinalSection, same: true } : null;
-            editParams.crossSection = params.crossSection != null ? { name: params.crossSection, same: true } : null;
-            editParams.techDescription = params.techDescription != null ? { name: params.techDescription, same: true } : null;
-            editParams.model = params.model != null ? { name: params.model, same: true } : null;
+            const promises = [];
+            promises.push(getFile("photo"));
+            promises.push(getFile("groundPlan"));
+            promises.push(getFile("longitudinalSection"));
+            promises.push(getFile("crossSection"));
+            promises.push(getFile("techDescription"));
+            promises.push(getFile("model"));
+            await Promise.all(promises);
             editParams.files = params.files != null ? { data: params.files, same: true } : null;
 
             context.commit("setEditParams", editParams);
@@ -218,7 +235,7 @@ export default {
 async function editFile(context, oid, file, paramName) {
     const storage = firebase.storage();
     const oldFileName = context.rootState.object.data[paramName];
-    if (file != null && file.same !== true) {      
+    if (file != null && file.same !== true) {
         if (oldFileName != null) {
             await storage.ref("/objects/" + oid + "/" + oldFileName).delete();
         }
@@ -236,6 +253,7 @@ function BridgeParams() {
         material: null,
         type: null,
         system: null,
+        crossSectionShape: null,
         constructionYear: null,
         lineStreet: null,
         chainage: null,

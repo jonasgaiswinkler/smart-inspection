@@ -3,9 +3,11 @@
     <ion-header>
       <ion-toolbar color="primary">
         <ion-buttons slot="start">
-          <ion-back-button default-href="/home"></ion-back-button>
+          <ion-button @click="$router.push({name: 'Home'})">
+            <ion-icon slot="icon-only" :icon="arrowBack"></ion-icon>
+          </ion-button>
         </ion-buttons>
-        <ion-title>smart inspection – {{ $t("settings") }}</ion-title>
+        <ion-title>{{ $t("settings") }}</ion-title>
       </ion-toolbar>
     </ion-header>
 
@@ -36,10 +38,11 @@ import {
   IonCol,
   IonButton,
   IonButtons,
-  IonBackButton,
+  IonIcon,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
 import store from "@/store";
+import { arrowBack } from "ionicons/icons";
 import { useRouter } from "vue-router";
 
 export default defineComponent({
@@ -55,7 +58,7 @@ export default defineComponent({
     IonCol,
     IonButton,
     IonButtons,
-    IonBackButton,
+    IonIcon
   },
   setup() {
     // Define router
@@ -67,7 +70,7 @@ export default defineComponent({
       router.replace({ name: "Login" });
     };
 
-    return { logout };
+    return { logout, arrowBack };
   },
 });
 </script>

@@ -8,7 +8,10 @@ import "firebase/functions"
 // @ts-ignore
 import objectParams from './objectParams.js';
 import object from './object';
-import newInspection from './newInspection';
+// @ts-ignore
+import inspectionParams from './inspectionParams.js';
+// @ts-ignore
+import inspection from './inspection.js';
 
 export default createStore({
   state: {
@@ -58,6 +61,7 @@ export default createStore({
   modules: {
     objectParams: objectParams,
     object: object,
-    newInspection: newInspection
+    inspectionParams: inspectionParams,
+    inspection: inspection
   }
 })
