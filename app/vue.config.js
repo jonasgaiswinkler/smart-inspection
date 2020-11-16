@@ -1,6 +1,6 @@
 module.exports = {
   pwa: {
-    name: 'smart inspection',
+    name: 'Smart Inspection',
     themeColor: '#005096',
     msTileColor: '#005096'
   },

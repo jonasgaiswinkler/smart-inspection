@@ -1,10 +1,11 @@
 <template>
   <form class="height-100" id="objectdata" @submit.stop.prevent="next">
+    <h1>{{ $t('objectData') }}</h1>
     <ion-item v-if="errorID" color="danger">
       <ion-label>{{ $t("idAssigned") }}</ion-label>
     </ion-item>
     <ion-item :disabled="isLoading">
-      <ion-label>{{ $t("object.id") }}</ion-label>
+      <ion-label>{{ $t("object.id") }}*</ion-label>
       <ion-input
         @ionChange="setObjectParam('id', $event.target.value)"
         type="number"
@@ -18,7 +19,7 @@
       <ion-label>{{ $t("pleaseChooseOption") }}</ion-label>
     </ion-item>
     <ion-item :disabled="isLoading">
-      <ion-label>{{ $t("object.materials.name") }}</ion-label>
+      <ion-label>{{ $t("object.materials.name") }}*</ion-label>
       <ion-select
         :value="objectParams.material"
         @ionChange="setObjectParam('material', $event.target.value)"
@@ -38,7 +39,7 @@
       <ion-label>{{ $t("pleaseChooseOption") }}</ion-label>
     </ion-item>
     <ion-item :disabled="isLoading">
-      <ion-label>{{ $t("object.types.name") }}</ion-label>
+      <ion-label>{{ $t("object.types.name") }}*</ion-label>
       <ion-select
         :value="objectParams.type"
         @ionChange="setObjectParam('type', $event.target.value)"
@@ -57,7 +58,7 @@
       <ion-label>{{ $t("pleaseChooseOption") }}</ion-label>
     </ion-item>
     <ion-item :disabled="isLoading">
-      <ion-label>{{ $t("object.systems.name") }}</ion-label>
+      <ion-label>{{ $t("object.systems.name") }}*</ion-label>
       <ion-select
         :value="objectParams.system"
         @ionChange="setObjectParam('system', $event.target.value)"
@@ -76,7 +77,7 @@
       <ion-label>{{ $t("pleaseChooseOption") }}</ion-label>
     </ion-item>
     <ion-item :disabled="isLoading">
-      <ion-label>{{ $t("object.crossSectionShapes.name") }}</ion-label>
+      <ion-label>{{ $t("object.crossSectionShapes.name") }}*</ion-label>
       <ion-select
         :value="objectParams.crossSectionShape"
         @ionChange="setObjectParam('crossSectionShape', $event.target.value)"
@@ -92,7 +93,7 @@
       </ion-select>
     </ion-item>
     <ion-item :disabled="isLoading">
-      <ion-label>{{ $t("object.constructionYear") }}</ion-label>
+      <ion-label>{{ $t("object.constructionYear") }}*</ion-label>
       <ion-input
         @ionChange="setObjectParam('constructionYear', $event.target.value)"
         type="number"
@@ -102,7 +103,7 @@
       ></ion-input>
     </ion-item>
     <ion-item :disabled="isLoading">
-      <ion-label>{{ $t("object.lineStreet") }}</ion-label>
+      <ion-label>{{ $t("object.lineStreet") }}*</ion-label>
       <ion-input
         @ionChange="setObjectParam('lineStreet', $event.target.value)"
         :value="objectParams.lineStreet"
@@ -111,7 +112,7 @@
       ></ion-input>
     </ion-item>
     <ion-item :disabled="isLoading">
-      <ion-label>{{ $t("object.chainage") }}</ion-label>
+      <ion-label>{{ $t("object.chainage") }}*</ion-label>
       <ion-input
         @ionChange="setObjectParam('chainage', $event.target.value)"
         type="number"
@@ -138,7 +139,7 @@
       </ion-button>
     </ion-item>
     <ion-item :disabled="isLoading">
-      <ion-label>{{ $t("object.spanLength") }}</ion-label>
+      <ion-label>{{ $t("object.spanLength") }}*</ion-label>
       <ion-input
         @ionChange="setObjectParam('spanLength', $event.target.value)"
         type="number"
@@ -152,7 +153,7 @@
       <ion-label>{{ $t("pleaseChooseOption") }}</ion-label>
     </ion-item>
     <ion-item :disabled="isLoading">
-      <ion-label>{{ $t("object.superstructures.name") }}</ion-label>
+      <ion-label>{{ $t("object.superstructures.name") }}*</ion-label>
       <ion-select
         :value="objectParams.superstructure"
         @ionChange="setObjectParam('superstructure', $event.target.value)"
@@ -177,7 +178,7 @@
       ></ion-input>
     </ion-item>
     <ion-item :disabled="isLoading">
-      <ion-label>{{ $t("object.shortDescription") }}</ion-label>
+      <ion-label>{{ $t("object.shortDescription") }}*</ion-label>
       <ion-textarea
         @ionChange="setObjectParam('shortDescription', $event.target.value)"
         :value="objectParams.shortDescription"
@@ -188,7 +189,7 @@
     <ion-row class="ion-float-right ion-align-items-center">
       <ion-spinner v-if="isLoading" color="primary"></ion-spinner>
       <ion-button type="submit" class="ion-margin-start">{{
-        $t("next")
+        $t("objectDocuments")
       }}</ion-button>
     </ion-row>
   </form>

@@ -3,7 +3,7 @@
     <ion-header>
       <ion-toolbar color="primary">
         <ion-buttons slot="start">
-          <ion-button @click="$router.push({name: $route.name === 'NewObject' ? 'Home' : 'Object'})">
+          <ion-button @click="back">
             <ion-icon slot="icon-only" :icon="arrowBack"></ion-icon>
           </ion-button>
         </ion-buttons>
@@ -13,18 +13,14 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content :fullscreen="true">
-      <ion-grid class="height-100">
-        <ion-row color="primary" class="ion-justify-content-center height-100">
+    <ion-content>
+      <ion-grid style="height: 100%;">
+        <ion-row
+          color="primary"
+          style="height: 100%;"
+          class="ion-justify-content-center"
+        >
           <ion-col size-md="6" size-lg="6" size-xs="12">
-            <ion-segment :value="selectedSegment">
-              <ion-segment-button disabled value="objectData">
-                <ion-label>{{ $t("objectdata") }}</ion-label>
-              </ion-segment-button>
-              <ion-segment-button disabled value="objectDocuments">
-                <ion-label>{{ $t("objectdocuments") }}</ion-label>
-              </ion-segment-button>
-            </ion-segment>
             <object-data
               v-if="selectedSegment === 'objectData'"
               @next="selectedSegment = 'objectDocuments'"
@@ -56,14 +52,11 @@ import {
   IonButton,
   IonSelect,
   IonSelectOption,
-  IonLabel,
   IonIcon,
   IonBackButton,
   IonButtons,
   IonTextarea,
   IonSpinner,
-  IonSegment,
-  IonSegmentButton,
   toastController,
 } from "@ionic/vue";
 import { computed, defineComponent, reactive, ref } from "vue";
@@ -91,14 +84,11 @@ export default defineComponent({
     //IonSelectOption,
     //IonInput,
     IonButton,
-    IonLabel,
     IonIcon,
     //IonBackButton,
     IonButtons,
     //IonSpinner,
     //IonTextarea
-    IonSegment,
-    IonSegmentButton,
     "object-data": ObjectData,
     "object-documents": ObjectDocuments,
   },
@@ -112,27 +102,34 @@ export default defineComponent({
     // define router
     const router = useRouter();
 
-    if (router.currentRoute.value.name === "EditObject") {
+    // get current route name
+    const routeName = router.currentRoute.value.name;
+
+    if (routeName === "EditObject") {
       store.dispatch("objectParams/load");
     }
 
     const selectedSegment = ref("objectData");
 
-    const segmentChanged = function (event) {
-      selectedSegment.value = event.detail.value;
+    const back = function() {
+      router.push({
+        name: routeName === "NewObject" ? "Home" : "Object",
+      });
+      selectedSegment.value = "objectData";
     };
 
     return {
-      segmentChanged,
       selectedSegment,
-      arrowBack
+      arrowBack,
+      back,
     };
   },
 });
 </script>
 
-<style scoped>
-.height-100 {
-  height: 100%;
-}
+<style>
+/* .popover-content {
+  top: 0 !important;
+  max-height: 400px !important;
+} */
 </style>

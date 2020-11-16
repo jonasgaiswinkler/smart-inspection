@@ -17,7 +17,7 @@ export default createStore({
   state: {
     user: null,
     users: null,
-    userRole: null
+    userRole: null,
   },
   mutations: {
     setUser(state, user) {
@@ -56,6 +56,10 @@ export default createStore({
       } else {
         return null
       }
+    },
+    async setUserRole(context, userRole) {
+      context.commit("setUserRole", userRole);
+      context.dispatch("object/getRequestedObjects", null, { root: true });
     }
   },
   modules: {

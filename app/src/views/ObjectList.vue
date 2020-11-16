@@ -3,7 +3,7 @@
     <ion-header>
       <ion-toolbar color="primary">
         <ion-buttons slot="start">
-          <ion-button @click="$router.push({name: 'Home'})">
+          <ion-button @click="$router.push({ name: 'Home' })">
             <ion-icon slot="icon-only" :icon="arrowBack"></ion-icon>
           </ion-button>
         </ion-buttons>
@@ -21,7 +21,6 @@
             <ion-col size-md="6" size-lg="6" size-xs="12">
               <ion-searchbar
                 debounce="100"
-                type="number"
                 :placeholder="$t('search')"
                 @ionChange="search"
               ></ion-searchbar>
@@ -29,20 +28,42 @@
                 v-if="isLoading"
                 type="indeterminate"
               ></ion-progress-bar>
-              <ion-list v-for="doc in objects" :key="doc.id">
+              <ion-list>
+                <ion-list-header>
+                  <div style="float: left; width: 18%">
+                    <ion-label>{{ $t("object.id") }}</ion-label>
+                  </div>
+                  <div style="float: left; width: 22%">
+                    <ion-label> km </ion-label>
+                  </div>
+                  <div style="float: left; width: 60%">
+                    <ion-label>
+                      {{ $t("object.shortDescription") }}
+                    </ion-label>
+                  </div>
+                </ion-list-header>
                 <ion-item
+                  v-for="doc in objects"
+                  :key="doc.id"
                   button
+                  :disabled="doc.deletionRequested"
                   @click="
                     $router.push({ name: 'Object', params: { oid: doc.id } })
                   "
                 >
-                  <ion-label>{{
-                    $t("object.name") +
-                    " " +
-                    doc.id +
-                    ": " +
-                    doc.data().shortDescription
-                  }}</ion-label>
+                  <div style="float: left; width: 18%">
+                    <ion-label>{{ doc.id }}</ion-label>
+                  </div>
+                  <div style="float: left; width: 22%">
+                    <ion-label>
+                      {{ doc.chainage }}
+                    </ion-label>
+                  </div>
+                  <div style="float: left; width: 60%">
+                    <ion-label>
+                      {{ doc.shortDescription }}
+                    </ion-label>
+                  </div>
                 </ion-item>
               </ion-list>
             </ion-col>
@@ -74,6 +95,7 @@ import {
   IonBackButton,
   IonButtons,
   IonList,
+  IonListHeader,
   IonProgressBar,
   IonSearchbar,
   IonTextarea,
@@ -108,6 +130,7 @@ export default defineComponent({
     IonButton,
     IonLabel,
     IonList,
+    IonListHeader,
     IonIcon,
     //IonBackButton,
     IonButtons,
@@ -121,35 +144,36 @@ export default defineComponent({
     // define i18n
     const i18n = useI18n();
 
-    // define firestore
-    const db = firebase.firestore();
-
     // define object list
-    const objects = ref([]);
-    const list = [];
+    const list = computed(() => store.state.object.list);
 
     // define isLoading
-    const isLoading = ref(true);
+    const isLoading = computed(() => store.state.object.isLoading);
+    const searchValue = ref("");
 
-    db.collection("objects")
-      .get()
-      .then((snapshot) => {
-        for (const doc of snapshot.docs) {
-          list.push(doc);
-        }
-        objects.value = list;
-        isLoading.value = false;
-      });
-
-    const search = function (value) {
-      objects.value = list.filter(doc => doc.id.includes(value.detail.value));
+    const search = function(value) {
+      searchValue.value = value.detail.value;
     };
+
+    const objects = computed(() => {
+      if (list.value == null) {
+        return [];
+      } else if (searchValue.value == "") {
+        return list.value;
+      } else {
+        return list.value.filter(
+          (doc) =>
+            doc.id.includes(searchValue.value) ||
+            doc.chainage.includes(searchValue.value)
+        );
+      }
+    });
 
     return {
       objects,
       isLoading,
       search,
-      arrowBack
+      arrowBack,
     };
   },
 });

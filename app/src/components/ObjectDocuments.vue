@@ -1,4 +1,5 @@
 <template>
+  <h1>{{ $t('objectDocuments') }}</h1>
   <h4>{{ $t("plans") }}</h4>
   <file-input
     :disabled="isLoading"
@@ -83,7 +84,7 @@
       ></font-awesome-icon>
     </ion-button>
     <input
-      @change="setObjectParam('files', {data: $event.target.files})"
+      @change="setObjectParam('files', { data: $event.target.files })"
       multiple
       type="file"
       ref="inputFiles"
@@ -91,12 +92,11 @@
     />
   </ion-item>
   <ion-row class="ion-align-items-center">
-    <ion-button @click="$emit('back')" fill="clear">{{ $t("back") }}</ion-button>
+    <ion-button @click="$emit('back')" fill="clear">{{
+      $t("objectData")
+    }}</ion-button>
     <div style="flex: 1"></div>
-    <ion-spinner
-      v-if="isLoading"
-      color="primary"
-    ></ion-spinner>
+    <ion-spinner v-if="isLoading" color="primary"></ion-spinner>
     <ion-button
       :disabled="isLoading"
       @click="saveObject"
@@ -154,7 +154,7 @@ export default defineComponent({
     //IonTextarea
   },
   emits: ["back"],
-  setup() {
+  setup(props, { emit }) {
     // Define store
     const store = useStore();
 
@@ -210,6 +210,7 @@ export default defineComponent({
         });
         toast.present();
         router.push({ name: "Object", params: { oid: result.oid } });
+        emit("back");
       } catch (error) {
         console.error(error);
         toastController
@@ -234,7 +235,7 @@ export default defineComponent({
       setObjectParam,
       saveObject,
       isLoading,
-      inputFiles
+      inputFiles,
     };
   },
 });

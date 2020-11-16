@@ -3,7 +3,7 @@
     <ion-header>
       <ion-toolbar color="primary">
         <ion-buttons slot="start">
-          <ion-button @click="$router.push({name: 'Home'})">
+          <ion-button @click="$router.push({ name: 'Home' })">
             <ion-icon slot="icon-only" :icon="arrowBack"></ion-icon>
           </ion-button>
         </ion-buttons>
@@ -29,80 +29,74 @@
                     <p>{{ objectData.shortDescription }}</p>
                     <ul>
                       <li>
-                        {{
-                          $t("object.id") +
-                          ": " +
-                          oid
-                        }}
+                        {{ $t("object.id") + ": " + oid }}
                       </li>
                       <li v-if="objectData.material != null">
                         {{
                           $t("object.materials.name") +
-                          ": " +
-                          $t("object.materials.data." + objectData.material)
+                            ": " +
+                            $t("object.materials.data." + objectData.material)
                         }}
                       </li>
                       <li v-if="objectData.type != null">
                         {{
                           $t("object.types.name") +
-                          ": " +
-                          $t("object.types.data." + objectData.type)
+                            ": " +
+                            $t("object.types.data." + objectData.type)
                         }}
                       </li>
                       <li v-if="objectData.system != null">
                         {{
                           $t("object.systems.name") +
-                          ": " +
-                          $t("object.systems.data." + objectData.system)
+                            ": " +
+                            $t("object.systems.data." + objectData.system)
                         }}
                       </li>
                       <li v-if="objectData.crossSectionShape != null">
                         {{
                           $t("object.crossSectionShapes.name") +
-                          ": " +
-                          $t("object.crossSectionShapes.data." + objectData.crossSectionShape)
+                            ": " +
+                            $t(
+                              "object.crossSectionShapes.data." +
+                                objectData.crossSectionShape
+                            )
                         }}
                       </li>
                       <li v-if="objectData.constructionYear != null">
                         {{
                           $t("object.constructionYear") +
-                          ": " +
-                          objectData.constructionYear
+                            ": " +
+                            objectData.constructionYear
                         }}
                       </li>
                       <li v-if="objectData.lineStreet != null">
                         {{
-                          $t("object.lineStreet") +
-                          ": " +
-                          objectData.lineStreet
+                          $t("object.lineStreet") + ": " + objectData.lineStreet
                         }}
                       </li>
                       <li v-if="objectData.chainage != null">
-                        {{
-                          $t("object.chainage") +
-                          ": " +
-                          objectData.chainage
-                        }}
+                        {{ $t("object.chainage") + ": " + objectData.chainage }}
                       </li>
                       <li v-if="objectData.spanLength != null">
                         {{
-                          $t("object.spanLength") +
-                          ": " +
-                          objectData.spanLength
+                          $t("object.spanLength") + ": " + objectData.spanLength
                         }}
                       </li>
                       <li v-if="objectData.superstructure != null">
                         {{
                           $t("object.superstructures.name") +
-                          ": " +
-                          $t("object.superstructures.data." + objectData.superstructure)
+                            ": " +
+                            $t(
+                              "object.superstructures.data." +
+                                objectData.superstructure
+                            )
                         }}
                       </li>
                       <li v-if="objectData.trafficRoutes != null">
                         {{
                           $t("object.trafficRoutes") +
-                          ": " +
-                          objectData.trafficRoutes
+                            ": " +
+                            objectData.trafficRoutes
                         }}
                       </li>
                     </ul>
@@ -128,7 +122,7 @@
                         class="flex-grow-1 width-100"
                         fill="outline"
                         expand="block"
-                        :disabled="isDeleting"
+                        :disabled="isRequesting"
                       >
                         <font-awesome-icon
                           class="button-icon"
@@ -141,26 +135,25 @@
                       size-md="12"
                       size-lg="12"
                       size-xs="6"
-                      v-if="$store.state.userRole === 'admin'"
                       class="tile flex-grow-1"
                     >
                       <ion-button
-                        @click="deleteObject"
+                        @click="requestObjectDeletion"
                         class="flex-grow-1 width-100"
                         fill="outline"
                         expand="block"
-                        :disabled="isDeleting"
+                        :disabled="isRequesting"
                       >
                         <font-awesome-icon
-                          v-if="!isDeleting"
+                          v-if="!isRequesting"
                           class="button-icon"
                           :icon="faTrash"
                         ></font-awesome-icon>
-                        <ion-spinner v-if="isDeleting"></ion-spinner>
+                        <ion-spinner v-if="isRequesting"></ion-spinner>
                       </ion-button>
                       <div
                         class="text-overflow"
-                        v-html="$t('deleteObject')"
+                        v-html="$t('requestObjectDeletion')"
                       ></div> </ion-col
                   ></ion-row>
                 </ion-col>
@@ -211,7 +204,7 @@ import {
   faFile,
   faTools,
   faTrash,
-  faList
+  faList,
 } from "@fortawesome/free-solid-svg-icons";
 
 export default defineComponent({
@@ -269,7 +262,7 @@ export default defineComponent({
       {
         name: "inspectionList",
         icon: faList,
-        route: "InspectionList"
+        route: "InspectionListObject",
       },
       {
         name: "generateReport",
@@ -287,47 +280,46 @@ export default defineComponent({
     ]);
 
     // define is deleting
-    const isDeleting = ref(false);
+    const isRequesting = ref(false);
 
     // push function
     const push = (route) => {
       router.push({ name: route });
     };
 
-    // delete function
-    const deleteObject = async function () {
+    // request deletion function
+    const requestObjectDeletion = async function() {
       const alert = await alertController.create({
-        header: i18n.t("deleteObject"),
-        message: i18n.t("confirmDelete"),
+        header: i18n.t("requestObjectDeletion"),
+        message: i18n.t("confirmDeletionRequest"),
         buttons: [
           {
             text: i18n.t("cancel"),
             role: "cancel",
           },
           {
-            text: i18n.t("delete"),
-            handler: () => {
-              isDeleting.value = true;
-              store.dispatch("object/delete").then(async (result) => {
-                isDeleting.value = false;
-                if (result.data.status === 200) {
-                  const toast = await toastController.create({
-                    message: i18n.t("objectDeleted"),
-                    duration: 2000,
-                    color: "success",
-                  });
-                  toast.present();
-                  router.push({ name: "Home" });
-                } else {
-                  console.error(result);
-                  const toast = await toastController.create({
-                    message: "Error",
-                    duration: 2000,
-                    color: "danger",
-                  });
-                  toast.present();
-                }
-              });
+            text: i18n.t("confirm"),
+            handler: async () => {
+              isRequesting.value = true;
+              try {
+                await store.dispatch("object/requestDeletion");
+                const toast = await toastController.create({
+                  message: i18n.t("deletionRequested"),
+                  duration: 2000,
+                  color: "success",
+                });
+                toast.present();
+                router.push({ name: "Home" });
+              } catch (error) {
+                console.error(error);
+                const toast = await toastController.create({
+                  message: error,
+                  duration: 2000,
+                  color: "danger",
+                });
+                toast.present();
+              }
+              isRequesting.value = false;
             },
           },
         ],
@@ -340,12 +332,12 @@ export default defineComponent({
       push,
       faTrafficLight,
       faTrash,
-      deleteObject,
-      isDeleting,
+      requestObjectDeletion,
+      isRequesting,
       objectData,
       objectPhotoUrl,
       oid,
-      arrowBack
+      arrowBack,
     };
   },
 });

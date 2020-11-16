@@ -2,7 +2,7 @@
   <ion-page>
     <ion-header>
       <ion-toolbar color="primary">
-        <ion-title>smart inspection</ion-title>
+        <ion-title>Smart Inspection</ion-title>
       </ion-toolbar>
     </ion-header>
 

@@ -2,7 +2,7 @@
   <ion-page>
     <ion-header>
       <ion-toolbar color="primary">
-        <ion-title>smart inspection</ion-title>
+        <ion-title>Smart Inspection</ion-title>
       </ion-toolbar>
     </ion-header>
 
@@ -16,7 +16,13 @@
             size-xs="12"
           >
             <ion-row class="height-100">
-              <ion-col v-for="button in buttons" :key="button.name" size="6">
+              <ion-col
+                v-for="(button, i) in buttons"
+                :key="button.name"
+                :size-lg="i > 1 || isAdmin ? 4 : 6"
+                :size-md="i > 1 || isAdmin ? 4 : 6"
+                :size-xs="i > 0 || isAdmin ? 6 : 12"
+              >
                 <div class="tile height-100">
                   <ion-button
                     @click="push(button.route)"
@@ -24,16 +30,60 @@
                     fill="outline"
                     expand="block"
                   >
-                    <font-awesome-icon
-                      class="button-icon"
-                      :icon="button.icon"
-                    ></font-awesome-icon>
+                    <font-awesome-layers class="button-icon">
+                      <font-awesome-icon :icon="button.icon" />
+                      <font-awesome-icon
+                        v-if="button.iconSecondary !== undefined"
+                        :icon="faSquare"
+                        style="color: white"
+                        transform="down-5 right-5 shrink-9"
+                      />
+                      <font-awesome-icon
+                        v-if="button.iconSecondary !== undefined"
+                        :icon="button.iconSecondary"
+                        transform="down-5 right-5 shrink-20 rotate-180"
+                      />
+                    </font-awesome-layers>
                   </ion-button>
                   <div class="ion-hide-sm-down text-overflow">
                     <h1>{{ $t(button.name) }}</h1>
                   </div>
                   <div class="ion-hide-md-up text-overflow">
                     {{ $t(button.name) }}
+                  </div>
+                </div>
+              </ion-col>
+              <ion-col
+                v-if="isAdmin"
+                size-lg="4"
+                size-md="4"
+                size-xs="6"
+                key="requestDeletion"
+              >
+                <div class="tile height-100">
+                  <ion-button
+                    @click="push('ObjectDeletion')"
+                    class="flex-grow-1 width-100"
+                    fill="outline"
+                    expand="block"
+                    :disabled="requestedObjectsAmount == null"
+                  >
+                    <font-awesome-layers class="button-icon">
+                      <font-awesome-icon :icon="faTrash" />
+                      <font-awesome-layers-text
+                        :key="requestedObjectsAmount"
+                        v-if="requestedObjectsAmount != null"
+                        counter
+                        :value="requestedObjectsAmount"
+                        position="top-right"
+                      />
+                    </font-awesome-layers>
+                  </ion-button>
+                  <div class="ion-hide-sm-down text-overflow">
+                    <h1>{{ $t("requestedDeletions") }}</h1>
+                  </div>
+                  <div class="ion-hide-md-up text-overflow">
+                    {{ $t("requestedDeletions") }}
                   </div>
                 </div>
               </ion-col>
@@ -58,15 +108,24 @@ import {
   IonCol,
   IonButton,
 } from "@ionic/vue";
-import { defineComponent, reactive } from "vue";
+import { computed, defineComponent, reactive } from "vue";
 import { useRouter } from "vue-router";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import {
+  FontAwesomeIcon,
+  FontAwesomeLayers,
+  FontAwesomeLayersText,
+} from "@fortawesome/vue-fontawesome";
 import {
   faPlus,
   faList,
   faCog,
   faUser,
+  faArchway,
+  faSquare,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
+import { faWpforms } from "@fortawesome/free-brands-svg-icons";
+import { useStore } from "vuex";
 
 export default defineComponent({
   name: "Home",
@@ -81,40 +140,65 @@ export default defineComponent({
     IonCol,
     IonButton,
     "font-awesome-icon": FontAwesomeIcon,
+    "font-awesome-layers": FontAwesomeLayers,
+    "font-awesome-layers-text": FontAwesomeLayersText,
   },
   setup() {
+    // Define store
+    const store = useStore();
+
     // Define router
     const router = useRouter();
 
     // Array of buttons
     const buttons = reactive([
       {
+        name: "objectList",
+        icon: faList,
+        iconSecondary: faArchway,
+        route: "ObjectList",
+      },
+      {
         name: "newObject",
         icon: faPlus,
         route: "NewObject",
       },
       {
-        name: "objectList",
+        name: "inspectionList",
         icon: faList,
-        route: "ObjectList",
+        iconSecondary: faWpforms,
+        route: "InspectionListGlobal",
+      },
+      {
+        name: "profile",
+        icon: faUser,
       },
       {
         name: "settings",
         icon: faCog,
         route: "Settings",
       },
-      {
-        name: "profile",
-        icon: faUser,
-      },
     ]);
+
+    const isAdmin = computed(() => store.state.userRole === "admin");
+    const requestedObjectsAmount = computed(() => {
+      const requestedObjects = store.state.object.requestedObjects;
+      return requestedObjects != null ? requestedObjects.length : null;
+    });
 
     // push function
     const push = (route) => {
       router.push({ name: route });
     };
 
-    return { buttons, push };
+    return {
+      buttons,
+      push,
+      faSquare,
+      isAdmin,
+      faTrash,
+      requestedObjectsAmount,
+    };
   },
 });
 </script>
@@ -138,9 +222,12 @@ export default defineComponent({
   width: 100%;
 }
 
+.width-auto {
+  width: auto;
+}
+
 .button-icon {
-  width: 100% !important;
-  height: 65% !important;
+  font-size: 14vh;
 }
 
 .text-overflow {
