@@ -3,7 +3,11 @@
     <ion-header>
       <ion-toolbar color="primary">
         <ion-buttons slot="start">
-          <ion-button @click="$router.push({name: 'Object'})">
+          <ion-button
+            @click="$router.push({ name: 'Object' })"
+            :aria-label="$t('back')"
+            :title="$t('back')"
+          >
             <ion-icon slot="icon-only" :icon="arrowBack"></ion-icon>
           </ion-button>
         </ion-buttons>
@@ -48,6 +52,8 @@
                         fill="outline"
                         expand="block"
                         :disabled="isDeleting"
+                        :aria-label="$t(button.name)"
+                        :title="$t(button.name)"
                       >
                         <font-awesome-icon
                           class="button-icon"
@@ -69,6 +75,8 @@
                         fill="outline"
                         expand="block"
                         :disabled="isDeleting"
+                        :aria-label="$t('deleteObject')"
+                        :title="$t('deleteObject')"
                       >
                         <font-awesome-icon
                           v-if="!isDeleting"
@@ -180,7 +188,7 @@ export default defineComponent({
       {
         name: "newInspection",
         icon: faPlus,
-        route: "NewInspection"
+        route: "NewInspection",
       },
       {
         name: "generateReport",
@@ -206,7 +214,7 @@ export default defineComponent({
     };
 
     // delete function
-    const deleteObject = async function () {
+    const deleteObject = async function() {
       const alert = await alertController.create({
         header: i18n.t("deleteObject"),
         message: i18n.t("confirmDelete"),
@@ -255,7 +263,7 @@ export default defineComponent({
       isDeleting,
       inspectionData,
       inspectionPhotoUrl,
-      arrowBack
+      arrowBack,
     };
   },
 });

@@ -1,23 +1,24 @@
-import { createStore } from 'vuex'
+import { createStore } from "vuex";
 import * as firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
-import "firebase/functions"
+import "firebase/functions";
 
 // import modules
 // @ts-ignore
-import objectParams from './objectParams.js';
-import object from './object';
+import objectParams from "./objectParams.js";
+import object from "./object";
 // @ts-ignore
-import inspectionParams from './inspectionParams.js';
+import inspectionParams from "./inspectionParams.js";
 // @ts-ignore
-import inspection from './inspection.js';
+import inspection from "./inspection.js";
 
 export default createStore({
   state: {
     user: null,
     users: null,
     userRole: null,
+    isLoading: true,
   },
   mutations: {
     setUser(state, user) {
@@ -28,12 +29,17 @@ export default createStore({
     },
     setUserRole(state, userRole) {
       state.userRole = userRole;
-    }
+    },
+    setIsLoading(state, isLoading) {
+      state.isLoading = isLoading;
+    },
   },
   actions: {
     // firebase login
     login(context, payload) {
-      return firebase.auth().signInWithEmailAndPassword(payload.email, payload.password);
+      return firebase
+        .auth()
+        .signInWithEmailAndPassword(payload.email, payload.password);
     },
     logout(context) {
       return firebase.auth().signOut();
@@ -42,7 +48,10 @@ export default createStore({
       return firebase.auth().sendPasswordResetEmail(email);
     },
     async loadUsers(context) {
-      const usersSnap = await firebase.firestore().collection("users").get();
+      const usersSnap = await firebase
+        .firestore()
+        .collection("users")
+        .get();
       const users = [];
       for (const userDoc of usersSnap.docs) {
         users.push({ id: userDoc.id, ...userDoc.data() });
@@ -52,20 +61,20 @@ export default createStore({
     setPermissions(context, payload) {
       if (payload.uid !== undefined && payload.role !== undefined) {
         const functions = firebase.functions();
-        return functions.httpsCallable('setPermissions')(payload);
+        return functions.httpsCallable("setPermissions")(payload);
       } else {
-        return null
+        return null;
       }
     },
     async setUserRole(context, userRole) {
       context.commit("setUserRole", userRole);
       context.dispatch("object/getRequestedObjects", null, { root: true });
-    }
+    },
   },
   modules: {
     objectParams: objectParams,
     object: object,
     inspectionParams: inspectionParams,
-    inspection: inspection
-  }
-})
+    inspection: inspection,
+  },
+});

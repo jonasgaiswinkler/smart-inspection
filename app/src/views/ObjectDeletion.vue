@@ -3,7 +3,11 @@
     <ion-header>
       <ion-toolbar color="primary">
         <ion-buttons slot="start">
-          <ion-button @click="$router.push({ name: 'Home' })">
+          <ion-button
+            @click="$router.push({ name: 'Home' })"
+            :aria-label="$t('back')"
+            :title="$t('back')"
+          >
             <ion-icon slot="icon-only" :icon="arrowBack"></ion-icon>
           </ion-button>
         </ion-buttons>
@@ -60,6 +64,7 @@
                     fill="clear"
                     slot="end"
                     :title="$t('restoreObject')"
+                    :aria-label="$t('restoreObject')"
                   >
                     <font-awesome-icon
                       slot="icon-only"
@@ -72,6 +77,7 @@
                     slot="end"
                     style="margin-left: 0.25em"
                     :title="$t('deleteObject')"
+                    :aria-label="$t('deleteObject')"
                   >
                     <font-awesome-icon
                       slot="icon-only"

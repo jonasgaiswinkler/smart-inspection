@@ -113,6 +113,10 @@ router.beforeEach(async function(to, from, next) {
   }
 });
 
+router.afterEach(function() {
+  store.commit("setIsLoading", false);
+});
+
 /* set status bar color */
 Plugins.Device.getInfo().then((info) => {
   if (info.platform == "android") {

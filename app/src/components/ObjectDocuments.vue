@@ -1,5 +1,5 @@
 <template>
-  <h1>{{ $t('objectDocuments') }}</h1>
+  <h1>{{ $t("objectDocuments") }}</h1>
   <h4>{{ $t("plans") }}</h4>
   <file-input
     :disabled="isLoading"
@@ -63,6 +63,8 @@
       :disabled="isLoading"
       slot="end"
       style="margin-right: 10px; margin-left: 0px"
+      :aria-label="$t('delete')"
+      :title="$t('delete')"
     >
       <font-awesome-icon
         slot="icon-only"
@@ -76,6 +78,8 @@
       fill="clear"
       :disabled="isLoading"
       style="margin-left: 0px"
+      :aria-label="$t('selectFiles')"
+      :title="$t('selectFiles')"
     >
       <font-awesome-icon
         slot="icon-only"
@@ -92,15 +96,21 @@
     />
   </ion-item>
   <ion-row class="ion-align-items-center">
-    <ion-button @click="$emit('back')" fill="clear">{{
-      $t("objectData")
-    }}</ion-button>
+    <ion-button
+      @click="$emit('back')"
+      fill="clear"
+      :aria-label="$t('objectData')"
+      :title="$t('objectData')"
+      >{{ $t("objectData") }}</ion-button
+    >
     <div style="flex: 1"></div>
     <ion-spinner v-if="isLoading" color="primary"></ion-spinner>
     <ion-button
       :disabled="isLoading"
       @click="saveObject"
       class="ion-margin-start"
+      :aria-label="$t('save')"
+      :title="$t('save')"
       >{{ $t("save") }}</ion-button
     >
   </ion-row>
@@ -168,7 +178,7 @@ export default defineComponent({
     const i18n = useI18n();
 
     // define object params from store
-    const objectParams = computed(function () {
+    const objectParams = computed(function() {
       if (routeName === "NewObject") {
         return store.state.objectParams.newParams;
       } else if (routeName === "EditObject") {
@@ -176,7 +186,7 @@ export default defineComponent({
       }
     });
     // define object params setter
-    const setObjectParam = function (key, value) {
+    const setObjectParam = function(key, value) {
       let commitPath = "";
       if (routeName === "NewObject") {
         commitPath = "objectParams/setNewParam";
@@ -193,7 +203,7 @@ export default defineComponent({
     const isLoading = computed(() => store.state.objectParams.isLoading);
 
     // save new object function
-    const saveObject = async function () {
+    const saveObject = async function() {
       store.commit("objectParams/setIsLoading", true);
       try {
         let result = null;

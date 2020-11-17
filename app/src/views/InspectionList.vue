@@ -3,7 +3,15 @@
     <ion-header>
       <ion-toolbar color="primary">
         <ion-buttons slot="start">
-          <ion-button @click="$router.push({ name: routeName == 'InspectionListObject' ? 'Object' : 'Home'})">
+          <ion-button
+            @click="
+              $router.push({
+                name: routeName == 'InspectionListObject' ? 'Object' : 'Home',
+              })
+            "
+            :aria-label="$t('back')"
+            :title="$t('back')"
+          >
             <ion-icon slot="icon-only" :icon="arrowBack"></ion-icon>
           </ion-button>
         </ion-buttons>
@@ -144,7 +152,7 @@ export default defineComponent({
     // get current route name
     const routeName = router.currentRoute.value.name;
 
-    const getObjectInspections = async function (oid) {
+    const getObjectInspections = async function(oid) {
       const inspections = await db
         .collection("objects")
         .doc(oid)
@@ -162,7 +170,10 @@ export default defineComponent({
               " " +
               inspection.id +
               ": " +
-              inspection.data().date.toDate().toLocaleDateString("de-DE"),
+              inspection
+                .data()
+                .date.toDate()
+                .toLocaleDateString("de-DE"),
           });
         }
         return list;
@@ -171,7 +182,7 @@ export default defineComponent({
       }
     };
 
-    const getGlobalInspections = async function () {
+    const getGlobalInspections = async function() {
       const objects = await db.collection("objects").get();
 
       const promises = [];
@@ -181,7 +192,7 @@ export default defineComponent({
 
       const result = await Promise.all(promises);
       return result
-        .filter(function (el) {
+        .filter(function(el) {
           return el != null;
         })
         .flat(1);
@@ -209,7 +220,7 @@ export default defineComponent({
       });
     }
 
-    const search = function (value) {
+    const search = function(value) {
       inspections.value = list.filter((doc) =>
         doc.id.includes(value.detail.value)
       );

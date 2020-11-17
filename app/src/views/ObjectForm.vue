@@ -3,7 +3,11 @@
     <ion-header>
       <ion-toolbar color="primary">
         <ion-buttons slot="start">
-          <ion-button @click="back">
+          <ion-button
+            @click="back"
+            :aria-label="$t('back')"
+            :title="$t('back')"
+          >
             <ion-icon slot="icon-only" :icon="arrowBack"></ion-icon>
           </ion-button>
         </ion-buttons>

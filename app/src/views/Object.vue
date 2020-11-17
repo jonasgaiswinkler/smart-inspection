@@ -3,7 +3,11 @@
     <ion-header>
       <ion-toolbar color="primary">
         <ion-buttons slot="start">
-          <ion-button @click="$router.push({ name: 'Home' })">
+          <ion-button
+            @click="$router.push({ name: 'Home' })"
+            :aria-label="$t('back')"
+            :title="$t('back')"
+          >
             <ion-icon slot="icon-only" :icon="arrowBack"></ion-icon>
           </ion-button>
         </ion-buttons>
@@ -123,6 +127,8 @@
                         fill="outline"
                         expand="block"
                         :disabled="isRequesting"
+                        :aria-label="$t(button.name)"
+                        :title="$t(button.name)"
                       >
                         <font-awesome-icon
                           class="button-icon"
@@ -143,6 +149,8 @@
                         fill="outline"
                         expand="block"
                         :disabled="isRequesting"
+                        :aria-label="$t('requestObjectDeletion')"
+                        :title="$t('requestObjectDeletion')"
                       >
                         <font-awesome-icon
                           v-if="!isRequesting"

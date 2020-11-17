@@ -50,31 +50,47 @@
                 v-if="!showResetPassword"
                 class="ion-padding ion-float-right"
               >
-                <ion-button type="submit">{{ $t("login") }}</ion-button>
+                <ion-button
+                  type="submit"
+                  :aria-label="$t('login')"
+                  :title="$t('login')"
+                  >{{ $t("login") }}</ion-button
+                >
               </ion-row>
               <ion-row
                 v-if="!showResetPassword"
                 class="ion-padding ion-float-right"
               >
-                <ion-button @click="showResetPassword = true" fill="clear">{{
-                  $t("resetPassword")
-                }}</ion-button>
+                <ion-button
+                  @click="showResetPassword = true"
+                  fill="clear"
+                  :aria-label="$t('resetPassword')"
+                  :title="$t('resetPassword')"
+                  >{{ $t("resetPassword") }}</ion-button
+                >
               </ion-row>
               <ion-row
                 v-if="showResetPassword"
                 class="ion-padding ion-float-right"
               >
-                <ion-button @click="resetPassword">{{
-                  $t("resetPassword")
-                }}</ion-button>
+                <ion-button
+                  @click="resetPassword"
+                  :aria-label="$t('resetPassword')"
+                  :title="$t('resetPassword')"
+                  >{{ $t("resetPassword") }}</ion-button
+                >
               </ion-row>
               <ion-row
                 v-if="showResetPassword"
                 class="ion-padding ion-float-right"
               >
-                <ion-button @click="showResetPassword = false" fill="clear">{{
-                  $t("back")
-                }}</ion-button>
+                <ion-button
+                  @click="showResetPassword = false"
+                  fill="clear"
+                  :aria-label="$t('back')"
+                  :title="$t('back')"
+                  >{{ $t("back") }}</ion-button
+                >
               </ion-row>
             </ion-col>
           </ion-row>
@@ -141,7 +157,7 @@ export default defineComponent({
     const showResetPassword = ref(false);
 
     // Define reset password method
-    const resetPassword = async function () {
+    const resetPassword = async function() {
       if (email.value !== "") {
         try {
           await store.dispatch("resetPassword", email.value);

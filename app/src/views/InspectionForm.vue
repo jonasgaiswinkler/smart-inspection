@@ -3,7 +3,11 @@
     <ion-header>
       <ion-toolbar color="primary">
         <ion-buttons slot="start">
-          <ion-button @click="$router.push({name: 'Object'})">
+          <ion-button
+            @click="$router.push({ name: 'Object' })"
+            :aria-label="$t('back')"
+            :title="$t('back')"
+          >
             <ion-icon slot="icon-only" :icon="arrowBack"></ion-icon>
           </ion-button>
         </ion-buttons>
@@ -129,6 +133,8 @@
                   :disabled="isLoading"
                   class="ion-margin-start"
                   type="submit"
+                  :aria-label="$t('save')"
+                  :title="$t('save')"
                   >{{ $t("save") }}</ion-button
                 >
               </ion-row>
@@ -218,13 +224,13 @@ export default defineComponent({
     // define bridge options
     const inspectionOptions = messages.inspection;
     // define object params from store
-    const inspectionParams = computed(function () {
+    const inspectionParams = computed(function() {
       if (routeName === "NewInspection") {
         return store.state.inspectionParams.newParams;
       }
     });
     // define object params setter
-    const setInspectionParam = function (key, value) {
+    const setInspectionParam = function(key, value) {
       let commitPath = "";
       if (routeName === "NewInspection") {
         commitPath = "inspectionParams/setNewParam";
@@ -239,7 +245,7 @@ export default defineComponent({
     const isLoading = computed(() => store.state.inspectionParams.isLoading);
 
     // save new object function
-    const saveInspection = async function () {
+    const saveInspection = async function() {
       store.commit("inspectionParams/setIsLoading", true);
       try {
         let result;
@@ -275,7 +281,7 @@ export default defineComponent({
       isLoading,
       users,
       saveInspection,
-      arrowBack
+      arrowBack,
     };
   },
 });

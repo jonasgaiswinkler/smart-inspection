@@ -29,6 +29,8 @@
                     class="flex-grow-1 width-100"
                     fill="outline"
                     expand="block"
+                    :aria-label="$t(button.name)"
+                    :title="$t(button.name)"
                   >
                     <font-awesome-layers class="button-icon">
                       <font-awesome-icon :icon="button.icon" />
@@ -67,6 +69,8 @@
                     fill="outline"
                     expand="block"
                     :disabled="requestedObjectsAmount == null"
+                    :aria-label="$t('requestedDeletions')"
+                    :title="$t('requestedDeletions')"
                   >
                     <font-awesome-layers class="button-icon">
                       <font-awesome-icon :icon="faTrash" />

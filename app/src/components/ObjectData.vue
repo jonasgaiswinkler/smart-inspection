@@ -1,6 +1,6 @@
 <template>
   <form class="height-100" id="objectdata" @submit.stop.prevent="next">
-    <h1>{{ $t('objectData') }}</h1>
+    <h1>{{ $t("objectData") }}</h1>
     <ion-item v-if="errorID" color="danger">
       <ion-label>{{ $t("idAssigned") }}</ion-label>
     </ion-item>
@@ -134,6 +134,8 @@
         slot="end"
         fill="clear"
         :disabled="isLoading"
+        :aria-label="$t('localization')"
+        :title="$t('localization')"
       >
         <ion-icon slot="icon-only" :icon="locate"></ion-icon>
       </ion-button>
@@ -188,9 +190,13 @@
     </ion-item>
     <ion-row class="ion-float-right ion-align-items-center">
       <ion-spinner v-if="isLoading" color="primary"></ion-spinner>
-      <ion-button type="submit" class="ion-margin-start">{{
-        $t("objectDocuments")
-      }}</ion-button>
+      <ion-button
+        type="submit"
+        class="ion-margin-start"
+        :aria-label="$t('objectDocuments')"
+        :title="$t('objectDocuments')"
+        >{{ $t("objectDocuments") }}</ion-button
+      >
     </ion-row>
   </form>
 </template>
@@ -260,7 +266,7 @@ export default defineComponent({
     // define object options
     const objectOptions = messages.object;
     // define object params from store
-    const objectParams = computed(function () {
+    const objectParams = computed(function() {
       if (routeName === "NewObject") {
         return store.state.objectParams.newParams;
       } else if (routeName === "EditObject") {
@@ -268,7 +274,7 @@ export default defineComponent({
       }
     });
     // define object params setter
-    const setObjectParam = function (key, value) {
+    const setObjectParam = function(key, value) {
       let commitPath = "";
       if (routeName === "NewObject") {
         commitPath = "objectParams/setNewParam";
@@ -285,7 +291,7 @@ export default defineComponent({
     const isLoading = computed(() => store.state.objectParams.isLoading);
 
     // define geolocation method
-    const getLocation = function () {
+    const getLocation = function() {
       Geolocation.getCurrentPosition()
         .then((position) => {
           setObjectParam("coords", position.coords);
@@ -296,7 +302,7 @@ export default defineComponent({
     };
 
     // define coords getter
-    const newObjectCoords = computed(function () {
+    const newObjectCoords = computed(function() {
       if (routeName === "NewObject") {
         return store.getters["objectParams/getNewParamsCoords"];
       } else if (routeName === "EditObject") {
@@ -313,7 +319,7 @@ export default defineComponent({
     const errorSuperstructure = ref(false);
 
     // define next function
-    const next = async function () {
+    const next = async function() {
       store.commit("objectParams/setIsLoading", true);
       if (routeName === "NewObject") {
         const objectExists = await store.dispatch("objectParams/exists");
@@ -321,10 +327,18 @@ export default defineComponent({
         errorMaterial.value = objectParams.value.material == null;
         errorType.value = objectParams.value.type == null;
         errorSystem.value = objectParams.value.system == null;
-        errorCrossSectionShape.value = objectParams.value.crossSectionShape == null;
+        errorCrossSectionShape.value =
+          objectParams.value.crossSectionShape == null;
         errorSuperstructure.value = objectParams.value.superstructure == null;
 
-        if (!errorID.value && !errorMaterial.value && !errorType.value && !errorSystem.value && !errorSuperstructure.value && !errorCrossSectionShape.value) {
+        if (
+          !errorID.value &&
+          !errorMaterial.value &&
+          !errorType.value &&
+          !errorSystem.value &&
+          !errorSuperstructure.value &&
+          !errorCrossSectionShape.value
+        ) {
           emit("next");
         }
       } else {
@@ -349,7 +363,7 @@ export default defineComponent({
       errorType,
       errorSystem,
       errorCrossSectionShape,
-      errorSuperstructure
+      errorSuperstructure,
     };
   },
 });

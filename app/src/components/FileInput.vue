@@ -16,6 +16,8 @@
       :disabled="disabled"
       slot="end"
       style="margin-right: 10px; margin-left: 0px"
+      :aria-label="$t('download')"
+      :title="$t('download')"
     >
       <font-awesome-icon
         slot="icon-only"
@@ -30,6 +32,8 @@
       :disabled="disabled"
       slot="end"
       style="margin-right: 10px; margin-left: 0px"
+      :aria-label="$t('delete')"
+      :title="$t('delete')"
     >
       <font-awesome-icon
         slot="icon-only"
@@ -43,6 +47,8 @@
       :disabled="disabled"
       slot="end"
       style="margin-left: 0px"
+      :aria-label="$t('selectFile')"
+      :title="$t('selectFile')"
     >
       <font-awesome-icon
         slot="icon-only"
@@ -95,7 +101,7 @@ export default defineComponent({
 
     const fileInput = ref(null);
 
-    const select = async function (file) {
+    const select = async function(file) {
       if (props.accept != undefined) {
         const types = props.accept.split(", ");
         if (types.includes(file.type)) {
@@ -117,5 +123,4 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

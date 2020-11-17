@@ -3,7 +3,11 @@
     <ion-header>
       <ion-toolbar color="primary">
         <ion-buttons slot="start">
-          <ion-button @click="$router.push({name: 'Home'})">
+          <ion-button
+            @click="$router.push({ name: 'Home' })"
+            :aria-label="$t('back')"
+            :title="$t('back')"
+          >
             <ion-icon slot="icon-only" :icon="arrowBack"></ion-icon>
           </ion-button>
         </ion-buttons>
@@ -15,9 +19,13 @@
       <ion-grid class="height-100">
         <ion-row color="primary" class="ion-justify-content-center height-100">
           <ion-col size-md="6" size-lg="6" size-xs="12">
-            <ion-button @click="logout" expand="block">{{
-              $t("logout")
-            }}</ion-button>
+            <ion-button
+              @click="logout"
+              expand="block"
+              :aria-label="$t('logout')"
+              :title="$t('logout')"
+              >{{ $t("logout") }}</ion-button
+            >
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -58,7 +66,7 @@ export default defineComponent({
     IonCol,
     IonButton,
     IonButtons,
-    IonIcon
+    IonIcon,
   },
   setup() {
     // Define router
