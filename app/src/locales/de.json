@@ -6,6 +6,7 @@
     "password": "Passwort",
     "newObject": "Neues Objekt",
     "newInspection": "Neue Inspektion",
+    "newDamage": "Neuer Schaden/Mangel",
     "objectList": "Objektverzeichnis",
     "inspectionList": "Inspektionsverzeichnis",
     "bridgeObject": "Brückenobjekt",
@@ -19,13 +20,17 @@
     "generateReport": "Bericht generieren/&#8203;freigeben",
     "objectAssessment": "Objektbewertung",
     "editObject": "Objekt bearbeiten",
+    "editInspection": "Inspektion bearbeiten",
     "deleteObject": "Objekt löschen",
     "restoreObject": "Objekt wiederherstellen",
     "objectRestored": "Objekt wiederhergestellt",
-    "confirmDelete": "Bitte bestätigen Sie die Löschung des Objekts #{oid}.",
+    "deleteInspection": "Inspektion löschen",
+    "confirmDeleteObject": "Bitte bestätigen Sie die Löschung des Objekts #{oid}.",
+    "confirmDeleteInspection": "Bitte bestätigen Sie die Löschung der Inspektion.",
     "confirmDeletionRequest": "Bitte bestätigen Sie, dass dieses Objekt zur Löschung durch einen Administrator markiert wird.",
     "pleasechoose": "Bitte auswählen",
     "idAssigned": "ID bereits vergeben!",
+    "dateAssigned": "Datum bereits vergeben!",
     "resetPassword": "Passwort zurürcksetzen",
     "resetEmailSend": "Eine E-Mail mit Informationen zur Passwortzurücksetzung wurde an die angegebene E-Mail-Adresse gesendet.",
     "noEmailAddress": "Bitte geben Sie eine E-Mail-Adresse ein.",
@@ -49,6 +54,9 @@
     "requestObjectDeletion": "Objektlöschung beantragen",
     "requestedDeletions": "Beantragte Löschungen",
     "inspectionSaved": "Inspektion gespeichert!",
+    "inspectionDeleted": "Inspektion gelöscht!",
+    "objectPhoto": "Objektfoto",
+    "inspectionPhoto": "Inspektionsfoto",
     "object": {
         "name": "Objekt",
         "id": "ID",
@@ -97,16 +105,12 @@
             }
         },
         "constructionYear": "Baujahr",
-        "lineStreet": "Strecke/Straße",
+        "routeCode": "Strecken-/Straßencode",
+        "routeName": "Strecken-/Straßenname",
         "chainage": "Kilometrierung [km]",
         "coords": "Koordinaten",
         "spanLength": "Stützweite [m]",
-        "superstructures": {
-            "name": "Oberbau",
-            "data": {
-                "ballastedTrack": "Schotteroberbau"
-            }
-        },
+        "width": "Breite [m]",
         "trafficRoutes": "Anzahl Verkehrswege",
         "shortDescription": "Kurzbeschreibung",
         "photo": "Foto",
@@ -121,10 +125,13 @@
         "name": "Inspektion",
         "inspector": "Objektprüfer",
         "date": "Datum",
-        "inspectionTypes": {
-            "name": "Art der Inspection",
+        "types": {
+            "name": "Art der Inspektion",
             "data": {
-                "rvs": "Prüfung (lt. RVS 13.03.11)"
+                "continuousMonitoring": "Laufende Überwachung",
+                "check": "Kontrolle",
+                "inspection": "Prüfung",
+                "specialInspection": "Sonderprüfung"
             }
         },
         "weather": {

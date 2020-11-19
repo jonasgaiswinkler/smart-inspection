@@ -28,6 +28,7 @@
                   <ion-img
                     v-if="objectPhotoUrl != null"
                     :src="objectPhotoUrl"
+                    :alt="$t('objectPhoto')"
                   ></ion-img>
                   <template v-if="objectData != null">
                     <p>{{ objectData.shortDescription }}</p>
@@ -73,28 +74,39 @@
                             objectData.constructionYear
                         }}
                       </li>
-                      <li v-if="objectData.lineStreet != null">
+                      <li v-if="objectData.routeCode != null">
                         {{
-                          $t("object.lineStreet") + ": " + objectData.lineStreet
+                          $t("object.routeCode") + ": " + objectData.routeCode
+                        }}
+                      </li>
+                      <li v-if="objectData.routeName != null">
+                        {{
+                          $t("object.routeName") + ": " + objectData.routeName
                         }}
                       </li>
                       <li v-if="objectData.chainage != null">
                         {{ $t("object.chainage") + ": " + objectData.chainage }}
+                      </li>
+                      <li v-if="objectData.coords != null">
+                        {{ $t("object.coords") + ": " }}
+                        <a
+                          :href="
+                            'https://www.google.com/maps/search/' +
+                              objectData.coords.latitude +
+                              ',' +
+                              objectData.coords.longitude
+                          "
+                          target="_blank"
+                          >Google Maps</a
+                        >
                       </li>
                       <li v-if="objectData.spanLength != null">
                         {{
                           $t("object.spanLength") + ": " + objectData.spanLength
                         }}
                       </li>
-                      <li v-if="objectData.superstructure != null">
-                        {{
-                          $t("object.superstructures.name") +
-                            ": " +
-                            $t(
-                              "object.superstructures.data." +
-                                objectData.superstructure
-                            )
-                        }}
+                      <li v-if="objectData.width != null">
+                        {{ $t("object.width") + ": " + objectData.width }}
                       </li>
                       <li v-if="objectData.trafficRoutes != null">
                         {{

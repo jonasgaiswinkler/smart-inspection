@@ -7,12 +7,13 @@
     <ion-item :disabled="isLoading">
       <ion-label>{{ $t("object.id") }}*</ion-label>
       <ion-input
-        @ionChange="setObjectParam('id', $event.target.value)"
-        type="number"
+        @ionInput="setObjectParam('id', $event.target.value)"
         :value="objectParams.id"
         class="ion-text-right"
         required
+        pattern="^(?!\.\.?$)(?!.*__.*__)([^/]{1,1500})$"
         :disabled="routeName === 'EditObject'"
+        autocomplete="off"
       ></ion-input>
     </ion-item>
     <ion-item v-if="errorMaterial" color="danger">
@@ -95,7 +96,7 @@
     <ion-item :disabled="isLoading">
       <ion-label>{{ $t("object.constructionYear") }}*</ion-label>
       <ion-input
-        @ionChange="setObjectParam('constructionYear', $event.target.value)"
+        @ionInput="setObjectParam('constructionYear', $event.target.value)"
         type="number"
         :value="objectParams.constructionYear"
         class="ion-text-right"
@@ -103,18 +104,25 @@
       ></ion-input>
     </ion-item>
     <ion-item :disabled="isLoading">
-      <ion-label>{{ $t("object.lineStreet") }}*</ion-label>
+      <ion-label>{{ $t("object.routeCode") }}</ion-label>
       <ion-input
-        @ionChange="setObjectParam('lineStreet', $event.target.value)"
-        :value="objectParams.lineStreet"
+        @ionInput="setObjectParam('routeCode', $event.target.value)"
+        :value="objectParams.routeCode"
         class="ion-text-right"
-        required
+      ></ion-input>
+    </ion-item>
+    <ion-item :disabled="isLoading">
+      <ion-label>{{ $t("object.routeName") }}</ion-label>
+      <ion-input
+        @ionInput="setObjectParam('routeName', $event.target.value)"
+        :value="objectParams.routeName"
+        class="ion-text-right"
       ></ion-input>
     </ion-item>
     <ion-item :disabled="isLoading">
       <ion-label>{{ $t("object.chainage") }}*</ion-label>
       <ion-input
-        @ionChange="setObjectParam('chainage', $event.target.value)"
+        @ionInput="setObjectParam('chainage', $event.target.value)"
         type="number"
         step="any"
         :value="objectParams.chainage"
@@ -125,9 +133,22 @@
     <ion-item :disabled="isLoading">
       <ion-label>{{ $t("object.coords") }}</ion-label>
       <ion-input
-        readonly
-        :value="newObjectCoords"
+        slot="end"
+        type="number"
+        step="any"
+        :value="objectParams.coords.latitude"
         class="ion-text-right"
+        placeholder="Latitude"
+        @ionInput="setObjectCoord('latitude', $event.target.value)"
+      ></ion-input>
+      <ion-input
+        slot="end"
+        type="number"
+        step="any"
+        :value="objectParams.coords.longitude"
+        class="ion-text-right"
+        placeholder="Longitude"
+        @ionInput="setObjectCoord('longitude', $event.target.value)"
       ></ion-input>
       <ion-button
         @click="getLocation"
@@ -143,7 +164,7 @@
     <ion-item :disabled="isLoading">
       <ion-label>{{ $t("object.spanLength") }}*</ion-label>
       <ion-input
-        @ionChange="setObjectParam('spanLength', $event.target.value)"
+        @ionInput="setObjectParam('spanLength', $event.target.value)"
         type="number"
         step="any"
         :value="objectParams.spanLength"
@@ -151,29 +172,21 @@
         required
       ></ion-input>
     </ion-item>
-    <ion-item v-if="errorSuperstructure" color="danger">
-      <ion-label>{{ $t("pleaseChooseOption") }}</ion-label>
-    </ion-item>
     <ion-item :disabled="isLoading">
-      <ion-label>{{ $t("object.superstructures.name") }}*</ion-label>
-      <ion-select
-        :value="objectParams.superstructure"
-        @ionChange="setObjectParam('superstructure', $event.target.value)"
-        :placeholder="$t('pleasechoose')"
-        interface="popover"
-      >
-        <ion-select-option
-          v-for="(type, key) in objectOptions.superstructures.data"
-          :key="key"
-          :value="key"
-          >{{ $t("object.superstructures.data." + key) }}</ion-select-option
-        >
-      </ion-select>
+      <ion-label>{{ $t("object.width") }}*</ion-label>
+      <ion-input
+        @ionInput="setObjectParam('width', $event.target.value)"
+        type="number"
+        step="any"
+        :value="objectParams.width"
+        class="ion-text-right"
+        required
+      ></ion-input>
     </ion-item>
     <ion-item :disabled="isLoading">
       <ion-label>{{ $t("object.trafficRoutes") }}</ion-label>
       <ion-input
-        @ionChange="setObjectParam('trafficRoutes', $event.target.value)"
+        @ionInput="setObjectParam('trafficRoutes', $event.target.value)"
         type="number"
         :value="objectParams.trafficRoutes"
         class="ion-text-right"
@@ -182,7 +195,7 @@
     <ion-item :disabled="isLoading">
       <ion-label>{{ $t("object.shortDescription") }}*</ion-label>
       <ion-textarea
-        @ionChange="setObjectParam('shortDescription', $event.target.value)"
+        @ionInput="setObjectParam('shortDescription', $event.target.value)"
         :value="objectParams.shortDescription"
         class="ion-text-right"
         required
@@ -294,21 +307,30 @@ export default defineComponent({
     const getLocation = function() {
       Geolocation.getCurrentPosition()
         .then((position) => {
-          setObjectParam("coords", position.coords);
+          setObjectParam("coords", {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
         })
         .catch((error) => {
           console.error(error);
         });
     };
 
-    // define coords getter
-    const newObjectCoords = computed(function() {
+    // define coords setter
+    const setObjectCoord = function(key, value) {
+      let commitPath = "";
       if (routeName === "NewObject") {
-        return store.getters["objectParams/getNewParamsCoords"];
+        commitPath = "objectParams/setNewParamCoord";
       } else if (routeName === "EditObject") {
-        return store.getters["objectParams/getEditParamsCoords"];
+        commitPath = "objectParams/setEditParamCoord";
       }
-    });
+
+      store.commit(commitPath, {
+        key: key,
+        value: value != "" ? parseFloat(value) : null,
+      });
+    };
 
     // missing fields errors
     const errorID = ref(false);
@@ -316,7 +338,6 @@ export default defineComponent({
     const errorType = ref(false);
     const errorSystem = ref(false);
     const errorCrossSectionShape = ref(false);
-    const errorSuperstructure = ref(false);
 
     // define next function
     const next = async function() {
@@ -324,25 +345,23 @@ export default defineComponent({
       if (routeName === "NewObject") {
         const objectExists = await store.dispatch("objectParams/exists");
         errorID.value = objectExists;
-        errorMaterial.value = objectParams.value.material == null;
-        errorType.value = objectParams.value.type == null;
-        errorSystem.value = objectParams.value.system == null;
-        errorCrossSectionShape.value =
-          objectParams.value.crossSectionShape == null;
-        errorSuperstructure.value = objectParams.value.superstructure == null;
-
-        if (
-          !errorID.value &&
-          !errorMaterial.value &&
-          !errorType.value &&
-          !errorSystem.value &&
-          !errorSuperstructure.value &&
-          !errorCrossSectionShape.value
-        ) {
-          emit("next");
-        }
       } else {
         errorID.value = false;
+      }
+
+      errorMaterial.value = objectParams.value.material == null;
+      errorType.value = objectParams.value.type == null;
+      errorSystem.value = objectParams.value.system == null;
+      errorCrossSectionShape.value =
+        objectParams.value.crossSectionShape == null;
+
+      if (
+        !errorID.value &&
+        !errorMaterial.value &&
+        !errorType.value &&
+        !errorSystem.value &&
+        !errorCrossSectionShape.value
+      ) {
         emit("next");
       }
       store.commit("objectParams/setIsLoading", false);
@@ -354,7 +373,6 @@ export default defineComponent({
       objectParams,
       setObjectParam,
       getLocation,
-      newObjectCoords,
       isLoading,
       routeName,
       next,
@@ -363,7 +381,7 @@ export default defineComponent({
       errorType,
       errorSystem,
       errorCrossSectionShape,
-      errorSuperstructure,
+      setObjectCoord,
     };
   },
 });

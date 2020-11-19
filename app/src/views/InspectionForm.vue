@@ -4,7 +4,11 @@
       <ion-toolbar color="primary">
         <ion-buttons slot="start">
           <ion-button
-            @click="$router.push({ name: 'Object' })"
+            @click="
+              $router.push({
+                name: $route.name === 'NewInspection' ? 'Object' : 'Inspection',
+              })
+            "
             :aria-label="$t('back')"
             :title="$t('back')"
           >
@@ -28,8 +32,11 @@
           >
             <ion-col size-md="6" size-lg="6" size-xs="12">
               <h1>{{ $t("inspectionData") }}</h1>
+              <ion-item v-if="errorInspector" color="danger">
+                <ion-label>{{ $t("pleaseChooseOption") }}</ion-label>
+              </ion-item>
               <ion-item :disabled="isLoading">
-                <ion-label>{{ $t("inspection.inspector") }}</ion-label>
+                <ion-label>{{ $t("inspection.inspector") }}*</ion-label>
                 <ion-select
                   :value="inspectionParams.inspector"
                   @ionChange="
@@ -37,6 +44,7 @@
                   "
                   :placeholder="$t('pleasechoose')"
                   interface="popover"
+                  aria-required="required"
                 >
                   <ion-select-option
                     v-for="user in users"
@@ -46,35 +54,35 @@
                   >
                 </ion-select>
               </ion-item>
+              <ion-item v-if="errorDate" color="danger">
+                <ion-label>{{ $t("dateAssigned") }}</ion-label>
+              </ion-item>
               <ion-item :disabled="isLoading">
-                <ion-label>{{ $t("inspection.date") }}</ion-label>
+                <ion-label>{{ $t("inspection.date") }}*</ion-label>
                 <ion-input
                   @ionChange="setInspectionParam('date', $event.target.value)"
                   type="date"
                   :value="inspectionParams.date"
                   class="ion-text-right"
+                  required
                 ></ion-input>
               </ion-item>
+              <ion-item v-if="errorType" color="danger">
+                <ion-label>{{ $t("pleaseChooseOption") }}</ion-label>
+              </ion-item>
               <ion-item :disabled="isLoading">
-                <ion-label>{{
-                  $t("inspection.inspectionTypes.name")
-                }}</ion-label>
+                <ion-label>{{ $t("inspection.types.name") }}*</ion-label>
                 <ion-select
-                  :value="inspectionParams.inspectionType"
-                  @ionChange="
-                    setInspectionParam('inspectionType', $event.target.value)
-                  "
+                  :value="inspectionParams.type"
+                  @ionChange="setInspectionParam('type', $event.target.value)"
                   :placeholder="$t('pleasechoose')"
                   interface="popover"
                 >
                   <ion-select-option
-                    v-for="(inspectionType, key) in inspectionOptions
-                      .inspectionTypes.data"
+                    v-for="(type, key) in inspectionOptions.types.data"
                     :key="key"
                     :value="key"
-                    >{{
-                      $t("inspection.inspectionTypes.data." + key)
-                    }}</ion-select-option
+                    >{{ $t("inspection.types.data." + key) }}</ion-select-option
                   >
                 </ion-select>
               </ion-item>
@@ -169,7 +177,7 @@ import {
   IonSpinner,
   toastController,
 } from "@ionic/vue";
-import { computed, defineComponent } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useStore } from "vuex";
 import { faFile } from "@fortawesome/free-solid-svg-icons";
@@ -215,9 +223,6 @@ export default defineComponent({
     // get current route name
     const routeName = router.currentRoute.value.name;
 
-    // load users
-    store.dispatch("loadUsers");
-
     // define users getter
     const users = computed(() => store.state.users);
 
@@ -227,6 +232,8 @@ export default defineComponent({
     const inspectionParams = computed(function() {
       if (routeName === "NewInspection") {
         return store.state.inspectionParams.newParams;
+      } else if (routeName === "EditInspection") {
+        return store.state.inspectionParams.editParams;
       }
     });
     // define object params setter
@@ -234,6 +241,8 @@ export default defineComponent({
       let commitPath = "";
       if (routeName === "NewInspection") {
         commitPath = "inspectionParams/setNewParam";
+      } else if (routeName === "EditInspection") {
+        commitPath = "inspectionParams/setEditParam";
       }
       store.commit(commitPath, {
         key: key,
@@ -244,31 +253,53 @@ export default defineComponent({
     // get loading status from store
     const isLoading = computed(() => store.state.inspectionParams.isLoading);
 
+    // missing fields errors
+    const errorDate = ref(false);
+    const errorInspector = ref(false);
+    const errorType = ref(false);
+
     // save new object function
     const saveInspection = async function() {
       store.commit("inspectionParams/setIsLoading", true);
-      try {
-        let result;
-        if (routeName === "NewInspection") {
-          result = await store.dispatch("inspectionParams/saveNew");
-        }
-        const toast = await toastController.create({
-          message: i18n.t("inspectionSaved"),
-          duration: 2000,
-          color: "success",
-        });
-        toast.present();
-      } catch (error) {
-        console.error(error);
-        toastController
-          .create({
-            message: error,
+      const inspectionExists = await store.dispatch(
+        "inspectionParams/exists",
+        routeName
+      );
+      errorDate.value = inspectionExists;
+
+      errorInspector.value = inspectionParams.value.inspector == null;
+      errorType.value = inspectionParams.value.type == null;
+
+      if (!errorDate.value && !errorInspector.value && !errorType.value) {
+        try {
+          let result;
+          if (routeName === "NewInspection") {
+            result = await store.dispatch("inspectionParams/saveNew");
+          } else if (routeName === "EditInspection") {
+            result = await store.dispatch("inspectionParams/saveEdit");
+          }
+          const toast = await toastController.create({
+            message: i18n.t("inspectionSaved"),
             duration: 2000,
-            color: "danger",
-          })
-          .then((toast) => {
-            toast.present();
+            color: "success",
           });
+          toast.present();
+          router.push({
+            name: "Inspection",
+            params: { oid: result.oid, idate: result.idate },
+          });
+        } catch (error) {
+          console.error(error);
+          toastController
+            .create({
+              message: error,
+              duration: 2000,
+              color: "danger",
+            })
+            .then((toast) => {
+              toast.present();
+            });
+        }
       }
       store.commit("inspectionParams/setIsLoading", false);
     };
@@ -282,6 +313,9 @@ export default defineComponent({
       users,
       saveInspection,
       arrowBack,
+      errorDate,
+      errorInspector,
+      errorType,
     };
   },
 });

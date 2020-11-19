@@ -24,12 +24,59 @@
           >
             <ion-col size-md="6" size-lg="6" size-xs="12">
               <ion-row class="height-100">
-                <!--<ion-col size-lg="8" size-md="8" size-xs="12">
+                <ion-col size-lg="8" size-md="8" size-xs="12">
                   <ion-img
-                    v-if="objectPhotoUrl != null"
-                    :src="objectPhotoUrl"
+                    v-if="inspectionPhotoUrl != null"
+                    :src="inspectionPhotoUrl"
+                    :alt="$t('inspectionPhoto')"
                   ></ion-img>
-                  <p v-if="objectData != null">{{ objectData.shortDescription }}</p>
+                  <template v-if="inspectionData != null">
+                    <p v-if="inspectionData.additionalInfo != null">
+                      {{ inspectionData.additionalInfo }}
+                    </p>
+                    <ul>
+                      <li v-if="inspectionData.inspectorName != null">
+                        {{
+                          $t("inspection.inspector") +
+                            ": " +
+                            inspectionData.inspectorName
+                        }}
+                      </li>
+                      <li v-if="inspectionData.date != null">
+                        {{
+                          $t("inspection.date") +
+                            ": " +
+                            new Date(inspectionData.date).toLocaleDateString(
+                              "de-DE"
+                            )
+                        }}
+                      </li>
+                      <li v-if="inspectionData.type != null">
+                        {{
+                          $t("inspection.types.name") +
+                            ": " +
+                            $t("inspection.types.data." + inspectionData.type)
+                        }}
+                      </li>
+                      <li v-if="inspectionData.weather != null">
+                        {{
+                          $t("inspection.weather.name") +
+                            ": " +
+                            $t(
+                              "inspection.weather.data." +
+                                inspectionData.weather
+                            )
+                        }}
+                      </li>
+                      <li v-if="inspectionData.temperature != null">
+                        {{
+                          $t("inspection.temperature") +
+                            ": " +
+                            inspectionData.temperature
+                        }}
+                      </li>
+                    </ul>
+                  </template>
                 </ion-col>
                 <ion-col
                   size-lg="4"
@@ -66,17 +113,16 @@
                       size-md="12"
                       size-lg="12"
                       size-xs="6"
-                      v-if="$store.state.userRole === 'admin'"
                       class="tile flex-grow-1"
                     >
                       <ion-button
-                        @click="deleteObject"
+                        @click="deleteInspection"
                         class="flex-grow-1 width-100"
                         fill="outline"
                         expand="block"
                         :disabled="isDeleting"
-                        :aria-label="$t('deleteObject')"
-                        :title="$t('deleteObject')"
+                        :aria-label="$t('deleteInspection')"
+                        :title="$t('deleteInspection')"
                       >
                         <font-awesome-icon
                           v-if="!isDeleting"
@@ -87,10 +133,10 @@
                       </ion-button>
                       <div
                         class="text-overflow"
-                        v-html="$t('deleteObject')"
+                        v-html="$t('deleteInspection')"
                       ></div> </ion-col
                   ></ion-row>
-                </ion-col>-->
+                </ion-col>
               </ion-row>
             </ion-col>
           </ion-row>
@@ -136,7 +182,6 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import {
   faTrafficLight,
   faPlus,
-  faFile,
   faTools,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
@@ -152,7 +197,7 @@ export default defineComponent({
     IonRow,
     IonGrid,
     IonCol,
-    //IonImg,
+    IonImg,
     //IonItem,
     //IonSelect,
     //IonSelectOption,
@@ -162,10 +207,10 @@ export default defineComponent({
     IonIcon,
     //IonBackButton,
     IonButtons,
-    //IonSpinner,
+    IonSpinner,
     //IonSpinner,
     //IonTextarea,
-    //"font-awesome-icon": FontAwesomeIcon,
+    "font-awesome-icon": FontAwesomeIcon,
   },
   setup() {
     // Define store
@@ -186,22 +231,14 @@ export default defineComponent({
     // Array of buttons
     const buttons = reactive([
       {
-        name: "newInspection",
+        name: "newDamage",
         icon: faPlus,
         route: "NewInspection",
       },
       {
-        name: "generateReport",
-        icon: faFile,
-      },
-      {
-        name: "objectAssessment",
-        icon: faTrafficLight,
-      },
-      {
-        name: "editObject",
+        name: "editInspection",
         icon: faTools,
-        route: "EditObject",
+        route: "EditInspection",
       },
     ]);
 
@@ -214,10 +251,10 @@ export default defineComponent({
     };
 
     // delete function
-    const deleteObject = async function() {
+    const deleteInspection = async function() {
       const alert = await alertController.create({
-        header: i18n.t("deleteObject"),
-        message: i18n.t("confirmDelete"),
+        header: i18n.t("deleteInspection"),
+        message: i18n.t("confirmDeleteInspection"),
         buttons: [
           {
             text: i18n.t("cancel"),
@@ -227,26 +264,28 @@ export default defineComponent({
             text: i18n.t("delete"),
             handler: () => {
               isDeleting.value = true;
-              store.dispatch("object/delete").then(async (result) => {
-                isDeleting.value = false;
-                if (result.data.status === 200) {
+              store
+                .dispatch("inspection/delete")
+                .then(async (result) => {
+                  isDeleting.value = false;
                   const toast = await toastController.create({
-                    message: i18n.t("objectDeleted"),
+                    message: i18n.t("inspectionDeleted"),
                     duration: 2000,
                     color: "success",
                   });
                   toast.present();
-                  router.push({ name: "Home" });
-                } else {
-                  console.error(result);
+                  router.push({ name: "Object" });
+                })
+                .catch(async (error) => {
+                  isDeleting.value = false;
+                  console.error(error);
                   const toast = await toastController.create({
                     message: "Error",
                     duration: 2000,
                     color: "danger",
                   });
                   toast.present();
-                }
-              });
+                });
             },
           },
         ],
@@ -259,7 +298,7 @@ export default defineComponent({
       push,
       faTrafficLight,
       faTrash,
-      deleteObject,
+      deleteInspection,
       isDeleting,
       inspectionData,
       inspectionPhotoUrl,

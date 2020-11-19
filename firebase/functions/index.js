@@ -14,7 +14,17 @@ exports.setPermissions = functions.https.onCall(async (data, context) => {
 exports.deleteObject = functions.https.onCall(async (data, context) => {
     if (context.auth.token.role === "admin" && data.oid !== undefined) {
         await admin.firestore().collection("objects").doc(data.oid).delete();
-        await admin.storage().bucket().deleteFiles({prefix: `objects/${data.oid}/`});
+        await admin.storage().bucket().deleteFiles({ prefix: `objects/${data.oid}/` });
+        return { status: 200 };
+    } else {
+        return { status: 401 };
+    }
+});
+
+exports.deleteInspection = functions.https.onCall(async (data, context) => {
+    if (data.oid !== undefined && data.iid !== undefined) {
+        await admin.firestore().collection("objects").doc(data.oid).collection('inspections').doc(data.iid).delete();
+        await admin.storage().bucket().deleteFiles({ prefix: `objects/${data.oid}/inspections/${data.iid}` });
         return { status: 200 };
     } else {
         return { status: 401 };

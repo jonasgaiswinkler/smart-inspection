@@ -56,7 +56,7 @@
                     @click="
                       $router.push({
                         name: 'Inspection',
-                        params: { oid: inspection.oid, iid: inspection.iid },
+                        params: { oid: inspection.oid, idate: inspection.date },
                       })
                     "
                   >
@@ -152,79 +152,30 @@ export default defineComponent({
     // get current route name
     const routeName = router.currentRoute.value.name;
 
-    const getObjectInspections = async function(oid) {
-      const inspections = await db
-        .collection("objects")
-        .doc(oid)
-        .collection("inspections")
-        .get();
-
-      const list = [];
-      if (!inspections.empty) {
-        for (const inspection of inspections.docs) {
-          list.push({
-            iid: inspection.id,
-            oid: oid,
-            text:
-              i18n.t("inspection.name") +
-              " " +
-              inspection.id +
-              ": " +
-              inspection
-                .data()
-                .date.toDate()
-                .toLocaleDateString("de-DE"),
-          });
-        }
-        return list;
-      } else {
-        return null;
-      }
-    };
-
-    const getGlobalInspections = async function() {
-      const objects = await db.collection("objects").get();
-
-      const promises = [];
-      for (const object of objects.docs) {
-        promises.push(getObjectInspections(object.id));
-      }
-
-      const result = await Promise.all(promises);
-      return result
-        .filter(function(el) {
-          return el != null;
-        })
-        .flat(1);
-    };
-
     // get oid from store
     const oid = computed(() => store.state.object.oid);
 
     // define object list
-    const inspections = ref([]);
-    const list = [];
+    const list = computed(() => store.state.inspection.list);
 
     // define isLoading
-    const isLoading = ref(true);
+    const isLoading = computed(() => store.state.inspection.isLoading);
 
-    if (routeName === "InspectionListObject") {
-      getObjectInspections(oid.value).then((result) => {
-        inspections.value = result;
-        isLoading.value = false;
-      });
-    } else if (routeName === "InspectionListGlobal") {
-      getGlobalInspections().then((result) => {
-        inspections.value = result;
-        isLoading.value = false;
-      });
-    }
+    const searchValue = ref("");
 
     const search = function(value) {
-      inspections.value = list.filter((doc) =>
-        doc.id.includes(value.detail.value)
-      );
+      searchValue.value = value.detail.value;
     };
+
+    const inspections = computed(() => {
+      if (list.value == null) {
+        return [];
+      } else if (searchValue.value == "") {
+        return list.value;
+      } else {
+        return list.value.filter((doc) => doc.text.includes(searchValue.value));
+      }
+    });
 
     return {
       inspections,
@@ -233,6 +184,7 @@ export default defineComponent({
       arrowBack,
       routeName,
       oid,
+      list,
     };
   },
 });

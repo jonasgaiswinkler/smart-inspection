@@ -97,21 +97,11 @@ export default defineComponent({
     "object-documents": ObjectDocuments,
   },
   setup() {
-    // Define store
-    const store = useStore();
-
-    // define i18n
-    const i18n = useI18n();
-
     // define router
     const router = useRouter();
 
     // get current route name
     const routeName = router.currentRoute.value.name;
-
-    if (routeName === "EditObject") {
-      store.dispatch("objectParams/load");
-    }
 
     const selectedSegment = ref("objectData");
 

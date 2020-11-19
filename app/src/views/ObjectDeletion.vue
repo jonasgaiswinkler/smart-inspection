@@ -188,7 +188,7 @@ export default defineComponent({
     const deleteObject = async function(oid) {
       const alert = await alertController.create({
         header: i18n.t("deleteObject"),
-        message: i18n.t("confirmDelete", { oid: oid }),
+        message: i18n.t("confirmDeleteObject", { oid: oid }),
         buttons: [
           {
             text: i18n.t("cancel"),

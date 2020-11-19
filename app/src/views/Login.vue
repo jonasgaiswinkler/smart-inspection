@@ -22,6 +22,7 @@
               <ion-img
                 class="fh-logo"
                 src="./assets/icon/fh-logo.png"
+                alt="Logo FH"
               ></ion-img>
               <div class="ion-text-center">
                 <h3>{{ $t("welcomeText") }}</h3>

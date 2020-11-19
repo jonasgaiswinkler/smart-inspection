@@ -14,6 +14,9 @@ export default {
         setNewParam(state, payload) {
             state.newParams[payload.key] = payload.value;
         },
+        setNewParamCoord(state, payload) {
+            state.newParams.coords[payload.key] = payload.value;
+        },
         clearNewParams(state) {
             state.newParams = BridgeParams();
         },
@@ -22,6 +25,9 @@ export default {
         },
         setEditParam(state, payload) {
             state.editParams[payload.key] = payload.value;
+        },
+        setEditParamCoord(state, payload) {
+            state.editParams.coords[payload.key] = payload.value;
         },
         clearEditParams(state) {
             state.editParams = BridgeParams();
@@ -61,11 +67,12 @@ export default {
                 system: params.system,
                 crossSectionShape: params.crossSectionShape,
                 constructionYear: params.constructionYear != null ? parseInt(params.constructionYear) : null,
-                lineStreet: params.lineStreet,
+                routeCode: params.routeCode,
+                routeName: params.routeName,
                 chainage: params.chainage != null ? parseFloat(params.chainage) : null,
-                coords: params.coords != null ? new firebase.firestore.GeoPoint(params.coords.latitude, params.coords.longitude) : null,
+                coords: (params.coords.latitude != null && params.coords.longitude != null) ? new firebase.firestore.GeoPoint(params.coords.latitude, params.coords.longitude) : null,
                 spanLength: params.spanLength != null ? parseFloat(params.spanLength) : null,
-                superstructure: params.superstructure,
+                width: params.width != null ? parseFloat(params.width) : null,
                 trafficRoutes: params.trafficRoutes != null ? parseInt(params.trafficRoutes) : null,
                 shortDescription: params.shortDescription,
                 photo: params.photo != null ? "photo" + getFileExtension(params.photo) : null,
@@ -128,11 +135,12 @@ export default {
                 system: params.system,
                 crossSectionShape: params.crossSectionShape,
                 constructionYear: params.constructionYear != null ? parseInt(params.constructionYear) : null,
-                lineStreet: params.lineStreet,
+                routeCode: params.routeCode,
+                routeName: params.routeName,
                 chainage: params.chainage != null ? parseFloat(params.chainage) : null,
-                coords: params.coords != null ? new firebase.firestore.GeoPoint(params.coords.latitude, params.coords.longitude) : null,
+                coords: (params.coords.latitude != null && params.coords.longitude != null) ? new firebase.firestore.GeoPoint(params.coords.latitude, params.coords.longitude) : null,
                 spanLength: params.spanLength != null ? parseFloat(params.spanLength) : null,
-                superstructure: params.superstructure,
+                width: params.width != null ? parseFloat(params.width) : null,
                 trafficRoutes: params.trafficRoutes != null ? parseInt(params.trafficRoutes) : null,
                 shortDescription: params.shortDescription,
                 photo: params.photo != null ? "photo" + getFileExtension(params.photo) : null,
@@ -175,7 +183,7 @@ export default {
 
             await Promise.all(promises);
             context.commit("clearNewParams");
-            await context.dispatch("object/load", null, {root: true});
+            await context.dispatch("object/load", null, { root: true });
             return { status: 200, oid: oid };
         },
         async load(context) {
@@ -199,11 +207,18 @@ export default {
             editParams.system = params.system;
             editParams.crossSectionShape = params.crossSectionShape;
             editParams.constructionYear = params.constructionYear != null ? params.constructionYear.toString() : null;
-            editParams.lineStreet = params.lineStreet;
+            editParams.routeCode = params.routeCode;
+            editParams.routeName = params.routeName;
             editParams.chainage = params.chainage != null ? params.chainage.toString() : null;
-            editParams.coords = params.coords;
+            editParams.coords = params.coords != null ? {
+                latitude: params.coords.latitude,
+                longitude: params.coords.longitude
+            } : {
+                    latitude: null,
+                    longitude: null
+                };
             editParams.spanLength = params.spanLength != null ? params.spanLength.toString() : null;
-            editParams.superstructure = params.superstructure;
+            editParams.width = params.width != null ? params.width.toString() : null;
             editParams.trafficRoutes = params.trafficRoutes != null ? params.trafficRoutes.toString() : null;
             editParams.shortDescription = params.shortDescription;
             const promises = [];
@@ -255,11 +270,15 @@ function BridgeParams() {
         system: null,
         crossSectionShape: null,
         constructionYear: null,
-        lineStreet: null,
+        routeCode: null,
+        routeName: null,
         chainage: null,
-        coords: null,
+        coords: {
+            latitude: null,
+            longitude: null
+        },
         spanLength: null,
-        superstructure: null,
+        width: null,
         trafficRoutes: null,
         shortDescription: null,
         photo: null,

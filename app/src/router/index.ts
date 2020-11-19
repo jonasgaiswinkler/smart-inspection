@@ -69,9 +69,14 @@ const routes: Array<RouteRecordRaw> = [
     component: InspectionList,
   },
   {
-    path: "/object/:oid/inspection/:iid",
+    path: "/object/:oid/inspection/:idate",
     name: "Inspection",
     component: Inspection,
+  },
+  {
+    path: "/object/:oid/inspection/:idate/edit",
+    name: "EditInspection",
+    component: InspectionForm,
   },
   {
     path: "/settings",

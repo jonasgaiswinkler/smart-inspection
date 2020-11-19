@@ -79,30 +79,58 @@ router.beforeEach(async function(to, from, next) {
     if (to.name === "ObjectList") {
       store.dispatch("object/loadList");
     }
+    if (to.name === "InspectionListGlobal") {
+      store.dispatch("inspection/loadList", true);
+    }
 
     if (to.params.oid != undefined) {
+      let loadObject = { status: 200 };
       // @ts-ignore
       if (store.state.object.oid !== to.params.oid) {
         store.commit("object/setOid", to.params.oid);
-        const loadObject = await store.dispatch("object/load");
+        loadObject = await store.dispatch("object/load");
         if (loadObject.status !== 200) {
           next({ name: "Home" });
-        } else {
-          if (
-            to.params.iid != undefined &&
-            // @ts-ignore
-            store.state.inspection.iid !== to.params.iid
-          ) {
-            store.commit("inspection/setIid", to.params.iid);
-            const loadInspection = await store.dispatch("inspection/load");
+        }
+      }
+
+      if (to.name === "InspectionListObject") {
+        store.dispatch("inspection/loadList", false);
+      }
+
+      if (to.name === "EditObject") {
+        await store.dispatch("objectParams/load");
+      }
+
+      if (to.name === "NewInspection") {
+        await store.dispatch("loadUsers");
+      }
+
+      if (to.params.idate != undefined && loadObject.status == 200) {
+        let loadInspection = { status: 200 };
+        // @ts-ignore
+        if (store.state.inspection.idate !== to.params.idate) {
+          loadInspection = await store.dispatch(
+            "inspection/search",
+            to.params.idate
+          );
+          if (loadInspection.status === 200) {
+            loadInspection = await store.dispatch("inspection/load");
             if (loadInspection.status !== 200) {
               next({ name: "Home" });
-            } else {
-              next();
             }
           } else {
-            next();
+            next({ name: "Home" });
           }
+        }
+
+        if (to.name === "EditInspection") {
+          await store.dispatch("loadUsers");
+          await store.dispatch("inspectionParams/load");
+        }
+
+        if (loadInspection.status == 200) {
+          next();
         }
       } else {
         next();
