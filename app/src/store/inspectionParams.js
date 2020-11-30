@@ -36,7 +36,7 @@ export default {
     actions: {
         async saveNew(context) {
             const oid = context.rootState.object.oid;
-            if (oid !== null) {
+            if (oid != null) {
                 const params = context.state.newParams;
                 const db = firebase.firestore();
                 const storage = firebase.storage();
@@ -69,7 +69,6 @@ export default {
         async saveEdit(context) {
             const params = context.state.editParams;
             const oid = context.rootState.object.oid;
-            console.log(context.rootState);
             const iid = context.rootState.inspection.iid;
             const db = firebase.firestore();
 

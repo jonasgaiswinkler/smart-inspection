@@ -15,12 +15,19 @@
     "objectData": "Objektdaten",
     "objectDocuments": "Objektdokumente",
     "inspectionData": "Inspektionsdaten",
+    "damageData": "Schadens-/Mangeldaten",
+    "damageState": "Schadens-/Mangelzustand",
+    "damageList": "Schadens-/Mangelverzeichnis",
     "plans": "Pläne/technische Unterlagen",
     "additionalResources": "Detailpläne/zusätzliche Unterlagen/Bescheide",
     "generateReport": "Bericht generieren/&#8203;freigeben",
+    "assessment": "Bewertung",
     "objectAssessment": "Objektbewertung",
+    "componentAssessment": "Bauteilbewertung",
     "editObject": "Objekt bearbeiten",
     "editInspection": "Inspektion bearbeiten",
+    "editDamage": "Schaden/Mangel bearbeiten",
+    "updateDamageState": "Schadens-/Mangelzustand aktualisieren",
     "deleteObject": "Objekt löschen",
     "restoreObject": "Objekt wiederherstellen",
     "objectRestored": "Objekt wiederhergestellt",
@@ -55,8 +62,14 @@
     "requestedDeletions": "Beantragte Löschungen",
     "inspectionSaved": "Inspektion gespeichert!",
     "inspectionDeleted": "Inspektion gelöscht!",
+    "damageSaved": "Mangel/Schaden gespeichert!",
+    "deleteDamage": "Mangel/Schaden löschen",
+    "confirmDeleteDamage": "Bitte bestätigen Sie die Löschung des Mangels/Schadens.",
+    "damageDeleted": "Mangel/Schaden gelöscht!",
     "objectPhoto": "Objektfoto",
     "inspectionPhoto": "Inspektionsfoto",
+    "measurements": "Abmessungen",
+    "locationOnlyNecessary": "Verortung ist nur notwendig, wenn kein Plan vorhanden ist.",
     "object": {
         "name": "Objekt",
         "id": "ID",
@@ -145,5 +158,65 @@
         "temperature": "Temperatur [°C]",
         "photo": "Übersichtsfoto",
         "additionalInfo": "Zusätzliche Infos"
+    },
+    "damage": {
+        "name": "Schaden/Mangel",
+        "allocations": {
+            "name": "Zuordnung",
+            "data": {
+                "substructure": {
+                    "name": "Unterbau",
+                    "data": {
+                        "pile": "Pfeiler",
+                        "flatFoundation": "Flachgründung",
+                        "abutment": "Widerlager",
+                        "pileFoundation": "Pfahlgründung",
+                        "embankmentSurface": "Böschungspflaster"
+                    }
+                },
+                "superstructure": {
+                    "name": "Überbau"
+                },
+                "equipment": {
+                    "name": "Ausrüstung",
+                    "data": {
+                        "bearing": "Lager",
+                        "sealing": "Abdichtung",
+                        "trafficSurface": "Fahrbahnbelag",
+                        "drainage": "Entwässerung",
+                        "edgeBeam": "Randbalken",
+                        "vehicleRestraintSystem": "Fahrzeugrückhaltesystem",
+                        "railing": "Geländer",
+                        "noiseProtection": "Lärmschutz"
+                    }
+                }
+            }
+        },
+        "component": "Bauteil",
+        "componentDetail": "Bauteil detailliert",
+        "type": "Schadens-/Mangelart",
+        "typeDetail": "Art detailliert",
+        "location": "Verortung",
+        "cause": "Ursache",
+        "description": "Beschreibung",
+        "photo": "Foto",
+        "measurement1": "Abmessung 1",
+        "measurement1Sm": "Abm. 1",
+        "measurement2": "Abmessung 2",
+        "measurement2Sm": "Abm. 2",
+        "limit": "Grenzwert für {msg}",
+        "limitSm": "Grenzw.",
+        "impact": "Auswirkungen",
+        "categories": {
+            "name": "Kategorisierung",
+            "data": {
+                "immediateActionLimit": "Soforteingriffsschwelle",
+                "interventionLimit": "Eingriffsschwelle",
+                "alertLimit": "Auslösewert"
+            }
+        },
+        "action": "Maßnahmen",
+        "period": "Überprüfungsfristen",
+        "additionalInfo": "Sonstige Informationen"
     }
 }

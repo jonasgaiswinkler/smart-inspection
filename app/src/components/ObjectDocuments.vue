@@ -1,5 +1,5 @@
 <template>
-  <h1>{{ $t("objectDocuments") }}</h1>
+  <h2>{{ $t("objectDocuments") }}</h2>
   <h4>{{ $t("plans") }}</h4>
   <file-input
     :disabled="isLoading"

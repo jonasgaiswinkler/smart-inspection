@@ -9,7 +9,11 @@ import ObjectDeletion from "@/views/ObjectDeletion.vue";
 import InspectionForm from "@/views/InspectionForm.vue";
 import Inspection from "@/views/Inspection.vue";
 import InspectionList from "@/views/InspectionList.vue";
+import DamageForm from "@/views/DamageForm.vue";
+import Damage from "@/views/Damage.vue";
+import DamageList from "@/views/DamageList.vue";
 import Settings from "@/views/Settings.vue";
+import AssessmentForm from "@/views/AssessmentForm.vue";
 
 const base = "/smart-inspection/";
 
@@ -54,6 +58,11 @@ const routes: Array<RouteRecordRaw> = [
     component: Object,
   },
   {
+    path: "/object/:oid/damage-list",
+    name: "DamageListObject",
+    component: DamageList,
+  },
+  {
     path: "/object/:oid/edit",
     name: "EditObject",
     component: ObjectForm,
@@ -77,6 +86,36 @@ const routes: Array<RouteRecordRaw> = [
     path: "/object/:oid/inspection/:idate/edit",
     name: "EditInspection",
     component: InspectionForm,
+  },
+  {
+    path: "/object/:oid/inspection/:idate/damage-list",
+    name: "DamageListInspection",
+    component: DamageList,
+  },
+  {
+    path: "/object/:oid/inspection/:idate/new-damage",
+    name: "NewDamage",
+    component: DamageForm,
+  },
+  {
+    path: "/object/:oid/inspection/:idate/assessment",
+    name: "AssessmentForm",
+    component: AssessmentForm,
+  },
+  {
+    path: "/object/:oid/inspection/:idate/damage/:did",
+    name: "Damage",
+    component: Damage,
+  },
+  {
+    path: "/object/:oid/inspection/:idate/damage/:did/edit",
+    name: "EditDamage",
+    component: DamageForm,
+  },
+  {
+    path: "/object/:oid/inspection/:idate/damage/:did/update",
+    name: "UpdateDamage",
+    component: DamageForm,
   },
   {
     path: "/settings",

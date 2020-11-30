@@ -38,12 +38,13 @@
                         v-if="button.iconSecondary !== undefined"
                         :icon="faSquare"
                         style="color: white"
-                        transform="down-5 right-5 shrink-9"
+                        transform="down-5 right-5 shrink-8"
                       />
                       <font-awesome-icon
                         v-if="button.iconSecondary !== undefined"
                         :icon="button.iconSecondary"
-                        transform="down-5 right-5 shrink-20 rotate-180"
+                        transform="down-5 right-3 shrink-20 rotate-180"
+                        fixed-width
                       />
                     </font-awesome-layers>
                   </ion-button>

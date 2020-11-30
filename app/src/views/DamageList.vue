@@ -6,7 +6,8 @@
           <ion-button
             @click="
               $router.push({
-                name: routeName == 'InspectionListObject' ? 'Object' : 'Home',
+                name:
+                  $route.name == 'DamageListObject' ? 'Object' : 'Inspection',
               })
             "
             :aria-label="$t('back')"
@@ -42,26 +43,58 @@
                 type="indeterminate"
               ></ion-progress-bar>
               <ion-list>
-                <template
-                  v-for="(inspection, i) in inspections"
-                  :key="inspection.oid + '/' + inspection.iid"
-                >
-                  <ion-list-header
-                    v-if="i == 0 || inspections[i - 1].oid != inspection.oid"
+                <ion-list-header>
+                  <ion-grid>
+                    <ion-row>
+                      <ion-col size="4">
+                        {{ $t("damage.name") }}
+                      </ion-col>
+                      <ion-col size="4">
+                        {{ $t("damage.allocations.name") }}
+                      </ion-col>
+                      <ion-col size="4">
+                        {{ $t("damage.type") }}
+                      </ion-col>
+                    </ion-row></ion-grid
                   >
-                    {{ $t("object.name") + ": " + inspection.oid }}
-                  </ion-list-header>
+                </ion-list-header>
+                <template v-for="damage in damages" :key="damage.did">
                   <ion-item
                     button
                     @click="
                       $router.push({
-                        name: 'Inspection',
-                        params: { oid: inspection.oid, idate: inspection.date },
+                        name: 'Damage',
+                        params: {
+                          oid: oid,
+                          idate:
+                            $route.name == 'DamageListObject'
+                              ? currentIdate
+                              : idate,
+                          did: damage.did,
+                        },
                         query: { from: $route.name },
                       })
                     "
                   >
-                    <ion-label>{{ inspection.text }}</ion-label>
+                    <ion-grid>
+                      <ion-row>
+                        <ion-col size="4">
+                          <ion-label>#{{ damage.did }}</ion-label>
+                        </ion-col>
+                        <ion-col size="4">
+                          <ion-label>{{
+                            $t(
+                              "damage.allocations.data." +
+                                damage.allocation +
+                                ".name"
+                            )
+                          }}</ion-label>
+                        </ion-col>
+                        <ion-col size="4">
+                          <ion-label>{{ damage.type }}</ion-label>
+                        </ion-col>
+                      </ion-row></ion-grid
+                    >
                   </ion-item>
                 </template>
               </ion-list>
@@ -150,17 +183,17 @@ export default defineComponent({
     // define router
     const router = useRouter();
 
-    // get current route name
-    const routeName = router.currentRoute.value.name;
-
     // get oid from store
     const oid = computed(() => store.state.object.oid);
 
+    // get idate
+    const idate = computed(() => store.state.inspection.idate);
+
     // define object list
-    const list = computed(() => store.state.inspection.list);
+    const list = computed(() => store.state.damage.list);
 
     // define isLoading
-    const isLoading = computed(() => store.state.inspection.isLoading);
+    const isLoading = computed(() => store.state.damage.isLoading);
 
     const searchValue = ref("");
 
@@ -168,24 +201,27 @@ export default defineComponent({
       searchValue.value = value.detail.value;
     };
 
-    const inspections = computed(() => {
+    const damages = computed(() => {
       if (list.value == null) {
         return [];
       } else if (searchValue.value == "") {
         return list.value;
       } else {
-        return list.value.filter((doc) => doc.text.includes(searchValue.value));
+        return list.value.filter((doc) => doc.did.includes(searchValue.value));
       }
     });
 
+    const currentIdate = computed(() => store.state.damage.currentIdate);
+
     return {
-      inspections,
+      damages,
       isLoading,
       search,
       arrowBack,
-      routeName,
       oid,
       list,
+      idate,
+      currentIdate,
     };
   },
 });

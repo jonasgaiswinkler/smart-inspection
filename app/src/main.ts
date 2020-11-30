@@ -98,6 +98,13 @@ router.beforeEach(async function(to, from, next) {
         store.dispatch("inspection/loadList", false);
       }
 
+      if (
+        to.name === "DamageListObject" ||
+        to.name === "DamageListInspection"
+      ) {
+        store.dispatch("damage/loadList");
+      }
+
       if (to.name === "EditObject") {
         await store.dispatch("objectParams/load");
       }
@@ -129,7 +136,32 @@ router.beforeEach(async function(to, from, next) {
           await store.dispatch("inspectionParams/load");
         }
 
-        if (loadInspection.status == 200) {
+        if (to.params.did != undefined && loadInspection.status == 200) {
+          let loadDamage = {
+            status: 200,
+          };
+          // @ts-ignore
+          if (store.state.damage.did !== to.params.did) {
+            store.commit("damage/setDid", to.params.did);
+            loadDamage = await store.dispatch("damage/load");
+            if (loadDamage.status !== 200) {
+              next({
+                name: "Home",
+              });
+            }
+          }
+
+          if (to.name === "EditDamage") {
+            await store.dispatch("damageParams/loadEdit");
+          }
+          if (to.name === "UpdateDamage") {
+            await store.dispatch("damageParams/loadUpdate");
+          }
+
+          if (loadDamage.status === 200) {
+            next();
+          }
+        } else {
           next();
         }
       } else {

@@ -1,6 +1,6 @@
 <template>
   <form class="height-100" id="objectdata" @submit.stop.prevent="next">
-    <h1>{{ $t("objectData") }}</h1>
+    <h2>{{ $t("objectData") }}</h2>
     <ion-item v-if="errorID" color="danger">
       <ion-label>{{ $t("idAssigned") }}</ion-label>
     </ion-item>
@@ -278,6 +278,7 @@ export default defineComponent({
 
     // define object options
     const objectOptions = messages.object;
+
     // define object params from store
     const objectParams = computed(function() {
       if (routeName === "NewObject") {
@@ -286,6 +287,7 @@ export default defineComponent({
         return store.state.objectParams.editParams;
       }
     });
+
     // define object params setter
     const setObjectParam = function(key, value) {
       let commitPath = "";

@@ -4,7 +4,12 @@
       <ion-toolbar color="primary">
         <ion-buttons slot="start">
           <ion-button
-            @click="$router.push({ name: 'Object' })"
+            @click="
+              $router.push({
+                name:
+                  $route.query.from != undefined ? $route.query.from : 'Object',
+              })
+            "
             :aria-label="$t('back')"
             :title="$t('back')"
           >
@@ -102,10 +107,26 @@
                         :aria-label="$t(button.name)"
                         :title="$t(button.name)"
                       >
-                        <font-awesome-icon
-                          class="button-icon"
-                          :icon="button.icon"
-                        ></font-awesome-icon>
+                        <font-awesome-layers class="button-icon">
+                          <font-awesome-icon
+                            class="height-100 width-100"
+                            :icon="button.icon"
+                          />
+                          <font-awesome-icon
+                            v-if="button.iconSecondary !== undefined"
+                            :icon="faSquare"
+                            style="color: white"
+                            transform="down-5 right-5 shrink-8"
+                            class="height-100 width-100"
+                          />
+                          <font-awesome-icon
+                            v-if="button.iconSecondary !== undefined"
+                            :icon="button.iconSecondary"
+                            transform="down-5 right-5 shrink-20 rotate-180"
+                            class="height-100 width-100"
+                            fixed-width
+                          />
+                        </font-awesome-layers>
                       </ion-button>
                       <div class="text-overflow" v-html="$t(button.name)"></div>
                     </ion-col>
@@ -178,12 +199,18 @@ import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { Plugins } from "@capacitor/core";
 import { arrowBack } from "ionicons/icons";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import {
+  FontAwesomeIcon,
+  FontAwesomeLayers,
+} from "@fortawesome/vue-fontawesome";
 import {
   faTrafficLight,
   faPlus,
   faTools,
   faTrash,
+  faSquare,
+  faList,
+  faExclamationTriangle,
 } from "@fortawesome/free-solid-svg-icons";
 
 export default defineComponent({
@@ -211,6 +238,7 @@ export default defineComponent({
     //IonSpinner,
     //IonTextarea,
     "font-awesome-icon": FontAwesomeIcon,
+    "font-awesome-layers": FontAwesomeLayers,
   },
   setup() {
     // Define store
@@ -222,10 +250,10 @@ export default defineComponent({
     // define i18n
     const i18n = useI18n();
 
-    // define object data
+    // define inspection data
     const inspectionData = computed(() => store.state.inspection.data);
 
-    // define object photo url
+    // define inspection photo url
     const inspectionPhotoUrl = computed(() => store.state.inspection.photoUrl);
 
     // Array of buttons
@@ -233,7 +261,18 @@ export default defineComponent({
       {
         name: "newDamage",
         icon: faPlus,
-        route: "NewInspection",
+        route: "NewDamage",
+      },
+      {
+        name: "damageList",
+        icon: faList,
+        iconSecondary: faExclamationTriangle,
+        route: "DamageListInspection",
+      },
+      {
+        name: "assessment",
+        icon: faTrafficLight,
+        route: "AssessmentForm",
       },
       {
         name: "editInspection",
@@ -303,6 +342,7 @@ export default defineComponent({
       inspectionData,
       inspectionPhotoUrl,
       arrowBack,
+      faSquare,
     };
   },
 });

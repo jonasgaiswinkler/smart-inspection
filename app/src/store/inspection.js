@@ -60,9 +60,9 @@ export default {
             const iid = context.state.iid;
             if (iid != null) {
                 const db = firebase.firestore();
-                const objectDoc = await db.collection("objects").doc(oid).collection("inspections").doc(iid).get();
-                if (objectDoc.exists) {
-                    const data = { ...objectDoc.data() };
+                const inspectionDoc = await db.collection("objects").doc(oid).collection("inspections").doc(iid).get();
+                if (inspectionDoc.exists) {
+                    const data = { ...inspectionDoc.data() };
                     data.inspectorName = (await db.collection("users").doc(data.inspector).get()).data().name;
                     context.commit("setData", data);
                     if (data != undefined && data.photo != null) {
@@ -99,7 +99,7 @@ export default {
                 if (result.data.status === 200) {
                     context.dispatch("loadList");
                 } else {
-                    throw new Error("Error in deleting object!");
+                    throw new Error("Error in deleting inspection!");
                 }
             }
         }

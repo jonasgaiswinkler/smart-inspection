@@ -4,5 +4,6 @@ module.exports = {
     themeColor: '#005096',
     msTileColor: '#005096'
   },
-  publicPath: '/smart-inspection/'
+  publicPath: '/smart-inspection/',
+  //lintOnSave: process.env.NODE_ENV !== 'production'
 }

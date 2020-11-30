@@ -52,7 +52,11 @@
                   button
                   :disabled="doc.deletionRequested"
                   @click="
-                    $router.push({ name: 'Object', params: { oid: doc.id } })
+                    $router.push({
+                      name: 'Object',
+                      params: { oid: doc.id },
+                      query: { from: $route.name },
+                    })
                   "
                 >
                   <div style="float: left; width: 18%">

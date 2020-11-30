@@ -12,6 +12,10 @@ import object from "./object";
 import inspectionParams from "./inspectionParams.js";
 // @ts-ignore
 import inspection from "./inspection.js";
+// @ts-ignore
+import damageParams from "./damageParams.js";
+// @ts-ignore
+import damage from "./damage.js";
 
 export default createStore({
   state: {
@@ -76,5 +80,7 @@ export default createStore({
     object: object,
     inspectionParams: inspectionParams,
     inspection: inspection,
+    damageParams: damageParams,
+    damage: damage,
   },
 });
