@@ -1,5 +1,5 @@
 <template>
-  <form class="height-100" id="damagedata" @submit.stop.prevent="next">
+  <form class="height-100" id="damagedata" @submit.stop.prevent="submit">
     <h2>{{ $t("damageState") }}</h2>
     <file-input
       :disabled="isLoading"
@@ -77,12 +77,11 @@
       ></ion-input>
     </ion-item>
     <ion-item :disabled="isLoading">
-      <ion-label>{{ $t("damage.additionalInfo") }}*</ion-label>
+      <ion-label>{{ $t("damage.additionalInfo") }}</ion-label>
       <ion-textarea
         @ionInput="setDamageParam('additionalInfo', $event.target.value)"
         :value="damageParams.additionalInfo"
         class="ion-text-right"
-        required
       ></ion-textarea>
     </ion-item>
     <ion-row class="ion-align-items-center">
@@ -98,7 +97,7 @@
       <ion-spinner v-if="isLoading" color="primary"></ion-spinner>
       <ion-button
         :disabled="isLoading"
-        @click="$emit('save')"
+        type="submit"
         class="ion-margin-start"
         :aria-label="$t('save')"
         :title="$t('save')"
@@ -203,6 +202,10 @@ export default defineComponent({
       });
     };
 
+    const submit = function() {
+      emit("save");
+    };
+
     return {
       locate,
       routeName,
@@ -210,6 +213,7 @@ export default defineComponent({
       setDamageParam,
       damageOptions,
       isLoading,
+      submit,
     };
   },
 });

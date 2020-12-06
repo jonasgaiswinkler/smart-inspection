@@ -51,7 +51,7 @@
                   <div class="ion-hide-sm-down text-overflow">
                     <h1>{{ $t(button.name) }}</h1>
                   </div>
-                  <div class="ion-hide-md-up text-overflow">
+                  <div class="ion-hide-sm-up text-overflow">
                     {{ $t(button.name) }}
                   </div>
                 </div>
@@ -87,7 +87,7 @@
                   <div class="ion-hide-sm-down text-overflow">
                     <h1>{{ $t("requestedDeletions") }}</h1>
                   </div>
-                  <div class="ion-hide-md-up text-overflow">
+                  <div class="ion-hide-sm-up text-overflow">
                     {{ $t("requestedDeletions") }}
                   </div>
                 </div>

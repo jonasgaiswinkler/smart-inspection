@@ -13,6 +13,7 @@ export default {
         photoUrl: null,
         list: null,
         isLoading: false,
+        assessment: null,
     }),
     mutations: {
         setIid(state, iid) {
@@ -30,12 +31,16 @@ export default {
         clear(state) {
             state.data = null;
             state.photoUrl = null;
+            state.assessment = null;
         },
         setList(state, list) {
             state.list = list;
         },
         setIsLoading(state, isLoading) {
             state.isLoading = isLoading;
+        },
+        setAssessment(state, assessment) {
+            state.assessment = assessment;
         },
     },
     getters: {
@@ -70,6 +75,19 @@ export default {
                         const photoUrl = await storage.ref("/objects/" + oid + "/inspections/" + iid + "/" + data.photo).getDownloadURL();
                         context.commit("setPhotoUrl", photoUrl);
                     }
+                    const assessmentDoc = await db
+                        .collection("objects")
+                        .doc(oid)
+                        .collection("assessments")
+                        .doc(iid)
+                        .get();
+                    if (assessmentDoc.exists) {
+                        context.commit(
+                            "setAssessment",
+                            assessmentDoc.data()
+                        );
+                    }
+                    context.commit("assessmentParams/setParams", assessmentDoc.data(), { root: true });
                     return { status: 200 }
                 } else {
                     return { status: 404 };
@@ -123,6 +141,7 @@ const getObjectInspections = async function (oid) {
                 oid: oid,
                 date: inspection.data().date,
                 text: new Date(inspection.data().date).toLocaleDateString("de-DE"),
+                ...inspection.data()
             });
         }
         return list;

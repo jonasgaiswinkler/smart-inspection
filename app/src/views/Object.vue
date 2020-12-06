@@ -122,6 +122,82 @@
                       </li>
                     </ul>
                   </template>
+                  <ion-grid v-if="currentAssessment != null">
+                    <ion-row>
+                      <ion-col size="6"></ion-col>
+                      <ion-col size="6" class="ion-text-center">{{
+                        new Date(currentAssessment.date).toLocaleDateString(
+                          "de-DE"
+                        )
+                      }}</ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col size="6">{{
+                        $t("assessments.substructure")
+                      }}</ion-col>
+                      <ion-col
+                        size="6"
+                        class="ion-text-center"
+                        style="border-width: 2px; border-style: solid;"
+                        :style="{
+                          'border-color': getAssessmentColor(
+                            currentAssessment.substructure
+                          ),
+                        }"
+                      >
+                        {{ currentAssessment.substructure }}
+                      </ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col size="6">{{
+                        $t("assessments.superstructure")
+                      }}</ion-col>
+                      <ion-col
+                        size="6"
+                        class="ion-text-center"
+                        style="border-width: 2px; border-style: solid;"
+                        :style="{
+                          'border-color': getAssessmentColor(
+                            currentAssessment.superstructure
+                          ),
+                        }"
+                      >
+                        {{ currentAssessment.superstructure }}
+                      </ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col size="6">{{
+                        $t("assessments.equipment")
+                      }}</ion-col>
+                      <ion-col
+                        size="6"
+                        class="ion-text-center"
+                        style="border-width: 2px; border-style: solid;"
+                        :style="{
+                          'border-color': getAssessmentColor(
+                            currentAssessment.equipment
+                          ),
+                        }"
+                      >
+                        {{ currentAssessment.equipment }}
+                      </ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col size="6">{{ $t("assessments.object") }}</ion-col>
+                      <ion-col
+                        size="6"
+                        class="ion-text-center"
+                        style="border-width: 2px; border-style: solid;"
+                        :style="{
+                          'border-color': getAssessmentColor(
+                            currentAssessment.object
+                          ),
+                        }"
+                      >
+                        {{ currentAssessment.object }}
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
                 </ion-col>
                 <ion-col
                   size-lg="4"
@@ -337,6 +413,10 @@ export default defineComponent({
       router.push({ name: route });
     };
 
+    const currentAssessment = computed(
+      () => store.state.object.currentAssessment
+    );
+
     // request deletion function
     const requestObjectDeletion = async function() {
       const alert = await alertController.create({
@@ -377,6 +457,22 @@ export default defineComponent({
       return alert.present();
     };
 
+    const getAssessmentColor = function(grade) {
+      if (grade === 1) {
+        return "#92d050";
+      } else if (grade === 2) {
+        return "#ffff00";
+      } else if (grade === 3) {
+        return "#ffc000";
+      } else if (grade === 4) {
+        return "#ff6600";
+      } else if (grade === 5) {
+        return "#ff0000";
+      } else {
+        return null;
+      }
+    };
+
     return {
       buttons,
       push,
@@ -388,6 +484,8 @@ export default defineComponent({
       oid,
       arrowBack,
       faSquare,
+      currentAssessment,
+      getAssessmentColor,
     };
   },
 });

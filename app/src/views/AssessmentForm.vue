@@ -23,7 +23,7 @@
       <form
         class="height-100"
         id="assessment-form"
-        @submit.stop.prevent="saveInspection"
+        @submit.stop.prevent="saveAssessment"
       >
         <ion-grid class="height-100">
           <ion-row
@@ -31,7 +31,41 @@
             class="ion-justify-content-center height-100"
           >
             <ion-col size-md="6" size-lg="6" size-xs="12">
-              <h1>{{ $t("objectAssessment") }}</h1>
+              <h1>{{ $t("assessments.substructure") }}</h1>
+              <assessment-input
+                :value="assessmentParams.substructure"
+                @input="setAssessmentParam('substructure', $event)"
+                :error="errorSubstructure"
+              ></assessment-input>
+              <h1>{{ $t("assessments.superstructure") }}</h1>
+              <assessment-input
+                :value="assessmentParams.superstructure"
+                @input="setAssessmentParam('superstructure', $event)"
+                :error="errorSuperstructure"
+              ></assessment-input>
+              <h1>{{ $t("assessments.equipment") }}</h1>
+              <assessment-input
+                :value="assessmentParams.equipment"
+                @input="setAssessmentParam('equipment', $event)"
+                :error="errorEquipment"
+              ></assessment-input>
+              <h1>{{ $t("assessments.object") }}</h1>
+              <assessment-input
+                :value="assessmentParams.object"
+                @input="setAssessmentParam('object', $event)"
+                :error="errorObject"
+              ></assessment-input>
+              <ion-row class="ion-float-right ion-align-items-center">
+                <ion-spinner v-if="isLoading" color="primary"></ion-spinner>
+                <ion-button
+                  :disabled="isLoading"
+                  class="ion-margin-start"
+                  type="submit"
+                  :aria-label="$t('save')"
+                  :title="$t('save')"
+                  >{{ $t("save") }}</ion-button
+                >
+              </ion-row>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -69,7 +103,7 @@ import { useStore } from "vuex";
 import { faFile } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "vue-router";
 import { arrowBack } from "ionicons/icons";
-import FileInput from "@/components/FileInput";
+import AssessmentInput from "@/components/AssessmentInput";
 
 export default defineComponent({
   name: "AssessmentForm",
@@ -92,7 +126,8 @@ export default defineComponent({
     //IonBackButton,
     IonButtons,
     // IonTextarea,
-    // IonSpinner,
+    IonSpinner,
+    "assessment-input": AssessmentInput,
   },
   setup() {
     // Define store
@@ -125,54 +160,56 @@ export default defineComponent({
       });
     };
 
+    // missing fields errors
+    const errorSubstructure = ref(false);
+    const errorSuperstructure = ref(false);
+    const errorEquipment = ref(false);
+    const errorObject = ref(false);
+
     // get loading status from store
     const isLoading = computed(() => store.state.assessmentParams.isLoading);
 
-    // save new object function
-    // const saveInspection = async function() {
-    //   store.commit("inspectionParams/setIsLoading", true);
-    //   const inspectionExists = await store.dispatch(
-    //     "inspectionParams/exists",
-    //     routeName
-    //   );
-    //   errorDate.value = inspectionExists;
+    const saveAssessment = async function() {
+      store.commit("assessmentParams/setIsLoading", true);
 
-    //   errorInspector.value = inspectionParams.value.inspector == null;
-    //   errorType.value = inspectionParams.value.type == null;
+      errorSubstructure.value = assessmentParams.value.substructure == null;
+      errorSuperstructure.value = assessmentParams.value.superstructure == null;
+      errorEquipment.value = assessmentParams.value.equipment == null;
+      errorObject.value = assessmentParams.value.object == null;
 
-    //   if (!errorDate.value && !errorInspector.value && !errorType.value) {
-    //     try {
-    //       let result;
-    //       if (routeName === "NewInspection") {
-    //         result = await store.dispatch("inspectionParams/saveNew");
-    //       } else if (routeName === "EditInspection") {
-    //         result = await store.dispatch("inspectionParams/saveEdit");
-    //       }
-    //       const toast = await toastController.create({
-    //         message: i18n.t("inspectionSaved"),
-    //         duration: 2000,
-    //         color: "success",
-    //       });
-    //       toast.present();
-    //       router.push({
-    //         name: "Inspection",
-    //         params: { oid: result.oid, idate: result.idate },
-    //       });
-    //     } catch (error) {
-    //       console.error(error);
-    //       toastController
-    //         .create({
-    //           message: error,
-    //           duration: 2000,
-    //           color: "danger",
-    //         })
-    //         .then((toast) => {
-    //           toast.present();
-    //         });
-    //     }
-    //   }
-    //   store.commit("inspectionParams/setIsLoading", false);
-    // };
+      if (
+        !errorSubstructure.value &&
+        !errorSuperstructure.value &&
+        !errorEquipment.value &&
+        !errorObject.value
+      ) {
+        try {
+          const result = await store.dispatch("assessmentParams/save");
+          const toast = await toastController.create({
+            message: i18n.t("assessmentSaved"),
+            duration: 2000,
+            color: "success",
+          });
+          toast.present();
+          router.push({
+            name: "Inspection",
+            params: { oid: result.oid, idate: result.idate },
+          });
+        } catch (error) {
+          console.error(error);
+          toastController
+            .create({
+              message: error,
+              duration: 2000,
+              color: "danger",
+            })
+            .then((toast) => {
+              toast.present();
+            });
+        }
+      }
+      store.commit("assessmentParams/setIsLoading", false);
+    };
 
     return {
       faFile,
@@ -182,6 +219,11 @@ export default defineComponent({
       isLoading,
       users,
       arrowBack,
+      saveAssessment,
+      errorSubstructure,
+      errorSuperstructure,
+      errorEquipment,
+      errorObject,
     };
   },
 });

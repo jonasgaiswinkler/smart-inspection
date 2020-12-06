@@ -194,7 +194,13 @@ export default defineComponent({
           email: email.value,
           password: password.value,
         });
-        router.push({ name: "Home" });
+        if (store.state.redirect !== null) {
+          const path = store.state.redirect;
+          store.commit("setRedirect", null);
+          router.push(path);
+        } else {
+          router.push({ name: "Home" });
+        }
       }
     };
 

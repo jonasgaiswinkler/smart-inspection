@@ -82,6 +82,72 @@
                       </li>
                     </ul>
                   </template>
+                  <ion-grid v-if="assessment != null">
+                    <ion-row>
+                      <ion-col size="6">{{
+                        $t("assessments.substructure")
+                      }}</ion-col>
+                      <ion-col
+                        size="6"
+                        class="ion-text-center"
+                        style="border-width: 2px; border-style: solid;"
+                        :style="{
+                          'border-color': getAssessmentColor(
+                            assessment.substructure
+                          ),
+                        }"
+                      >
+                        {{ assessment.substructure }}
+                      </ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col size="6">{{
+                        $t("assessments.superstructure")
+                      }}</ion-col>
+                      <ion-col
+                        size="6"
+                        class="ion-text-center"
+                        style="border-width: 2px; border-style: solid;"
+                        :style="{
+                          'border-color': getAssessmentColor(
+                            assessment.superstructure
+                          ),
+                        }"
+                      >
+                        {{ assessment.superstructure }}
+                      </ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col size="6">{{
+                        $t("assessments.equipment")
+                      }}</ion-col>
+                      <ion-col
+                        size="6"
+                        class="ion-text-center"
+                        style="border-width: 2px; border-style: solid;"
+                        :style="{
+                          'border-color': getAssessmentColor(
+                            assessment.equipment
+                          ),
+                        }"
+                      >
+                        {{ assessment.equipment }}
+                      </ion-col>
+                    </ion-row>
+                    <ion-row>
+                      <ion-col size="6">{{ $t("assessments.object") }}</ion-col>
+                      <ion-col
+                        size="6"
+                        class="ion-text-center"
+                        style="border-width: 2px; border-style: solid;"
+                        :style="{
+                          'border-color': getAssessmentColor(assessment.object),
+                        }"
+                      >
+                        {{ assessment.object }}
+                      </ion-col>
+                    </ion-row>
+                  </ion-grid>
                 </ion-col>
                 <ion-col
                   size-lg="4"
@@ -289,6 +355,8 @@ export default defineComponent({
       router.push({ name: route });
     };
 
+    const assessment = computed(() => store.state.inspection.assessment);
+
     // delete function
     const deleteInspection = async function() {
       const alert = await alertController.create({
@@ -332,6 +400,22 @@ export default defineComponent({
       return alert.present();
     };
 
+    const getAssessmentColor = function(grade) {
+      if (grade === 1) {
+        return "#92d050";
+      } else if (grade === 2) {
+        return "#ffff00";
+      } else if (grade === 3) {
+        return "#ffc000";
+      } else if (grade === 4) {
+        return "#ff6600";
+      } else if (grade === 5) {
+        return "#ff0000";
+      } else {
+        return null;
+      }
+    };
+
     return {
       buttons,
       push,
@@ -343,6 +427,8 @@ export default defineComponent({
       inspectionPhotoUrl,
       arrowBack,
       faSquare,
+      assessment,
+      getAssessmentColor,
     };
   },
 });

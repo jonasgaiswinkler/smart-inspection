@@ -86,11 +86,15 @@ export default {
                 context.commit('setCurrentIdate', inspections.docs[inspections.size - 1].data().date);
                 const list = [];
                 for (const doc of damageSnap.docs) {
-                    const damage = { ...doc.data() };
-                    damage.did = doc.id;
-                    list.push(damage);
+                    list.push(async function () {
+                        const states = await doc.ref.collection('states').orderBy('date', 'desc').limit(1).get();
+                        const damage = { ...doc.data() };
+                        damage.state = states.docs[0].data();
+                        damage.did = doc.id;
+                        return damage;
+                    }());
                 }
-                context.commit('setList', list);
+                context.commit('setList', await Promise.all(list));
             }
             context.commit("setIsLoading", false);
         },
@@ -105,6 +109,17 @@ export default {
                 } else {
                     throw new Error("Error in deleting damage!");
                 }
+            }
+        },
+        async fix(context, isFixed) {
+            const oid = context.rootState.object.oid;
+            const did = context.state.did;
+            if (oid != null && did != null) {
+                const db = firebase.firestore();
+                await db.collection('objects').doc(oid).collection('damages').doc(did).update({
+                    isFixed: isFixed
+                });
+                context.dispatch("load");
             }
         }
     }

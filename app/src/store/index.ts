@@ -16,6 +16,8 @@ import inspection from "./inspection.js";
 import damageParams from "./damageParams.js";
 // @ts-ignore
 import damage from "./damage.js";
+// @ts-ignore
+import assessmentParams from "./assessmentParams.js";
 
 export default createStore({
   state: {
@@ -23,6 +25,7 @@ export default createStore({
     users: null,
     userRole: null,
     isLoading: true,
+    redirect: null,
   },
   mutations: {
     setUser(state, user) {
@@ -36,6 +39,9 @@ export default createStore({
     },
     setIsLoading(state, isLoading) {
       state.isLoading = isLoading;
+    },
+    setRedirect(state, redirect) {
+      state.redirect = redirect;
     },
   },
   actions: {
@@ -82,5 +88,6 @@ export default createStore({
     inspection: inspection,
     damageParams: damageParams,
     damage: damage,
+    assessmentParams: assessmentParams,
   },
 });

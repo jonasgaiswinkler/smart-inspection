@@ -32,15 +32,10 @@
             <ion-col size-md="6" size-lg="6" size-xs="12">
               <ion-row class="height-100">
                 <ion-col size-lg="8" size-md="8" size-xs="12">
-                  <ion-img
-                    v-if="
-                      currentDamageState != null &&
-                        currentDamageState.photoUrl != null
-                    "
-                    :src="currentDamageState.photoUrl"
-                    :alt="$t('inspectionPhoto')"
-                  ></ion-img>
                   <template v-if="damageData != null">
+                    <h1 v-if="damageData.isFixed === true">
+                      {{ $t("thisDamageIsFixed") }}
+                    </h1>
                     <p v-if="damageData.description != null">
                       {{ damageData.description }}
                     </p>
@@ -185,6 +180,14 @@
                       }}
                     </li>
                   </ul>
+                  <ion-img
+                    v-if="
+                      currentDamageState != null &&
+                        currentDamageState.photoUrl != null
+                    "
+                    :src="currentDamageState.photoUrl"
+                    :alt="$t('inspectionPhoto')"
+                  ></ion-img>
                 </ion-col>
                 <ion-col
                   size-lg="4"
@@ -206,7 +209,7 @@
                         class="flex-grow-1 width-100"
                         fill="outline"
                         expand="block"
-                        :disabled="isDeleting"
+                        :disabled="isDeleting || isFixing"
                         :aria-label="$t(button.name)"
                         :title="$t(button.name)"
                       >
@@ -222,13 +225,66 @@
                       size-lg="12"
                       size-xs="6"
                       class="tile flex-grow-1"
+                      v-if="damageData != null && damageData.isFixed !== true"
+                    >
+                      <ion-button
+                        @click="fixDamage"
+                        class="flex-grow-1 width-100"
+                        fill="outline"
+                        expand="block"
+                        :disabled="isFixing"
+                        :aria-label="$t('fixDamage')"
+                        :title="$t('fixDamage')"
+                      >
+                        <font-awesome-icon
+                          v-if="!isFixing"
+                          class="button-icon"
+                          :icon="faCheck"
+                        ></font-awesome-icon>
+                        <ion-spinner v-if="isFixing"></ion-spinner>
+                      </ion-button>
+                      <div class="text-overflow" v-html="$t('fixDamage')"></div>
+                    </ion-col>
+                    <ion-col
+                      size-md="12"
+                      size-lg="12"
+                      size-xs="6"
+                      class="tile flex-grow-1"
+                      v-if="damageData != null && damageData.isFixed === true"
+                    >
+                      <ion-button
+                        @click="unfixDamage"
+                        class="flex-grow-1 width-100"
+                        fill="outline"
+                        expand="block"
+                        :disabled="isFixing"
+                        :aria-label="$t('unfixDamage')"
+                        :title="$t('unfixDamage')"
+                      >
+                        <font-awesome-icon
+                          v-if="!isFixing"
+                          class="button-icon"
+                          :icon="faTimes"
+                        ></font-awesome-icon>
+                        <ion-spinner v-if="isFixing"></ion-spinner>
+                      </ion-button>
+                      <div
+                        class="text-overflow"
+                        v-html="$t('unfixDamage')"
+                      ></div>
+                    </ion-col>
+                    <ion-col
+                      size-md="12"
+                      size-lg="12"
+                      size-xs="6"
+                      class="tile flex-grow-1"
                     >
                       <ion-button
                         @click="deleteDamage"
                         class="flex-grow-1 width-100"
                         fill="outline"
                         expand="block"
-                        :disabled="isDeleting"
+                        :disabled="isDeleting || isFixing"
                         :aria-label="$t('deleteDamage')"
                         :title="$t('deleteDamage')"
                       >
@@ -287,7 +343,13 @@ import { useRouter } from "vue-router";
 import { Plugins } from "@capacitor/core";
 import { arrowBack } from "ionicons/icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faEdit, faTools, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEdit,
+  faTools,
+  faTrash,
+  faCheck,
+  faTimes,
+} from "@fortawesome/free-solid-svg-icons";
 
 export default defineComponent({
   name: "Damage",
@@ -300,7 +362,7 @@ export default defineComponent({
     IonRow,
     IonGrid,
     IonCol,
-    IonImg,
+    //IonImg,
     //IonItem,
     //IonSelect,
     //IonSelectOption,
@@ -366,8 +428,9 @@ export default defineComponent({
       },
     ]);
 
-    // define is deleting
+    // define is loading
     const isDeleting = ref(false);
+    const isFixing = ref(false);
 
     // push function
     const push = (route) => {
@@ -432,11 +495,68 @@ export default defineComponent({
       return alert.present();
     };
 
+    // fix function
+    const fixDamage = async function() {
+      isFixing.value = true;
+      store
+        .dispatch("damage/fix", true)
+        .then(async (result) => {
+          isFixing.value = false;
+          const toast = await toastController.create({
+            message: i18n.t("damageFixed"),
+            duration: 2000,
+            color: "success",
+          });
+          toast.present();
+        })
+        .catch(async (error) => {
+          isFixing.value = false;
+          console.error(error);
+          const toast = await toastController.create({
+            message: "Error",
+            duration: 2000,
+            color: "danger",
+          });
+          toast.present();
+        });
+    };
+
+    // fix function
+    const unfixDamage = async function() {
+      isFixing.value = true;
+      store
+        .dispatch("damage/fix", false)
+        .then(async (result) => {
+          isFixing.value = false;
+          const toast = await toastController.create({
+            message: i18n.t("damageUnfixed"),
+            duration: 2000,
+            color: "success",
+          });
+          toast.present();
+        })
+        .catch(async (error) => {
+          isFixing.value = false;
+          console.error(error);
+          const toast = await toastController.create({
+            message: "Error",
+            duration: 2000,
+            color: "danger",
+          });
+          toast.present();
+        });
+    };
+
     return {
       buttons,
       push,
+      faCheck,
       faTrash,
+      faTimes,
       deleteDamage,
+      fixDamage,
+      unfixDamage,
+      isFixing,
       isDeleting,
       damageData,
       currentDamageState,

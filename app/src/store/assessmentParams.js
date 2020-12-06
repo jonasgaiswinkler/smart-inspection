@@ -35,13 +35,17 @@ export default {
                 const params = context.state.params;
                 const db = firebase.firestore();
 
-                const assessmentDoc = db.collection("objects").doc(oid).collection("assessments").doc();
+                const assessmentDoc = db.collection("objects").doc(oid).collection("assessments").doc(iid);
                 await assessmentDoc.set({
+                    substructure: params.substructure,
+                    superstructure: params.superstructure,
+                    equipment: params.equipment,
                     object: params.object,
                     date: idate
                 });
 
                 context.commit("clearParams");
+                await context.dispatch("object/load", null, { root: true });
                 await context.dispatch("inspection/load", null, { root: true });
                 return { status: 200, oid: oid, iid: iid, idate: idate };
             } else {
@@ -56,6 +60,9 @@ export default {
 
 function Assessment() {
     return {
+        substructure: null,
+        superstructure: null,
+        equipment: null,
         object: null,
     }
 }

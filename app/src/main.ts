@@ -72,6 +72,7 @@ router.beforeEach(async function(to, from, next) {
 
   // redirect user depending on auth state
   if (store.state.user === null && to.name != "Login") {
+    store.commit("setRedirect", to.path);
     next({ name: "Login" });
   } else if (store.state.user !== null && to.name == "Login") {
     next({ name: "Home" });

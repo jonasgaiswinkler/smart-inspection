@@ -13,6 +13,7 @@ export default {
     requestedObjects: null,
     list: null,
     isLoading: false,
+    currentAssessment: null,
   }),
   mutations: {
     setOid(state: any, oid: string) {
@@ -27,6 +28,7 @@ export default {
     clear(state: any) {
       state.data = null;
       state.photoUrl = null;
+      state.currentAssessment = null;
     },
     setRequestedObjects(state: any, requestedObjects: any) {
       state.requestedObjects = requestedObjects;
@@ -36,6 +38,9 @@ export default {
     },
     setIsLoading(state: any, isLoading: any) {
       state.isLoading = isLoading;
+    },
+    setCurrentAssessment(state: any, currentAssessment: any) {
+      state.currentAssessment = currentAssessment;
     },
   },
   getters: {},
@@ -61,6 +66,19 @@ export default {
               .ref("/objects/" + oid + "/" + data.photo)
               .getDownloadURL();
             context.commit("setPhotoUrl", photoUrl);
+          }
+          const assessmentDoc = await db
+            .collection("objects")
+            .doc(oid)
+            .collection("assessments")
+            .orderBy("date", "desc")
+            .limit(1)
+            .get();
+          if (!assessmentDoc.empty) {
+            context.commit(
+              "setCurrentAssessment",
+              assessmentDoc.docs[0].data()
+            );
           }
           return { status: 200 };
         } else {
