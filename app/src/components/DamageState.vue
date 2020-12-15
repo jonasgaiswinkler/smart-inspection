@@ -89,9 +89,9 @@
         v-if="$route.name == 'NewDamage'"
         @click="$emit('back')"
         fill="clear"
-        :aria-label="$t('damageData')"
-        :title="$t('damageData')"
-        >{{ $t("damageData") }}</ion-button
+        :aria-label="$t(previousPage)"
+        :title="$t(previousPage)"
+        >{{ $t(previousPage) }}</ion-button
       >
       <div style="flex: 1"></div>
       <ion-spinner v-if="isLoading" color="primary"></ion-spinner>
@@ -159,6 +159,7 @@ export default defineComponent({
     "measurement-input": MeasurementInput,
   },
   emits: ["back", "save"],
+  props: ["previousPage"],
   setup(props, { emit }) {
     // Define store
     const store = useStore();

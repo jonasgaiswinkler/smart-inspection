@@ -6,4 +6,14 @@ module.exports = {
   },
   publicPath: '/smart-inspection/',
   //lintOnSave: process.env.NODE_ENV !== 'production'
+  configureWebpack: {
+    module: {
+      rules: [
+        {
+          test: /pdf\.worker(\.min)?\.js$/,
+          loader: 'file-loader'
+        },
+      ],
+    },
+  },
 }

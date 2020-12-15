@@ -27,13 +27,70 @@
           <ion-col size-md="6" size-lg="6" size-xs="12">
             <damage-data
               v-if="
-                (selectedSegment === 'damageData' &&
-                  routeName != 'UpdateDamage') ||
-                  routeName == 'EditDamage'
+                selectedSegment === 'damageData' &&
+                  routeName != 'UpdateDamage'
               "
-              @next="selectedSegment = 'damageState'"
-              @saveedit="saveDamage"
+              :nextPage="getNavigation('damageData').next"
+              @next="selectedSegment = getNavigation('damageData').next"
+              
             ></damage-data>
+            <damage-location
+              v-if="
+                selectedSegment == 'damageGroundPlan' &&
+                  object.groundPlan != null
+              "
+              @next="selectedSegment = getNavigation('damageGroundPlan').next"
+              @back="
+                selectedSegment = getNavigation('damageGroundPlan').previous
+              "
+              :nextPage="getNavigation('damageGroundPlan').next"
+              :previousPage="getNavigation('damageGroundPlan').previous"
+              name="damageGroundPlan"
+              objectParam="groundPlan"
+              damageParam="locationGroundPlan"
+              saveParam="imageGroundPlan"
+              @saveedit="saveDamage"
+            ></damage-location>
+            <damage-location
+              v-if="
+                selectedSegment == 'damageLongitudinalSection' &&
+                  object.longitudinalSection != null
+              "
+              @next="
+                selectedSegment = getNavigation('damageLongitudinalSection')
+                  .next
+              "
+              @back="
+                selectedSegment = getNavigation('damageLongitudinalSection')
+                  .previous
+              "
+              :nextPage="getNavigation('damageLongitudinalSection').next"
+              :previousPage="
+                getNavigation('damageLongitudinalSection').previous
+              "
+              name="damageLongitudinalSection"
+              objectParam="longitudinalSection"
+              damageParam="locationLongitudinalSection"
+              saveParam="imageLongitudinalSection"
+              @saveedit="saveDamage"
+            ></damage-location>
+            <damage-location
+              v-if="
+                selectedSegment == 'damageCrossSection' &&
+                  object.groundPlan != null
+              "
+              @next="selectedSegment = getNavigation('damageCrossSection').next"
+              @back="
+                selectedSegment = getNavigation('damageCrossSection').previous
+              "
+              :nextPage="getNavigation('damageCrossSection').next"
+              :previousPage="getNavigation('damageCrossSection').previous"
+              name="damageCrossSection"
+              objectParam="crossSection"
+              damageParam="locationCrossSection"
+              saveParam="imageCrossSection"
+              @saveedit="saveDamage"
+            ></damage-location>
             <damage-state
               v-if="
                 (selectedSegment === 'damageState' &&
@@ -41,7 +98,8 @@
                   routeName == 'UpdateDamage'
               "
               @save="saveDamage"
-              @back="selectedSegment = 'damageData'"
+              @back="selectedSegment = getNavigation('damageState').previous"
+              :previousPage="getNavigation('damageState').previous"
             ></damage-state>
           </ion-col>
         </ion-row>
@@ -80,6 +138,7 @@ import { useRouter } from "vue-router";
 import { Plugins } from "@capacitor/core";
 import { arrowBack } from "ionicons/icons";
 import DamageData from "@/components/DamageData.vue";
+import DamageLocation from "@/components/DamageLocation.vue";
 import DamageState from "@/components/DamageState.vue";
 
 export default defineComponent({
@@ -104,6 +163,7 @@ export default defineComponent({
     //IonSpinner,
     //IonTextarea
     "damage-data": DamageData,
+    "damage-location": DamageLocation,
     "damage-state": DamageState,
   },
   setup() {
@@ -119,7 +179,55 @@ export default defineComponent({
     // get current route name
     const routeName = router.currentRoute.value.name;
 
+    const object = computed(() => store.state.object.data);
+
     const selectedSegment = ref("damageData");
+
+    const getNavigation = function(segment) {
+      if (object.value != null) {
+        let segmentNumber;
+        if (segment === "damageData") {
+          segmentNumber = 1;
+        } else if (segment === "damageGroundPlan") {
+          segmentNumber = 2;
+        } else if (segment === "damageLongitudinalSection") {
+          segmentNumber = 3;
+        } else if (segment === "damageCrossSection") {
+          segmentNumber = 4;
+        } else if (segment === "damageState") {
+          segmentNumber = 6;
+        }
+
+        const result = {};
+        if (object.value.groundPlan != null && segmentNumber <= 1) {
+          result.next = "damageGroundPlan";
+        } else if (
+          object.value.longitudinalSection != null &&
+          segmentNumber <= 2
+        ) {
+          result.next = "damageLongitudinalSection";
+        } else if (object.value.crossSection != null && segmentNumber <= 3) {
+          result.next = "damageCrossSection";
+        } else {
+          result.next = "damageState";
+        }
+
+        if (object.value.crossSection != null && segmentNumber >= 5) {
+          result.previous = "damageCrossSection";
+        } else if (
+          object.value.longitudinalSection != null &&
+          segmentNumber >= 4
+        ) {
+          result.previous = "damageLongitudinalSection";
+        } else if (object.value.groundPlan != null && segmentNumber >= 3) {
+          result.previous = "damageGroundPlan";
+        } else {
+          result.previous = "damageData";
+        }
+
+        return result;
+      }
+    };
 
     const back = function() {
       router.push({
@@ -147,6 +255,7 @@ export default defineComponent({
           color: "success",
         });
         toast.present();
+        selectedSegment.value = "damageData";
         router.push({ name: "Damage", params: { did: result.did } });
       } catch (error) {
         console.error(error);
@@ -169,6 +278,8 @@ export default defineComponent({
       back,
       saveDamage,
       routeName,
+      getNavigation,
+      object,
     };
   },
 });

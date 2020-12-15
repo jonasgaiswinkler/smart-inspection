@@ -55,13 +55,32 @@ export default {
           .doc(oid)
           .get();
         if (objectDoc.exists) {
-          const data = objectDoc.data();
+          const data = { ...objectDoc.data() };
           if (data?.deletionRequested) {
             return { status: 401 };
           }
+
+          const storage = firebase.storage();
+
+          const getFile = async function(key: string) {
+            if (data[key] != null) {
+              const url = await storage
+                .ref("/objects/" + oid + "/" + data[key])
+                .getDownloadURL();
+              data[key + "Url"] = url;
+            } else {
+              data[key + "Url"] = null;
+            }
+          };
+
+          const promises = [];
+          promises.push(getFile("groundPlan"));
+          promises.push(getFile("longitudinalSection"));
+          promises.push(getFile("crossSection"));
+          await Promise.all(promises);
+
           context.commit("setData", data);
           if (data != undefined && data.photo != null) {
-            const storage = firebase.storage();
             const photoUrl = await storage
               .ref("/objects/" + oid + "/" + data.photo)
               .getDownloadURL();

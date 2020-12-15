@@ -54,6 +54,24 @@ export default {
                 const damageDoc = await damageRef.get();
                 if (damageDoc.exists) {
                     const data = { ...damageDoc.data() };
+                    const storage = firebase.storage();
+
+                    const getFile = async function (key, photoParam) {
+                        if (data[key] != null) {
+                            const url = await storage
+                                .ref("/objects/" + oid + "/damages/" + did + "/" + photoParam + ".png")
+                                .getDownloadURL();
+                            data[photoParam] = url;
+                        } else {
+                            data[photoParam] = null;
+                        }
+                    };
+
+                    const promises = [];
+                    promises.push(getFile("locationGroundPlan", "imageGroundPlan"));
+                    promises.push(getFile("locationLongitudinalSection", "imageLongitudinalSection"));
+                    promises.push(getFile("locationCrossSection", "imageCrossSection"));
+                    await Promise.all(promises);
                     context.commit("setData", data);
 
                     const stateSnap = await damageRef.collection('states').orderBy('date').get();

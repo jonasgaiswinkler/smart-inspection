@@ -76,6 +76,10 @@
     "measurements": "Abmessungen",
     "locationOnlyNecessary": "Verortung ist nur notwendig, wenn kein Plan vorhanden ist.",
     "filter": "Filter",
+    "placeholderLocation": "{name}verortung",
+    "damageGroundPlan": "Grundrissverortung",
+    "damageLongitudinalSection": "Längsschnittsverortung",
+    "damageCrossSection": "Querschnittsverortung",
     "assessmentSaved": "Bewertung gespeichert!",
     "object": {
         "name": "Objekt",
@@ -201,7 +205,24 @@
         },
         "component": "Bauteil",
         "componentDetail": "Bauteil detailliert",
-        "type": "Schadens-/Mangelart",
+        "types": {
+            "name": "Schadens-/Mangelart",
+            "data": {
+                "deformation": "Verformung",
+                "crack": "Riss",
+                "rust": "Rost",
+                "wetSpot": "nasse Stelle",
+                "leaching": "Auswaschung",
+                "exposedReinforcement": "freiliegende Bewehrung",
+                "weathering": "Verwitterung",
+                "spalling": "Abplatzung",
+                "gap": "Lücke",
+                "orientation": "Ausrichtung",
+                "tightness": "Dichtheit",
+                "corrosion": "Korrosion",
+                "otherDamage": "sonstiger Schaden"
+            }
+        },
         "typeDetail": "Art detailliert",
         "location": "Verortung",
         "cause": "Ursache",

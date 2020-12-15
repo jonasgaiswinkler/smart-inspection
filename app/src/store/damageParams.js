@@ -66,6 +66,9 @@ export default {
                     type: params.type,
                     typeDetail: params.typeDetail,
                     location: params.location,
+                    locationGroundPlan: params.locationGroundPlan,
+                    locationLongitudinalSection: params.locationLongitudinalSection,
+                    locationCrossSection: params.locationCrossSection,
                     cause: params.cause,
                     description: params.description,
                     measurement1Name: params.measurement1.name != null ? params.measurement1.name : null,
@@ -93,6 +96,21 @@ export default {
                     promises.push(photoPromise);
                 }
 
+                if (params.imageGroundPlan != null) {
+                    const imageGroundPlanPromise = storage.ref("/objects/" + oid + "/damages/" + damageDoc.id + "/imageGroundPlan.png").put(params.imageGroundPlan);
+                    promises.push(imageGroundPlanPromise);
+                }
+
+                if (params.imageLongitudinalSection != null) {
+                    const imageLongitudinalSectionPromise = storage.ref("/objects/" + oid + "/damages/" + damageDoc.id + "/imageLongitudinalSection.png").put(params.imageLongitudinalSection);
+                    promises.push(imageLongitudinalSectionPromise);
+                }
+
+                if (params.imageCrossSection != null) {
+                    const imageCrossSectionPromise = storage.ref("/objects/" + oid + "/damages/" + damageDoc.id + "/imageCrossSection.png").put(params.imageCrossSection);
+                    promises.push(imageCrossSectionPromise);
+                }
+
                 await Promise.all(promises);
                 context.commit("clearNewParams");
                 return { status: 200, oid: oid, iid: iid, did: damageDoc.id };
@@ -114,10 +132,18 @@ export default {
                 type: params.type,
                 typeDetail: params.typeDetail,
                 location: params.location,
+                locationGroundPlan: params.locationGroundPlan,
+                locationLongitudinalSection: params.locationLongitudinalSection,
+                locationCrossSection: params.locationCrossSection,
                 cause: params.cause,
                 description: params.description
             }
             await damageDoc.update(payload);
+            const promises = [];
+            promises.push(editFileEdit(context, oid, did, params.imageGroundPlan, "imageGroundPlan", "locationGroundPlan"));
+            promises.push(editFileEdit(context, oid, did, params.imageLongitudinalSection, "imageLongitudinalSection", "locationLongitudinalSection"));
+            promises.push(editFileEdit(context, oid, did, params.imageCrossSection, "imageCrossSection", "locationCrossSection"));
+            await Promise.all(promises);
             context.commit("clearNewParams");
             await context.dispatch("damage/load", null, { root: true });
             return { status: 200, oid: oid, did: did };
@@ -152,14 +178,14 @@ export default {
                 payloadMeasurement.measurement2Name = params.measurement2.name
             }
             await damageDoc.set(payloadMeasurement, { merge: true });
-            await editFile(context, oid, iid, did, params.photo, "photo")
+            await editFileUpdate(context, oid, iid, did, params.photo, "photo")
             context.commit("clearUpdateParams");
             await context.dispatch("damage/load", null, { root: true });
             return { status: 200, oid: oid, iid: iid, did: did };
         },
         async loadEdit(context) {
             const params = context.rootState.damage.data;
-            const editParams = params;
+            const editParams = Object.assign(DamageParams(), params);
             context.commit("setEditParams", editParams);
         },
         async loadUpdate(context) {
@@ -224,6 +250,12 @@ function DamageParams() {
         type: null,
         typeDetail: null,
         location: null,
+        locationGroundPlan: null,
+        imageGroundPlan: null,
+        locationLongitudinalSection: null,
+        imageLongitudinalSection: null,
+        locationCrossSection: null,
+        imageCrossSection: null,
         cause: null,
         description: null,
         photo: null,
@@ -242,7 +274,7 @@ function getFileExtension(file) {
     return file.name.match(/\.[0-9a-z]+$/i)[0];
 }
 
-async function editFile(context, oid, iid, did, file, paramName) {
+async function editFileUpdate(context, oid, iid, did, file, paramName) {
     const storage = firebase.storage();
     const oldFile = context.rootState.damage.states.find(element => element.iid == iid);
     if (oldFile != undefined) {
@@ -259,6 +291,21 @@ async function editFile(context, oid, iid, did, file, paramName) {
         }
     } else if (file != null && file.same !== true) {
         return await storage.ref("/objects/" + oid + "/damages/" + did + "/states/" + iid + "/" + paramName + getFileExtension(file)).put(file);
+    }
+}
+
+async function editFileEdit(context, oid, did, file, paramName, locationName) {
+    const storage = firebase.storage();
+    const oldFile = context.rootState.damage.data;
+    if (oldFile != undefined) {
+        const oldFileName = oldFile[locationName]
+        if (oldFileName != null) {
+            await storage.ref("/objects/" + oid + "/damages/" + did + "/" + paramName + ".png").delete();
+        }
+    }
+
+    if (file != null) {
+        return await storage.ref("/objects/" + oid + "/damages/" + did + "/" + paramName + ".png").put(file);
     }
 }
 

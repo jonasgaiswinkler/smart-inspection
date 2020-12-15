@@ -71,7 +71,11 @@
                         }}
                       </li>
                       <li v-if="damageData.type != null">
-                        {{ $t("damage.type") + ": " + damageData.type }}
+                        {{
+                          $t("damage.types.name") +
+                            ": " +
+                            $t("damage.types.data." + damageData.type)
+                        }}
                       </li>
                       <li v-if="damageData.typeDetail != null">
                         {{
@@ -187,6 +191,27 @@
                     "
                     :src="currentDamageState.photoUrl"
                     :alt="$t('inspectionPhoto')"
+                  ></ion-img>
+                  <ion-img
+                    v-if="
+                      damageData.imageGroundPlan != null
+                    "
+                    :src="damageData.imageGroundPlan"
+                    :alt="$t('damageGroundPlan')"
+                  ></ion-img>
+                  <ion-img
+                    v-if="
+                      damageData.imageLongitudinalSection != null
+                    "
+                    :src="damageData.imageLongitudinalSection"
+                    :alt="$t('damageLongitudinalSection')"
+                  ></ion-img>
+                  <ion-img
+                    v-if="
+                      damageData.imageCrossSection != null
+                    "
+                    :src="damageData.imageCrossSection"
+                    :alt="$t('damageCrossSection')"
                   ></ion-img>
                 </ion-col>
                 <ion-col
@@ -362,7 +387,7 @@ export default defineComponent({
     IonRow,
     IonGrid,
     IonCol,
-    //IonImg,
+    IonImg,
     //IonItem,
     //IonSelect,
     //IonSelectOption,

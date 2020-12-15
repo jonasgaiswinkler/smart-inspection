@@ -141,6 +141,24 @@
                           </ion-select>
                         </ion-item>
                         <ion-item>
+                          <ion-label>{{ $t("damage.types.name") }}</ion-label>
+                          <ion-select
+                            :value="filterType"
+                            @ionChange="filterType = $event.target.value"
+                            interface="popover"
+                          >
+                            <ion-select-option value="-">-</ion-select-option>
+                            <ion-select-option
+                              v-for="(type, key) in damageOptions.types.data"
+                              :key="key"
+                              :value="key"
+                              >{{
+                                $t("damage.types.data." + key)
+                              }}</ion-select-option
+                            >
+                          </ion-select>
+                        </ion-item>
+                        <ion-item>
                           <ion-label>{{
                             $t("damage.categories.name")
                           }}</ion-label>
@@ -181,7 +199,7 @@
                         {{ $t("damage.allocations.name") }}
                       </ion-col>
                       <ion-col size="4">
-                        {{ $t("damage.type") }}
+                        {{ $t("damage.types.name") }}
                       </ion-col>
                     </ion-row></ion-grid
                   >
@@ -242,7 +260,9 @@
                           }}</ion-label>
                         </ion-col>
                         <ion-col size="4">
-                          <ion-label>{{ damage.type }}</ion-label>
+                          <ion-label>{{
+                            $t("damage.types.data." + damage.type)
+                          }}</ion-label>
                         </ion-col>
                       </ion-row></ion-grid
                     >
@@ -370,6 +390,7 @@ export default defineComponent({
     // filters
     const filterAllocation = ref("-");
     const filterComponent = ref("-");
+    const filterType = ref("-");
     const filterCategory = ref("-");
 
     watch(filterAllocation, () => {
@@ -400,12 +421,16 @@ export default defineComponent({
           if (filterComponent.value != "-") {
             isComponent = doc.component == filterComponent.value;
           }
+          let isType = true;
+          if (filterType.value != "-") {
+            isType = doc.type == filterType.value;
+          }
           let isCategory = true;
           if (filterCategory.value != "-") {
             isCategory = doc.state.category == filterCategory.value;
           }
 
-          if (isAllocation && isComponent && isCategory) {
+          if (isAllocation && isComponent && isCategory && isType) {
             return true;
           } else {
             return false;
@@ -426,11 +451,16 @@ export default defineComponent({
     const resetFilter = function() {
       filterAllocation.value = "-";
       filterComponent.value = "-";
+      filterType.value = "-";
       filterCategory.value = "-";
     };
 
     const filterIsActive = computed(() => {
-      return filterAllocation.value != "-" || filterCategory.value != "-";
+      return (
+        filterAllocation.value != "-" ||
+        filterType.value != "-" ||
+        filterCategory.value != "-"
+      );
     });
 
     const currentIdate = computed(() => store.state.damage.currentIdate);
@@ -449,6 +479,7 @@ export default defineComponent({
       damageOptions,
       filterAllocation,
       filterComponent,
+      filterType,
       filterCategory,
       faTimes,
       faRedo,

@@ -71,14 +71,25 @@
         class="ion-text-right"
       ></ion-input>
     </ion-item>
+    <ion-item v-if="errorType" color="danger">
+      <ion-label>{{ $t("pleaseChooseOption") }}</ion-label>
+    </ion-item>
     <ion-item :disabled="isLoading">
-      <ion-label>{{ $t("damage.type") }}*</ion-label>
-      <ion-input
-        @ionInput="setDamageParam('type', $event.target.value)"
+      <ion-label>{{ $t("damage.types.name") }}*</ion-label>
+      <ion-select
         :value="damageParams.type"
-        class="ion-text-right"
-        required
-      ></ion-input>
+        @ionChange="setDamageParam('type', $event.target.value)"
+        :placeholder="$t('pleasechoose')"
+        interface="popover"
+        aria-required="required"
+      >
+        <ion-select-option
+          v-for="(type, key) in damageOptions.types.data"
+          :key="key"
+          :value="key"
+          >{{ $t("damage.types.data." + key) }}</ion-select-option
+        >
+      </ion-select>
     </ion-item>
     <ion-item :disabled="isLoading">
       <ion-label>{{ $t("damage.typeDetail") }}</ion-label>
@@ -117,22 +128,12 @@
       <div style="flex: 1"></div>
       <ion-spinner v-if="isLoading" color="primary"></ion-spinner>
       <ion-button
-        v-if="$route.name == 'NewDamage'"
         :disabled="isLoading"
         type="submit"
         class="ion-margin-start"
-        :aria-label="$t('damageState')"
-        :title="$t('damageState')"
-        >{{ $t("damageState") }}</ion-button
-      >
-      <ion-button
-        v-if="$route.name == 'EditDamage'"
-        :disabled="isLoading"
-        type="submit"
-        class="ion-margin-start"
-        :aria-label="$t('save')"
-        :title="$t('save')"
-        >{{ $t("save") }}</ion-button
+        :aria-label="$t(nextPage)"
+        :title="$t(nextPage)"
+        >{{ $t(nextPage) }}</ion-button
       >
     </ion-row>
   </form>
@@ -174,6 +175,7 @@ import MeasurementInput from "@/components/MeasurementInput";
 
 export default defineComponent({
   name: "DamageData",
+  props: ['nextPage'],
   components: {
     IonRow,
     IonItem,
@@ -189,7 +191,7 @@ export default defineComponent({
     //"file-input": FileInput,
     //"measurement-input": MeasurementInput,
   },
-  emits: ["next", "saveedit"],
+  emits: ["next"],
   setup(props, { emit }) {
     // Define store
     const store = useStore();
@@ -222,6 +224,7 @@ export default defineComponent({
     // missing fields errors
     const errorAllocation = ref(false);
     const errorComponent = ref(false);
+    const errorType = ref(false);
 
     // define damage params setter
     const setDamageParam = function(key, value) {
@@ -249,13 +252,10 @@ export default defineComponent({
       errorComponent.value =
         damageParams.value.allocation != "superstructure" &&
         damageParams.value.component == null;
+      errorType.value = damageParams.value.type == null;
 
-      if (!errorAllocation.value && !errorComponent.value) {
-        if (routeName == "NewDamage") {
-          emit("next");
-        } else if (routeName == "EditDamage") {
-          emit("saveedit");
-        }
+      if (!errorAllocation.value && !errorComponent.value && !errorType.value) {
+        emit("next");
       }
     };
 
@@ -268,6 +268,7 @@ export default defineComponent({
       isLoading,
       errorAllocation,
       errorComponent,
+      errorType,
       submit,
     };
   },
