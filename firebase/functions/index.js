@@ -61,12 +61,12 @@ exports.deleteDamage = functions.https.onCall(async (data, context) => {
     }
 });
 
-exports.notifyAdmin = functions.firestore.document('objects/{oid}/damages/{did}/states/{iid}').onWrite(async (change, context) => {
+exports.notifyAdminLimit = functions.firestore.document('objects/{oid}/damages/{did}/states/{iid}').onWrite(async (change, context) => {
     const document = change.after.exists ? change.after.data() : null;
-    const oldDocument = change.before.data();
+    const oldDocument = change.before.exists ? change.before.data() : null;
 
     if (document !== null) {
-        if (document.category === 'immediateActionLimit' && document.category !== oldDocument.category) {
+        if (document.category === 'immediateActionLimit' && (oldDocument === null || document.category !== oldDocument.category)) {
             const users = await admin.auth().listUsers();
             const admins = users.users.filter((user) => user.customClaims !== undefined && user.customClaims.role === 'admin');
             if (admins.length !== 0) {
@@ -92,3 +92,56 @@ exports.notifyAdmin = functions.firestore.document('objects/{oid}/damages/{did}/
         }
     }
 });
+
+exports.notifyAdminAssessment = functions.firestore.document('objects/{oid}/assessments/{iid}').onWrite(async (change, context) => {
+    const document = change.after.exists ? change.after.data() : null;
+    const oldDocument = change.before.exists ? change.before.data() : null;
+
+    if (document !== null) {
+        if ((document.substructure === 5 && (oldDocument === null || document.substructure !== oldDocument.substructure)) ||
+            (document.superstructure === 5 && (oldDocument === null || document.superstructure !== oldDocument.superstructure)) ||
+            (document.equipment === 5 && (oldDocument === null || document.equipment !== oldDocument.equipment)) ||
+            (document.object === 5 && (oldDocument === null || document.object !== oldDocument.object))) {
+            const users = await admin.auth().listUsers();
+            const admins = users.users.filter((user) => user.customClaims !== undefined && user.customClaims.role === 'admin');
+            if (admins.length !== 0) {
+                const emails = [];
+                for (const admin of admins) {
+                    emails.push(admin.email);
+                }
+
+                const mailOptions = {
+                    from: 'Smart Inspection <smart-inspection@jonasgaiswinkler.eu>', // Something like: Jane Doe <janedoe@gmail.com>
+                    to: 'smart-inspection@jonasgaiswinkler.eu',
+                    bcc: emails,
+                    subject: 'Schlechter Zustand bei Objekt #' + context.params.oid + ' festgestellt', // email subject
+                    html: `<p>Für das Object #${context.params.oid} wurde bei der Inspektion am ${new Date(document.date).toLocaleDateString("de-DE")} die Bewertung "Schlechter Zustand" festgelegt.</p>
+                    <p>Unterbaubewertung: ${getAssessmentText(document.substructure)}</p>
+                    <p>Überbaubewertung: ${getAssessmentText(document.superstructure)}</p>
+                    <p>Ausrüstungsbewertung: ${getAssessmentText(document.equipment)}</p>
+                    <p>Objektbewertung: ${getAssessmentText(document.object)}</p>
+                <p><a href="https://jonasgaiswinkler.eu/smart-inspection/object/${context.params.oid}/inspection/${document.date}">Link zur Inspektion</a></p>
+                <p>Hinweis: Bitte nicht auf diese E-Mail antworten!</p>`
+                };
+
+                // returning result
+                await transporter.sendMail(mailOptions);
+            }
+
+        }
+    }
+});
+
+function getAssessmentText(grade) {
+    if (grade === 1) {
+        return "1 - Sehr guter Zustand";
+    } else if (grade === 2) {
+        return "2 - Guter Zustand";
+    } else if (grade === 3) {
+        return "3 - Ausreichender Zustand";
+    } else if (grade === 4) {
+        return "4 - Mangelhafter Zustand";
+    } else {
+        return "5 - Schlechter Zustand";
+    }
+}

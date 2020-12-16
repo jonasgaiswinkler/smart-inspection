@@ -194,21 +194,21 @@
                   ></ion-img>
                   <ion-img
                     v-if="
-                      damageData.imageGroundPlan != null
+                      damageData != null && damageData.imageGroundPlan != null
                     "
                     :src="damageData.imageGroundPlan"
                     :alt="$t('damageGroundPlan')"
                   ></ion-img>
                   <ion-img
                     v-if="
-                      damageData.imageLongitudinalSection != null
+                      damageData != null && damageData.imageLongitudinalSection != null
                     "
                     :src="damageData.imageLongitudinalSection"
                     :alt="$t('damageLongitudinalSection')"
                   ></ion-img>
                   <ion-img
                     v-if="
-                      damageData.imageCrossSection != null
+                      damageData != null && damageData.imageCrossSection != null
                     "
                     :src="damageData.imageCrossSection"
                     :alt="$t('damageCrossSection')"

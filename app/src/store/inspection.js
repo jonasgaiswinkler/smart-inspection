@@ -86,8 +86,8 @@ export default {
                             "setAssessment",
                             assessmentDoc.data()
                         );
+                        context.commit("assessmentParams/setParams", assessmentDoc.data(), { root: true });
                     }
-                    context.commit("assessmentParams/setParams", assessmentDoc.data(), { root: true });
                     return { status: 200 }
                 } else {
                     return { status: 404 };

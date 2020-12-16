@@ -225,7 +225,7 @@ export default {
                     updateParams.date = idate;
                     updateParams.measurement1 = params.measurement1 != null ? { ...params.measurement1 } : Measurement(true);
                     updateParams.measurement2 = params.measurement2 != null ? { ...params.measurement2 } : Measurement(true);
-                    updateParams.limit = params.measurement2 != null ? { ...params.limit } : Measurement(false);
+                    updateParams.limit = params.limit != null ? { ...params.limit } : Measurement(false);
                     updateParams.impact = params.impact;
                     updateParams.category = params.category;
                     updateParams.action = params.action;
