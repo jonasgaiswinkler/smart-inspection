@@ -14,6 +14,7 @@ import Damage from "@/views/Damage.vue";
 import DamageList from "@/views/DamageList.vue";
 import Settings from "@/views/Settings.vue";
 import AssessmentForm from "@/views/AssessmentForm.vue";
+import ModelViewer from "@/components/ModelViewer.vue";
 
 const base = "/smart-inspection/";
 
@@ -122,6 +123,11 @@ const routes: Array<RouteRecordRaw> = [
     name: "Settings",
     component: Settings,
   },
+  {
+    path: "/model",
+    name: "Model",
+    component: ModelViewer
+  }
 ];
 
 const router = createRouter({
