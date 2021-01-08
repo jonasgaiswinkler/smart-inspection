@@ -44,7 +44,7 @@ import firebaseConfig from "@/firebase.json";
 
 firebase.initializeApp(firebaseConfig);
 
-firebase.functions().useFunctionsEmulator("http://localhost:5001");
+//firebase.functions().useFunctionsEmulator("http://localhost:5001");
 
 /* promise for initial auth state */
 let authPromise = new Promise((resolve, reject) => {
