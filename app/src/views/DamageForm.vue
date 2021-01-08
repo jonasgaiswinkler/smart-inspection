@@ -14,6 +14,11 @@
         <ion-title>{{
           $route.name === "NewDamage" ? $t("newDamage") : $t("editDamage")
         }}</ion-title>
+        <ion-spinner
+          v-if="$store.state.isLoading"
+          slot="end"
+          style="margin-right: 20px; color: white"
+        ></ion-spinner>
       </ion-toolbar>
     </ion-header>
 
@@ -27,12 +32,10 @@
           <ion-col size-md="6" size-lg="6" size-xs="12">
             <damage-data
               v-if="
-                selectedSegment === 'damageData' &&
-                  routeName != 'UpdateDamage'
+                selectedSegment === 'damageData' && routeName != 'UpdateDamage'
               "
               :nextPage="getNavigation('damageData').next"
               @next="selectedSegment = getNavigation('damageData').next"
-              
             ></damage-data>
             <damage-location
               v-if="
@@ -91,6 +94,21 @@
               saveParam="imageCrossSection"
               @saveedit="saveDamage"
             ></damage-location>
+            <damage-model
+              v-if="
+                selectedSegment == 'damageModel' &&
+                  object.model != null
+              "
+              @next="selectedSegment = getNavigation('damageModel').next"
+              @back="
+                selectedSegment = getNavigation('damageModel').previous
+              "
+              :nextPage="getNavigation('damageModel').next"
+              :previousPage="getNavigation('damageModel').previous"
+              name="damageModel"
+              objectParam="model"
+              @saveedit="saveDamage"
+            ></damage-model>
             <damage-state
               v-if="
                 (selectedSegment === 'damageState' &&
@@ -140,6 +158,7 @@ import { arrowBack } from "ionicons/icons";
 import DamageData from "@/components/DamageData.vue";
 import DamageLocation from "@/components/DamageLocation.vue";
 import DamageState from "@/components/DamageState.vue";
+import DamageModel from "@/components/DamageModel.vue";
 
 export default defineComponent({
   name: "DamageForm",
@@ -160,11 +179,12 @@ export default defineComponent({
     IonIcon,
     //IonBackButton,
     IonButtons,
-    //IonSpinner,
+    IonSpinner,
     //IonTextarea
     "damage-data": DamageData,
     "damage-location": DamageLocation,
     "damage-state": DamageState,
+    "damage-model": DamageModel,
   },
   setup() {
     // Define store
@@ -194,6 +214,8 @@ export default defineComponent({
           segmentNumber = 3;
         } else if (segment === "damageCrossSection") {
           segmentNumber = 4;
+        } else if (segment === "damageModel") {
+          segmentNumber = 5;
         } else if (segment === "damageState") {
           segmentNumber = 6;
         }
@@ -208,11 +230,15 @@ export default defineComponent({
           result.next = "damageLongitudinalSection";
         } else if (object.value.crossSection != null && segmentNumber <= 3) {
           result.next = "damageCrossSection";
+        } else if (object.value.model != null && segmentNumber <= 4) {
+          result.next = "damageModel";
         } else {
           result.next = "damageState";
         }
 
-        if (object.value.crossSection != null && segmentNumber >= 5) {
+        if (object.value.model != null && segmentNumber >= 6) {
+          result.previous = "damageModel";
+        } else if (object.value.crossSection != null && segmentNumber >= 5) {
           result.previous = "damageCrossSection";
         } else if (
           object.value.longitudinalSection != null &&

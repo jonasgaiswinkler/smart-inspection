@@ -3,6 +3,11 @@
     <ion-header>
       <ion-toolbar color="primary">
         <ion-title>Smart Inspection</ion-title>
+        <ion-spinner
+          v-if="$store.state.isLoading"
+          slot="end"
+          style="margin-right: 20px; color: white"
+        ></ion-spinner>
       </ion-toolbar>
     </ion-header>
 
@@ -117,6 +122,7 @@ import {
   IonInput,
   IonButton,
   IonImg,
+  IonSpinner,
   toastController,
 } from "@ionic/vue";
 import { defineComponent } from "vue";
@@ -139,6 +145,7 @@ export default defineComponent({
     IonInput,
     IonButton,
     IonImg,
+    IonSpinner
   },
   setup() {
     // Define router

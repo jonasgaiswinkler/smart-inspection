@@ -14,6 +14,11 @@
         <ion-title>{{
           $route.name === "NewObject" ? $t("newObject") : $t("editObject")
         }}</ion-title>
+        <ion-spinner
+          v-if="$store.state.isLoading"
+          slot="end"
+          style="margin-right: 20px; color: white"
+        ></ion-spinner>
       </ion-toolbar>
     </ion-header>
 
@@ -91,7 +96,7 @@ export default defineComponent({
     IonIcon,
     //IonBackButton,
     IonButtons,
-    //IonSpinner,
+    IonSpinner,
     //IonTextarea
     "object-data": ObjectData,
     "object-documents": ObjectDocuments,

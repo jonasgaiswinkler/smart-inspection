@@ -80,6 +80,13 @@ export default createStore({
       context.commit("setUserRole", userRole);
       context.dispatch("object/getRequestedObjects", null, { root: true });
     },
+    testPdf(context) {
+      const functions = firebase.functions();
+      return functions.httpsCallable("createInspectionReport")({
+        oid: "ssdf",
+        did: "kskd"
+      });
+    }
   },
   modules: {
     objectParams: objectParams,

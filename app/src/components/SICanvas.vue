@@ -13,21 +13,21 @@
   <div
     style="position: absolute; bottom: 20px; right: 20px; background: white; padding: 3px; border-radius: 3px; z-index: 2"
   >
-  <ion-button @click="clearMarker"><font-awesome-icon
-        slot="icon-only"
-        :icon="faTimes"
-        full-width
-      ></font-awesome-icon></ion-button>
-    <ion-button @click="doZoom(false)"><font-awesome-icon
+    <ion-button @click="clearMarker">{{ $t("reset") }}</ion-button>
+    <ion-button @click="doZoom(false)"
+      ><font-awesome-icon
         slot="icon-only"
         :icon="faMinus"
         full-width
-      ></font-awesome-icon></ion-button>
-    <ion-button @click="doZoom(true)"><font-awesome-icon
+      ></font-awesome-icon
+    ></ion-button>
+    <ion-button @click="doZoom(true)"
+      ><font-awesome-icon
         slot="icon-only"
         :icon="faPlus"
         full-width
-      ></font-awesome-icon></ion-button>
+      ></font-awesome-icon
+    ></ion-button>
   </div>
 </template>
 
@@ -41,11 +41,7 @@ PDFJS.GlobalWorkerOptions.workerSrc = PDFJSWorker;
 import { debounce } from "debounce";
 import { IonButton } from "@ionic/vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import {
-  faPlus,
-  faMinus,
-  faTimes
-} from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faMinus, faTimes } from "@fortawesome/free-solid-svg-icons";
 
 export default defineComponent({
   name: "si-canvas",
@@ -69,7 +65,14 @@ export default defineComponent({
       lastMarker: null,
       faPlus: faPlus,
       faMinus: faMinus,
-      faTimes: faTimes
+      faTimes: faTimes,
+      listener: () => {
+        this.$nextTick(() => {
+          setTimeout(() => {
+            this.renderFile();
+          }, 100);
+        });
+      },
     };
   },
   methods: {
@@ -102,9 +105,14 @@ export default defineComponent({
     clearBctx() {
       this.bctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     },
-    getBlob() {
+    async getBlob() {
       if (this.location != null) {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        if (this.renderTask != null) {
+          await this.renderTask.promise;
+        }
+
         this.drawMarker(
           this.bctx,
           this.location.x * this.zoom,
@@ -112,7 +120,7 @@ export default defineComponent({
         );
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         const vm = this;
-        return new Promise(function(resolve, reject) {
+        return await new Promise(function(resolve, reject) {
           vm.background.toBlob(function(blob) {
             vm.bctx.clearRect(0, 0, vm.background.width, vm.background.height);
             vm.renderFile();
@@ -286,13 +294,10 @@ export default defineComponent({
     } else {
       this.getImage(true);
     }
-    window.addEventListener("resize", () => {
-      this.$nextTick(() => {
-        setTimeout(() => {
-          this.renderFile();
-        }, 100);
-      });
-    });
+    window.addEventListener("resize", this.listener);
+  },
+  beforeUnmount() {
+    window.removeEventListener("resize", this.listener);
   },
 });
 </script>

@@ -17,6 +17,11 @@
           </ion-button>
         </ion-buttons>
         <ion-title>{{ $t("damageList") }}</ion-title>
+        <ion-spinner
+          v-if="$store.state.isLoading"
+          slot="end"
+          style="margin-right: 20px; color: white"
+        ></ion-spinner>
       </ion-toolbar>
     </ion-header>
 
@@ -63,6 +68,7 @@
                 <ion-modal
                   :is-open="showModal"
                   @onDidDismiss="showModal = false"
+                  css-class="filter-modal"
                 >
                   <ion-grid class="height-100 width-100">
                     <ion-row
@@ -352,7 +358,7 @@ export default defineComponent({
     IonIcon,
     //IonBackButton,
     IonButtons,
-    //IonSpinner,
+    IonSpinner,
     //IonTextarea
     "font-awesome-icon": FontAwesomeIcon,
     "font-awesome-layers": FontAwesomeLayers,
@@ -492,12 +498,16 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style>
 .height-100 {
   height: 100%;
 }
 
 .width-100 {
   width: 100%;
+}
+
+.filter-modal {
+  --background: rgba(255, 255, 255, 0.9);
 }
 </style>

@@ -2,6 +2,7 @@ const admin = require('firebase-admin');
 const functions = require('firebase-functions');
 const nodemailer = require('nodemailer');
 const cors = require('cors')({ origin: true });
+const PDFDocument = require('pdfkit');
 admin.initializeApp();
 
 let transporter = nodemailer.createTransport({
@@ -60,6 +61,39 @@ exports.deleteDamage = functions.https.onCall(async (data, context) => {
         return { status: 401 };
     }
 });
+
+exports.createInspectionReport = functions.https.onCall(async (data, context) => {
+    if (context.auth && data.oid !== undefined && data.did !== undefined) {
+        const doc = new PDFDocument({
+            info: {
+                Title: "Test"
+            },
+            size: "A4"
+        });
+        const file = admin.storage().bucket().file('test/Testfile.pdf');
+
+        await new Promise((resolve, reject) => {
+            const stream = doc.pipe(file.createWriteStream({ metadata: { contentType: 'application/pdf' } }));
+
+            stream.on("finish", () => {
+                resolve();
+            });
+
+            addPageHeader(doc);
+
+            doc.end();
+        });
+        return { status: 200 }
+    } else {
+        return { status: 401 };
+    }
+});
+
+function addPageHeader(doc) {
+    const logoUrl = "assets/logo.png";
+    doc.image(logoUrl, 495, 30, { fit: [70, 70] });
+    doc.fontSize(25).text("Smart Inspection").moveDown();
+}
 
 exports.notifyAdminLimit = functions.firestore.document('objects/{oid}/damages/{did}/states/{iid}').onWrite(async (change, context) => {
     const document = change.after.exists ? change.after.data() : null;

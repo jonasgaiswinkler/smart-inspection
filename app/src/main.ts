@@ -39,9 +39,12 @@ defineCustomElements(window);
 /* firebase */
 import * as firebase from "firebase/app";
 import "firebase/auth";
+import "firebase/functions";
 import firebaseConfig from "@/firebase.json";
 
 firebase.initializeApp(firebaseConfig);
+
+firebase.functions().useFunctionsEmulator("http://localhost:5001");
 
 /* promise for initial auth state */
 let authPromise = new Promise((resolve, reject) => {
@@ -61,7 +64,8 @@ firebase.auth().onAuthStateChanged((user) => {
 });
 
 /* setup router */
-router.beforeEach(async function(to, from, next) {
+router.beforeEach(async function (to, from, next) {
+  store.commit("setIsLoading", true);
   // wait until auth state is loaded
   let user;
   if (authPromise instanceof Promise) {

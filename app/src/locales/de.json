@@ -80,6 +80,7 @@
     "damageGroundPlan": "Grundrissverortung",
     "damageLongitudinalSection": "Längsschnittsverortung",
     "damageCrossSection": "Querschnittsverortung",
+    "damageModel": "3D-Modellverortung",
     "assessmentSaved": "Bewertung gespeichert!",
     "object": {
         "name": "Objekt",

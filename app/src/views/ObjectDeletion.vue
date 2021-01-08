@@ -12,6 +12,11 @@
           </ion-button>
         </ion-buttons>
         <ion-title>{{ $t("requestedDeletions") }}</ion-title>
+        <ion-spinner
+          v-if="$store.state.isLoading"
+          slot="end"
+          style="margin-right: 20px; color: white"
+        ></ion-spinner>
       </ion-toolbar>
     </ion-header>
 
@@ -157,7 +162,7 @@ export default defineComponent({
     IonProgressBar,
     //IonBackButton,
     IonButtons,
-    //IonSpinner,
+    IonSpinner,
     //IonTextarea,
     "font-awesome-icon": FontAwesomeIcon,
   },

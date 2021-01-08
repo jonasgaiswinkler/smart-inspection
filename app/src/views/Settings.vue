@@ -12,6 +12,11 @@
           </ion-button>
         </ion-buttons>
         <ion-title>{{ $t("settings") }}</ion-title>
+        <ion-spinner
+          v-if="$store.state.isLoading"
+          slot="end"
+          style="margin-right: 20px; color: white"
+        ></ion-spinner>
       </ion-toolbar>
     </ion-header>
 
@@ -47,6 +52,7 @@ import {
   IonButton,
   IonButtons,
   IonIcon,
+  IonSpinner
 } from "@ionic/vue";
 import { defineComponent } from "vue";
 import store from "@/store";
@@ -67,6 +73,7 @@ export default defineComponent({
     IonButton,
     IonButtons,
     IonIcon,
+    IonSpinner
   },
   setup() {
     // Define router
