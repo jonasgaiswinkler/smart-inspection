@@ -4,7 +4,7 @@ module.exports = {
     themeColor: '#005096',
     msTileColor: '#005096'
   },
-  publicPath: '/smart-inspection/',
+  publicPath: '/',
   //lintOnSave: process.env.NODE_ENV !== 'production'
   configureWebpack: {
     module: {

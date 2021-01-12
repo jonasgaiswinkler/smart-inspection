@@ -16,7 +16,7 @@ import Settings from "@/views/Settings.vue";
 import AssessmentForm from "@/views/AssessmentForm.vue";
 import ModelViewer from "@/components/ModelViewer.vue";
 
-const base = "/smart-inspection/";
+const base = "/";
 
 const routes: Array<RouteRecordRaw> = [
   {

@@ -145,7 +145,7 @@ export default defineComponent({
     IonInput,
     IonButton,
     IonImg,
-    IonSpinner
+    IonSpinner,
   },
   setup() {
     // Define router
@@ -165,7 +165,7 @@ export default defineComponent({
     const showResetPassword = ref(false);
 
     // Define reset password method
-    const resetPassword = async function() {
+    const resetPassword = async function () {
       if (email.value !== "") {
         try {
           await store.dispatch("resetPassword", email.value);
@@ -197,16 +197,26 @@ export default defineComponent({
     // Define submit method
     const submit = async () => {
       if (showResetPassword.value === false) {
-        await store.dispatch("login", {
-          email: email.value,
-          password: password.value,
-        });
-        if (store.state.redirect !== null) {
-          const path = store.state.redirect;
-          store.commit("setRedirect", null);
-          router.push(path);
-        } else {
-          router.push({ name: "Home" });
+        try {
+          await store.dispatch("login", {
+            email: email.value,
+            password: password.value,
+          });
+          if (store.state.redirect !== null) {
+            const path = store.state.redirect;
+            store.commit("setRedirect", null);
+            router.push(path);
+          } else {
+            router.push({ name: "Home" });
+          }
+        } catch (error) {
+          console.error(error);
+          const toast = await toastController.create({
+            message: error.toString(),
+            duration: 3000,
+            color: "danger",
+          });
+          toast.present();
         }
       }
     };

@@ -1,5 +1,5 @@
 {
-  "appId": "io.ionic.starter",
+  "appId": "at.fhstp.smartinspection",
   "appName": "smart-inspection",
   "bundledWebRuntime": false,
   "npmClient": "npm",

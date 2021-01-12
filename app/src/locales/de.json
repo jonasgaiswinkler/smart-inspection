@@ -36,7 +36,7 @@
     "pleasechoose": "Bitte auswählen",
     "idAssigned": "ID bereits vergeben!",
     "dateAssigned": "Datum bereits vergeben!",
-    "resetPassword": "Passwort zurürcksetzen",
+    "resetPassword": "Passwort zurücksetzen",
     "resetEmailSend": "Eine E-Mail mit Informationen zur Passwortzurücksetzung wurde an die angegebene E-Mail-Adresse gesendet.",
     "noEmailAddress": "Bitte geben Sie eine E-Mail-Adresse ein.",
     "filesAmount": "Keine Datei gewählt | Eine Datei gewählt | {n} Dateien gewählt",
