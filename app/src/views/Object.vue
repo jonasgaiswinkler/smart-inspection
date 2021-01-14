@@ -32,9 +32,9 @@
             color="primary"
             class="ion-justify-content-center height-100"
           >
-            <ion-col size-md="6" size-lg="6" size-xs="12">
+            <ion-col size-md="6" size-lg="6" size-xs="12" class="height-100">
               <ion-row class="height-100">
-                <ion-col size-lg="8" size-md="8" size-xs="12">
+                <ion-col size-lg="8" size-md="8" size-xs="12" class="height-100" style="overflow: scroll;">
                   <ion-img
                     v-if="objectPhotoUrl != null"
                     :src="objectPhotoUrl"
@@ -208,7 +208,7 @@
                   size-lg="4"
                   size-md="4"
                   size-xs="12"
-                  class="flex-column"
+                  class="flex-column height-100"
                 >
                   <ion-row class="height-100">
                     <ion-col

@@ -107,6 +107,8 @@
               :previousPage="getNavigation('damageModel').previous"
               name="damageModel"
               objectParam="model"
+              damageParam="locationModel"
+              saveParam="imageModel"
               @saveedit="saveDamage"
             ></damage-model>
             <damage-state

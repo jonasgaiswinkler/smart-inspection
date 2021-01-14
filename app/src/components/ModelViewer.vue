@@ -11,13 +11,60 @@ import { STLLoaderPlugin } from "@xeokit/xeokit-sdk/src/plugins/STLLoaderPlugin/
 import { AnnotationsPlugin } from "@xeokit/xeokit-sdk/src/plugins/AnnotationsPlugin/AnnotationsPlugin";
 
 export default defineComponent({
-  name: "si-canvas",
+  name: "model-viewer",
+  props: ["url", "fileName", "location"],
+  emits: ["placed"],
   data() {
     return {
       annotation: null,
+      annotations: null,
       coords: null,
       viewer: null,
+      lastMarker: null,
     };
+  },
+  methods: {
+    placeMarker(coords) {
+      if (this.annotations != null) {
+        if (this.annotation != null) {
+          this.annotation.destroy();
+        }
+
+        this.$emit("placed", coords);
+
+        this.lastMarker = coords;
+
+        this.annotation = this.annotations.createAnnotation({
+          id: "myAnnotation",
+          worldPos: [coords.x, coords.y, coords.z], // <<------- initializes worldPos and entity from PickResult
+          occludable: false, // Optional, default is true
+          markerShown: true, // Optional, default is true
+          values: {
+            // HTML template values
+            glyph: "A",
+          },
+        });
+      }
+    },
+    getImage() {
+      if (this.viewer) {
+        return this.b64toBlob(this.viewer.getSnapshot({
+          format: "png"
+        }));
+      } else {
+        return null;
+      }
+    },
+    b64toBlob(dataURI) {
+      const byteString = atob(dataURI.split(",")[1]);
+      const ab = new ArrayBuffer(byteString.length);
+      const ia = new Uint8Array(ab);
+
+      for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+      }
+      return new Blob([ab], { type: "image/png" });
+    },
   },
   mounted() {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -48,8 +95,7 @@ export default defineComponent({
 
     const model = stlLoader.load({
       id: "myModel",
-      src:
-        "https://firebasestorage.googleapis.com/v0/b/smart-inspection-fhstp.appspot.com/o/Bridge%20N091013.stl?alt=media&token=1db1f730-48f1-4c57-ad57-3a8fa1b7d593",
+      src: this.url,
       smoothNormals: true,
       rotate: [90, 0, 0],
     });
@@ -58,7 +104,7 @@ export default defineComponent({
       this.viewer.cameraFlight.jumpTo(model);
     });
 
-    const annotations = new AnnotationsPlugin(this.viewer, {
+    this.annotations = new AnnotationsPlugin(this.viewer, {
       markerHTML:
         "<div class='annotation-marker' style='background-color: {{markerBGColor}};'>{{glyph}}</div>",
       labelHTML:
@@ -83,10 +129,10 @@ export default defineComponent({
       // default value for Perspective#far and Ortho#far is around ````2.000````.
 
       surfaceOffset: 0.3,
-      container: document.getElementById("modelContainer")
+      container: document.getElementById("modelContainer"),
     });
 
-    annotations.on("markerClicked", (annotation) => {
+    this.annotations.on("markerClicked", (annotation) => {
       annotation.labelShown = !annotation.labelShown;
     });
 
@@ -94,36 +140,28 @@ export default defineComponent({
     // Use the AnnotationsPlugin to create an annotation wherever we click on an object
     //------------------------------------------------------------------------------------------------------------------
 
-    let i = 0;
-
     this.viewer.scene.input.on("mouseclicked", (coords) => {
       const pickResult = this.viewer.scene.pick({
         canvasPos: coords,
         pickSurface: true, // <<------ This causes picking to find the intersection point on the entity
       });
 
-      if (pickResult) {
-        if (vm.annotation != null) {
-          vm.annotation.destroy();
-        }
+      console.log(pickResult.worldPos);
 
-        vm.coords = coords;
-        
-        vm.annotation = annotations.createAnnotation({
-          id: "myAnnotation_" + i,
-          pickResult: pickResult, // <<------- initializes worldPos and entity from PickResult
-          occludable: false, // Optional, default is true
-          markerShown: true, // Optional, default is true
-          values: {
-            // HTML template values
-            glyph: "A",
-          },
+      if (pickResult) {
+        vm.placeMarker({
+          x: pickResult.worldPos[0],
+          y: pickResult.worldPos[1],
+          z: pickResult.worldPos[2],
         });
-        i++;
       }
     });
 
     window.viewer = this.viewer;
+
+    if (this.location) {
+      this.placeMarker(this.location);
+    }
   },
   beforeUnmount() {
     if (this.viewer != null) {

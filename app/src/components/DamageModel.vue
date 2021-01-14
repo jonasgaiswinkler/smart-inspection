@@ -5,7 +5,14 @@
         {{ $t(name) }}
       </h2>
       <div style="position: relative; flex: 1; height: 0px;">
-        <model-viewer></model-viewer>
+        <model-viewer
+          v-if="object != null && object[objectParam] != null"
+          :location="damageParams[damageParam]"
+          @placed="setDamageParam(damageParam, $event)"
+          :fileName="object[objectParam]"
+          :url="object[objectParam + 'Url']"
+          ref="modelRef"
+        ></model-viewer>
       </div>
       <ion-row class="ion-align-items-center">
         <ion-button
@@ -98,6 +105,8 @@ export default defineComponent({
     // define router
     const router = useRouter();
 
+    const modelRef = ref(null);
+
     // get current route name
     const routeName = router.currentRoute.value.name;
 
@@ -130,11 +139,11 @@ export default defineComponent({
     const isLoading = computed(() => store.state.damageParams.isLoading);
 
     const submit = async function() {
-      // if (canvasRef.value != null) {
-      //   store.commit("damageParams/setIsLoading", true);
-      //   setDamageParam(props.saveParam, await canvasRef.value.getBlob());
-      //   store.commit("damageParams/setIsLoading", false);
-      // }
+      if (modelRef.value != null) {
+        store.commit("damageParams/setIsLoading", true);
+        setDamageParam(props.saveParam, await modelRef.value.getImage());
+        store.commit("damageParams/setIsLoading", false);
+      }
       if (routeName == "NewDamage" || props.nextPage != "damageState") {
         emit("next");
       } else if (routeName == "EditDamage" && props.nextPage == "damageState") {
@@ -148,6 +157,7 @@ export default defineComponent({
       submit,
       damageParams,
       setDamageParam,
+      modelRef
     };
   },
 });

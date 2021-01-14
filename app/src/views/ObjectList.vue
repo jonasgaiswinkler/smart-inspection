@@ -168,6 +168,9 @@
                             >
                           </ion-select>
                         </ion-item>
+                        <p>
+                          {{ $t("nItems", {n: objects.length}) }}
+                        </p>
                       </ion-col>
                     </ion-row>
                   </ion-grid>

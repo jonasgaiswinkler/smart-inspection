@@ -60,6 +60,7 @@ export default defineComponent({
       page: null,
       image: null,
       zoom: 1,
+      scale: 1,
       renderTask: null,
       doc: null,
       lastMarker: null,
@@ -86,7 +87,7 @@ export default defineComponent({
       }
     },
     click(event) {
-      this.placeMarker(event.offsetX, event.offsetY);
+      this.placeMarker(event.offsetX / this.scale, event.offsetY / this.scale);
     },
     placeMarker(x, y) {
       this.clearCtx();
@@ -115,8 +116,8 @@ export default defineComponent({
 
         this.drawMarker(
           this.bctx,
-          this.location.x * this.zoom,
-          this.location.y * this.zoom
+          this.location.x,
+          this.location.y
         );
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         const vm = this;
@@ -126,8 +127,8 @@ export default defineComponent({
             vm.renderFile();
             vm.drawMarker(
               vm.ctx,
-              vm.location.x * vm.zoom,
-              vm.location.y * vm.zoom
+              vm.location.x,
+              vm.location.y
             );
             resolve(blob);
           });
@@ -138,7 +139,7 @@ export default defineComponent({
     },
     drawMarker(ctx, x, y) {
       ctx.save();
-      ctx.translate(x, y);
+      ctx.translate(x * this.scale, y * this.scale);
 
       ctx.beginPath();
       ctx.moveTo(0, 0);
@@ -174,12 +175,12 @@ export default defineComponent({
         const width = this.$refs.frame.clientWidth;
         const pageViewport = this.page.getViewport({ scale: 1 });
 
-        const scale =
+        this.scale =
           Math.max(width / pageViewport.width, height / pageViewport.height) *
           this.zoom;
 
         const viewport = this.page.getViewport({
-          scale: scale,
+          scale: this.scale,
         });
         this.background.width = viewport.width;
         this.background.height = viewport.height;
@@ -188,8 +189,8 @@ export default defineComponent({
 
         if (this.location != null) {
           this.placeMarker(
-            this.location.x * this.zoom,
-            this.location.y * this.zoom
+            this.location.x,
+            this.location.y
           );
         }
 
@@ -198,12 +199,12 @@ export default defineComponent({
         const height = this.$refs.frame.clientHeight;
         const width = this.$refs.frame.clientWidth;
 
-        const scale =
+        this.scale =
           Math.max(width / this.image.width, height / this.image.height) *
           this.zoom;
 
-        const imgWidth = this.image.width * scale;
-        const imgHeight = this.image.height * scale;
+        const imgWidth = this.image.width * this.scale;
+        const imgHeight = this.image.height * this.scale;
 
         this.background.width = imgWidth;
         this.background.height = imgHeight;
@@ -212,8 +213,8 @@ export default defineComponent({
         this.bctx.drawImage(this.image, 0, 0, imgWidth, imgHeight); // Or at whatever offset you like
         if (this.location != null) {
           this.placeMarker(
-            this.location.x * this.zoom,
-            this.location.y * this.zoom
+            this.location.x,
+            this.location.y
           );
         }
       }

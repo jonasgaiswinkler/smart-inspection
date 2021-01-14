@@ -34,9 +34,9 @@
             color="primary"
             class="ion-justify-content-center height-100"
           >
-            <ion-col size-md="6" size-lg="6" size-xs="12">
+            <ion-col size-md="6" size-lg="6" size-xs="12" class="height-100">
               <ion-row class="height-100">
-                <ion-col size-lg="8" size-md="8" size-xs="12">
+                <ion-col size-lg="8" size-md="8" size-xs="12" class="height-100" style="overflow: scroll;">
                   <template v-if="damageData != null">
                     <h1 v-if="damageData.isFixed === true">
                       {{ $t("thisDamageIsFixed") }}
@@ -219,12 +219,19 @@
                     :src="damageData.imageCrossSection"
                     :alt="$t('damageCrossSection')"
                   ></ion-img>
+                  <ion-img
+                    v-if="
+                      damageData != null && damageData.imageModel != null
+                    "
+                    :src="damageData.imageModel"
+                    :alt="$t('damageModel')"
+                  ></ion-img>
                 </ion-col>
                 <ion-col
                   size-lg="4"
                   size-md="4"
                   size-xs="12"
-                  class="flex-column"
+                  class="flex-column height-100"
                 >
                   <ion-row class="height-100">
                     <ion-col

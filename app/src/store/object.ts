@@ -77,6 +77,7 @@ export default {
           promises.push(getFile("groundPlan"));
           promises.push(getFile("longitudinalSection"));
           promises.push(getFile("crossSection"));
+          promises.push(getFile("model"));
           await Promise.all(promises);
 
           context.commit("setData", data);

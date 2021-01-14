@@ -137,6 +137,9 @@
                             >
                           </ion-select>
                         </ion-item>
+                        <p>
+                          {{ $t("nItems", {n: inspections.length}) }}
+                        </p>
                       </ion-col>
                     </ion-row>
                   </ion-grid>

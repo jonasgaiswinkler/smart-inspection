@@ -1,5 +1,5 @@
 {
-    "welcomeText": "Willkommen bei smart inspection!",
+    "welcomeText": "Willkommen bei Smart Inspection!",
     "login": "Anmelden",
     "logout": "Abmelden",
     "email": "E-Mail",
@@ -82,6 +82,7 @@
     "damageCrossSection": "Querschnittsverortung",
     "damageModel": "3D-Modellverortung",
     "assessmentSaved": "Bewertung gespeichert!",
+    "nItems": "Keine Einträge | Ein Eintrag | {n} Einträge",
     "object": {
         "name": "Objekt",
         "id": "ID",

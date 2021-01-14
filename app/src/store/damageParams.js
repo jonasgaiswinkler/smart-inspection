@@ -69,6 +69,7 @@ export default {
                     locationGroundPlan: params.locationGroundPlan,
                     locationLongitudinalSection: params.locationLongitudinalSection,
                     locationCrossSection: params.locationCrossSection,
+                    locationModel: params.locationModel,
                     cause: params.cause,
                     description: params.description,
                     measurement1Name: params.measurement1.name != null ? params.measurement1.name : null,
@@ -111,6 +112,11 @@ export default {
                     promises.push(imageCrossSectionPromise);
                 }
 
+                if (params.imageModel != null) {
+                    const imageModelPromise = storage.ref("/objects/" + oid + "/damages/" + damageDoc.id + "/imageModel.png").put(params.imageModel);
+                    promises.push(imageModelPromise);
+                }
+
                 await Promise.all(promises);
                 context.commit("clearNewParams");
                 return { status: 200, oid: oid, iid: iid, did: damageDoc.id };
@@ -135,6 +141,7 @@ export default {
                 locationGroundPlan: params.locationGroundPlan,
                 locationLongitudinalSection: params.locationLongitudinalSection,
                 locationCrossSection: params.locationCrossSection,
+                locationModel: params.locationModel,
                 cause: params.cause,
                 description: params.description
             }
@@ -143,6 +150,7 @@ export default {
             promises.push(editFileEdit(context, oid, did, params.imageGroundPlan, "imageGroundPlan", "locationGroundPlan"));
             promises.push(editFileEdit(context, oid, did, params.imageLongitudinalSection, "imageLongitudinalSection", "locationLongitudinalSection"));
             promises.push(editFileEdit(context, oid, did, params.imageCrossSection, "imageCrossSection", "locationCrossSection"));
+            promises.push(editFileEdit(context, oid, did, params.imageModel, "imageModel", "locationModel"));
             await Promise.all(promises);
             context.commit("clearNewParams");
             await context.dispatch("damage/load", null, { root: true });
@@ -256,6 +264,8 @@ function DamageParams() {
         imageLongitudinalSection: null,
         locationCrossSection: null,
         imageCrossSection: null,
+        locationModel: null,
+        imageModel: null,
         cause: null,
         description: null,
         photo: null,

@@ -71,6 +71,8 @@ export default {
                     promises.push(getFile("locationGroundPlan", "imageGroundPlan"));
                     promises.push(getFile("locationLongitudinalSection", "imageLongitudinalSection"));
                     promises.push(getFile("locationCrossSection", "imageCrossSection"));
+                    promises.push(getFile("locationModel", "imageModel"));
+
                     await Promise.all(promises);
                     context.commit("setData", data);
 

@@ -40,6 +40,7 @@
     :disabled="isLoading"
     :label="$t('object.model')"
     :value="objectParams.model"
+    accept=".stl"
     @select="setObjectParam('model', $event)"
   ></file-input>
 
