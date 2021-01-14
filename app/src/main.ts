@@ -191,7 +191,7 @@ Plugins.Device.getInfo().then((info) => {
 
 const app = createApp(App)
   .use(store)
-  .use(IonicVue, { mode: "md", animated: false })
+  .use(IonicVue, { animated: true })
   .use(router)
   .use(i18n);
 

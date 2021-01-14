@@ -34,7 +34,7 @@
           >
             <ion-col size-md="6" size-lg="6" size-xs="12" class="height-100">
               <ion-row class="height-100">
-                <ion-col size-lg="8" size-md="8" size-xs="12" class="height-100" style="overflow: scroll;">
+                <ion-col size-lg="8" size-md="8" size-xs="12" class="overflow-scroll">
                   <ion-img
                     v-if="objectPhotoUrl != null"
                     :src="objectPhotoUrl"
@@ -530,5 +530,12 @@ export default defineComponent({
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+@media (min-width: 576px) {
+  .overflow-scroll {
+    overflow: scroll;
+    height: 100%;
+  }
 }
 </style>

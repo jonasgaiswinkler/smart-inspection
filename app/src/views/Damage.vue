@@ -36,7 +36,7 @@
           >
             <ion-col size-md="6" size-lg="6" size-xs="12" class="height-100">
               <ion-row class="height-100">
-                <ion-col size-lg="8" size-md="8" size-xs="12" class="height-100" style="overflow: scroll;">
+                <ion-col size-lg="8" size-md="8" size-xs="12" class="overflow-scroll">
                   <template v-if="damageData != null">
                     <h1 v-if="damageData.isFixed === true">
                       {{ $t("thisDamageIsFixed") }}
@@ -650,5 +650,12 @@ export default defineComponent({
 
 .color-danger {
   color: var(--ion-color-danger);
+}
+
+@media (min-width: 576px) {
+  .overflow-scroll {
+    overflow: scroll;
+    height: 100%;
+  }
 }
 </style>
