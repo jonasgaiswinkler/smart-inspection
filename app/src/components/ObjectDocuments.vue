@@ -184,6 +184,8 @@ export default defineComponent({
         return store.state.objectParams.newParams;
       } else if (routeName === "EditObject") {
         return store.state.objectParams.editParams;
+      } else {
+        return null;
       }
     });
     // define object params setter

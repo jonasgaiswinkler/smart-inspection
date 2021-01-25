@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package at.fhstp.smartinspection;
 
 import android.os.Bundle;
 

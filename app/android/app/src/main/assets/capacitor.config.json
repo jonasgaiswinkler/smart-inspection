@@ -4,6 +4,7 @@
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "dist",
+  "backgroundColor": "#ffffff",
   "plugins": {
     "SplashScreen": {
       "launchShowDuration": 0

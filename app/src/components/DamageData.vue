@@ -175,7 +175,7 @@ import MeasurementInput from "@/components/MeasurementInput";
 
 export default defineComponent({
   name: "DamageData",
-  props: ['nextPage'],
+  props: ["nextPage"],
   components: {
     IonRow,
     IonItem,
@@ -218,6 +218,8 @@ export default defineComponent({
         return store.state.damageParams.newParams;
       } else if (routeName === "EditDamage") {
         return store.state.damageParams.editParams;
+      } else {
+        return null;
       }
     });
 

@@ -239,6 +239,8 @@ export default defineComponent({
         return store.state.inspectionParams.newParams;
       } else if (routeName === "EditInspection") {
         return store.state.inspectionParams.editParams;
+      } else {
+        return null;
       }
     });
     // define object params setter

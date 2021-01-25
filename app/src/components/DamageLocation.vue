@@ -117,6 +117,8 @@ export default defineComponent({
         return store.state.damageParams.newParams;
       } else if (routeName === "EditDamage") {
         return store.state.damageParams.editParams;
+      } else {
+        return null;
       }
     });
 
