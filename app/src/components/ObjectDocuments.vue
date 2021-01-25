@@ -1,6 +1,9 @@
 <template>
   <h2>{{ $t("objectDocuments") }}</h2>
   <h4>{{ $t("plans") }}</h4>
+  <ion-item v-if="errorPhoto" color="danger">
+    <ion-label>{{ $t("fileTooBig") }}</ion-label>
+  </ion-item>
   <file-input
     :disabled="isLoading"
     :label="$t('object.photo')"
@@ -8,6 +11,9 @@
     accept="image/png, image/jpeg"
     @select="setObjectParam('photo', $event)"
   ></file-input>
+  <ion-item v-if="errorGroundPlan" color="danger">
+    <ion-label>{{ $t("fileTooBig") }}</ion-label>
+  </ion-item>
   <file-input
     :disabled="isLoading"
     :label="$t('object.groundPlan')"
@@ -15,6 +21,9 @@
     accept="image/png, image/jpeg, application/pdf"
     @select="setObjectParam('groundPlan', $event)"
   ></file-input>
+  <ion-item v-if="errorLongitudinalSection" color="danger">
+    <ion-label>{{ $t("fileTooBig") }}</ion-label>
+  </ion-item>
   <file-input
     :disabled="isLoading"
     :label="$t('object.longitudinalSection')"
@@ -22,6 +31,9 @@
     accept="image/png, image/jpeg, application/pdf"
     @select="setObjectParam('longitudinalSection', $event)"
   ></file-input>
+  <ion-item v-if="errorCrossSection" color="danger">
+    <ion-label>{{ $t("fileTooBig") }}</ion-label>
+  </ion-item>
   <file-input
     :disabled="isLoading"
     :label="$t('object.crossSection')"
@@ -178,6 +190,8 @@ export default defineComponent({
     // define i18n
     const i18n = useI18n();
 
+    const inputFiles = ref(null);
+
     // define object params from store
     const objectParams = computed(function() {
       if (routeName === "NewObject") {
@@ -205,41 +219,68 @@ export default defineComponent({
     // get loading status from store
     const isLoading = computed(() => store.state.objectParams.isLoading);
 
+    const isTooBig = function(param) {
+      if (objectParams.value[param] == null) {
+        return false;
+      } else if (objectParams.value[param].same) {
+        return false;
+      } else if (objectParams.value[param].size < 2097152) {
+        return false;
+      } else {
+        return true;
+      }
+    };
+
+    const errorPhoto = ref(false);
+    const errorGroundPlan = ref(false);
+    const errorLongitudinalSection = ref(false);
+    const errorCrossSection = ref(false);
+
     // save new object function
     const saveObject = async function() {
       store.commit("objectParams/setIsLoading", true);
-      try {
-        let result = null;
-        if (routeName === "NewObject") {
-          result = await store.dispatch("objectParams/saveNew");
-        } else if (routeName === "EditObject") {
-          result = await store.dispatch("objectParams/saveEdit");
-        }
+      errorPhoto.value = isTooBig("photo");
+      errorGroundPlan.value = isTooBig("groundPlan");
+      errorLongitudinalSection.value = isTooBig("longitudinalSection");
+      errorCrossSection.value = isTooBig("crossSection");
 
-        const toast = await toastController.create({
-          message: i18n.t("objectSaved"),
-          duration: 2000,
-          color: "success",
-        });
-        toast.present();
-        router.push({ name: "Object", params: { oid: result.oid } });
-        emit("back");
-      } catch (error) {
-        console.error(error);
-        toastController
-          .create({
-            message: error,
+      if (
+        !errorPhoto.value &&
+        !errorGroundPlan.value &&
+        !errorLongitudinalSection.value &&
+        !errorCrossSection.value
+      ) {
+        try {
+          let result = null;
+          if (routeName === "NewObject") {
+            result = await store.dispatch("objectParams/saveNew");
+          } else if (routeName === "EditObject") {
+            result = await store.dispatch("objectParams/saveEdit");
+          }
+
+          const toast = await toastController.create({
+            message: i18n.t("objectSaved"),
             duration: 2000,
-            color: "danger",
-          })
-          .then((toast) => {
-            toast.present();
+            color: "success",
           });
+          toast.present();
+          router.push({ name: "Object", params: { oid: result.oid } });
+          emit("back");
+        } catch (error) {
+          console.error(error);
+          toastController
+            .create({
+              message: error,
+              duration: 2000,
+              color: "danger",
+            })
+            .then((toast) => {
+              toast.present();
+            });
+        }
       }
       store.commit("objectParams/setIsLoading", false);
     };
-
-    const inputFiles = ref(null);
 
     return {
       faFileUpload,
@@ -249,6 +290,10 @@ export default defineComponent({
       saveObject,
       isLoading,
       inputFiles,
+      errorPhoto,
+      errorGroundPlan,
+      errorLongitudinalSection,
+      errorCrossSection,
     };
   },
 });

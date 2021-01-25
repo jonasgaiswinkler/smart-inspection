@@ -123,6 +123,9 @@
                   class="ion-text-right"
                 ></ion-input>
               </ion-item>
+              <ion-item v-if="errorPhoto" color="danger">
+                <ion-label>{{ $t("fileTooBig") }}</ion-label>
+              </ion-item>
               <file-input
                 :disabled="isLoading"
                 :label="$t('inspection.photo')"
@@ -265,6 +268,20 @@ export default defineComponent({
     const errorInspector = ref(false);
     const errorType = ref(false);
 
+    const isTooBig = function(param) {
+      if (inspectionParams.value[param] == null) {
+        return false;
+      } else if (inspectionParams.value[param].same) {
+        return false;
+      } else if (inspectionParams.value[param].size < 2097152) {
+        return false;
+      } else {
+        return true;
+      }
+    };
+
+    const errorPhoto = ref(false);
+
     // save new object function
     const saveInspection = async function() {
       store.commit("inspectionParams/setIsLoading", true);
@@ -276,8 +293,14 @@ export default defineComponent({
 
       errorInspector.value = inspectionParams.value.inspector == null;
       errorType.value = inspectionParams.value.type == null;
+      errorPhoto.value = isTooBig("photo");
 
-      if (!errorDate.value && !errorInspector.value && !errorType.value) {
+      if (
+        !errorDate.value &&
+        !errorInspector.value &&
+        !errorType.value &&
+        !errorPhoto.value
+      ) {
         try {
           let result;
           if (routeName === "NewInspection") {
@@ -323,6 +346,7 @@ export default defineComponent({
       errorDate,
       errorInspector,
       errorType,
+      errorPhoto,
     };
   },
 });

@@ -1,263 +1,264 @@
 {
-    "welcomeText": "Willkommen bei Smart Inspection!",
-    "login": "Anmelden",
-    "logout": "Abmelden",
-    "email": "E-Mail",
-    "password": "Passwort",
-    "newObject": "Neues Objekt",
-    "newInspection": "Neue Inspektion",
-    "newDamage": "Neuer Schaden/Mangel",
-    "objectList": "Objektverzeichnis",
-    "inspectionList": "Inspektionsverzeichnis",
-    "bridgeObject": "Brückenobjekt",
-    "settings": "Einstellungen",
-    "profile": "Profil",
-    "objectData": "Objektdaten",
-    "objectDocuments": "Objektdokumente",
-    "inspectionData": "Inspektionsdaten",
-    "damageData": "Schadens-/Mangeldaten",
-    "damageState": "Schadens-/Mangelzustand",
-    "damageList": "Schadens-/Mangelverzeichnis",
-    "plans": "Pläne/technische Unterlagen",
-    "additionalResources": "Detailpläne/zusätzliche Unterlagen/Bescheide",
-    "generateReport": "Bericht generieren/&#8203;freigeben",
-    "assessment": "Bewertung",
-    "editObject": "Objekt bearbeiten",
-    "editInspection": "Inspektion bearbeiten",
-    "editDamage": "Schaden/Mangel bearbeiten",
-    "updateDamageState": "Schadens-/Mangelzustand aktualisieren",
-    "deleteObject": "Objekt löschen",
-    "restoreObject": "Objekt wiederherstellen",
-    "objectRestored": "Objekt wiederhergestellt",
-    "deleteInspection": "Inspektion löschen",
-    "confirmDeleteObject": "Bitte bestätigen Sie die Löschung des Objekts #{oid}.",
-    "confirmDeleteInspection": "Bitte bestätigen Sie die Löschung der Inspektion.",
-    "confirmDeletionRequest": "Bitte bestätigen Sie, dass dieses Objekt zur Löschung durch einen Administrator markiert wird.",
-    "pleasechoose": "Bitte auswählen",
-    "idAssigned": "ID bereits vergeben!",
-    "dateAssigned": "Datum bereits vergeben!",
-    "resetPassword": "Passwort zurücksetzen",
-    "resetEmailSend": "Eine E-Mail mit Informationen zur Passwortzurücksetzung wurde an die angegebene E-Mail-Adresse gesendet.",
-    "noEmailAddress": "Bitte geben Sie eine E-Mail-Adresse ein.",
-    "filesAmount": "Keine Datei gewählt | Eine Datei gewählt | {n} Dateien gewählt",
-    "wrongFileType": "Falscher Dateityp!",
-    "pleaseChooseOption": "Bitte eine Option auswählen.",
-    "next": "Weiter",
-    "back": "Zurück",
-    "save": "Speichern",
-    "cancel": "Abbrechen",
-    "delete": "Löschen",
-    "search": "Suchen",
-    "download": "Download",
-    "confirm": "Bestätigen",
-    "close": "Schließen",
-    "reset": "Zurücksetzen",
-    "selectFile": "Datei auswählen",
-    "selectFiles": "Dateien auswählen",
-    "localization": "Ortung",
-    "objectSaved": "Objekt gespeichert!",
-    "objectDeleted": "Objekt gelöscht!",
-    "deletionRequested": "Löschung beantragt!",
-    "requestObjectDeletion": "Objektlöschung beantragen",
-    "requestedDeletions": "Beantragte Löschungen",
-    "inspectionSaved": "Inspektion gespeichert!",
-    "inspectionDeleted": "Inspektion gelöscht!",
-    "damageSaved": "Mangel/Schaden gespeichert!",
-    "deleteDamage": "Mangel/Schaden löschen",
-    "fixDamage": "Mangel/Schaden abschließen",
-    "unfixDamage": "Mangel/Schaden wiederaufnehmen",
-    "damageUnfixed": "Mangel/Schaden wiederaufgenommen",
-    "damageFixed": "Mangel/Schaden abgeschlossen!",
-    "thisDamageIsFixed": "Dieser Mangel/Schaden wurde als abgeschlossen markiert.",
-    "confirmDeleteDamage": "Bitte bestätigen Sie die Löschung des Mangels/Schadens.",
-    "damageDeleted": "Mangel/Schaden gelöscht!",
-    "objectPhoto": "Objektfoto",
-    "inspectionPhoto": "Inspektionsfoto",
-    "measurements": "Abmessungen",
-    "locationOnlyNecessary": "Verortung ist nur notwendig, wenn kein Plan vorhanden ist.",
-    "filter": "Filter",
-    "placeholderLocation": "{name}verortung",
-    "damageGroundPlan": "Grundrissverortung",
-    "damageLongitudinalSection": "Längsschnittsverortung",
-    "damageCrossSection": "Querschnittsverortung",
-    "damageModel": "3D-Modellverortung",
-    "assessmentSaved": "Bewertung gespeichert!",
-    "nItems": "Keine Einträge | Ein Eintrag | {n} Einträge",
-    "object": {
-        "name": "Objekt",
-        "id": "ID",
-        "materials": {
-            "name": "Baustoff",
-            "data": {
-                "stone": "Stein",
-                "wood": "Holz",
-                "brickwork": "Mauerwerk",
-                "steel": "Stahl",
-                "reinforcedConcrete": "Stahlbeton",
-                "prestressedConcrete": "Spannbeton",
-                "compositeConstruction": "Verbundkonstruktion"
-            }
-        },
-        "types": {
-            "name": "Brückenart",
-            "data": {
-                "railwayBridge": "Eisenbahnbrücke",
-                "roadBridge": "Straßenbrücke"
-            }
-        },
-        "systems": {
-            "name": "Statisches System",
-            "data": {
-                "singleSpanBeam": "Einfeldträger",
-                "continuousBeam": "Durchlaufträger",
-                "frameStructure": "Rahmentragwerk",
-                "archedStructure": "Bogentragwerk",
-                "trussStructure": "Fachwerktragwerk",
-                "suspensionBridge": "Hängebrücke",
-                "ropeBridge": "Seilbrücke",
-                "specialConstruction": "Sonderkonstruktion"
-            }
-        },
-        "crossSectionShapes": {
-            "name": "Querschnittsform",
-            "data": {
-                "slabs": "Platten",
-                "beams": "Balken",
-                "slabBeams": "Plattenbalken",
-                "boxGirder": "Hohlkasten",
-                "frame": "Rahmen",
-                "rolledBeams": "WIB – Walzträger in Beton",
-                "trough": "Trog"
-            }
-        },
-        "constructionYear": "Baujahr",
-        "routeCode": "Strecken-/Straßencode",
-        "routeName": "Strecken-/Straßenname",
-        "chainage": "Kilometrierung [km]",
-        "coords": "Koordinaten",
-        "spanLength": "Stützweite [m]",
-        "width": "Breite [m]",
-        "trafficRoutes": "Anzahl Verkehrswege",
-        "shortDescription": "Kurzbeschreibung",
-        "photo": "Foto",
-        "groundPlan": "Grundriss",
-        "longitudinalSection": "Längsschnitt",
-        "crossSection": "Querschnitt",
-        "techDescription": "Techn. Beschreibung",
-        "model": "3D-Modell",
-        "files": "Dateien"
+  "welcomeText": "Willkommen bei Smart Inspection!",
+  "login": "Anmelden",
+  "logout": "Abmelden",
+  "email": "E-Mail",
+  "password": "Passwort",
+  "newObject": "Neues Objekt",
+  "newInspection": "Neue Inspektion",
+  "newDamage": "Neuer Schaden/Mangel",
+  "objectList": "Objektverzeichnis",
+  "inspectionList": "Inspektionsverzeichnis",
+  "bridgeObject": "Brückenobjekt",
+  "settings": "Einstellungen",
+  "profile": "Profil",
+  "objectData": "Objektdaten",
+  "objectDocuments": "Objektdokumente",
+  "inspectionData": "Inspektionsdaten",
+  "damageData": "Schadens-/Mangeldaten",
+  "damageState": "Schadens-/Mangelzustand",
+  "damageList": "Schadens-/Mangelverzeichnis",
+  "plans": "Pläne/technische Unterlagen",
+  "additionalResources": "Detailpläne/zusätzliche Unterlagen/Bescheide",
+  "generateReport": "Bericht generieren/&#8203;freigeben",
+  "assessment": "Bewertung",
+  "editObject": "Objekt bearbeiten",
+  "editInspection": "Inspektion bearbeiten",
+  "editDamage": "Schaden/Mangel bearbeiten",
+  "updateDamageState": "Schadens-/Mangelzustand aktualisieren",
+  "deleteObject": "Objekt löschen",
+  "restoreObject": "Objekt wiederherstellen",
+  "objectRestored": "Objekt wiederhergestellt",
+  "deleteInspection": "Inspektion löschen",
+  "confirmDeleteObject": "Bitte bestätigen Sie die Löschung des Objekts #{oid}.",
+  "confirmDeleteInspection": "Bitte bestätigen Sie die Löschung der Inspektion.",
+  "confirmDeletionRequest": "Bitte bestätigen Sie, dass dieses Objekt zur Löschung durch einen Administrator markiert wird.",
+  "pleasechoose": "Bitte auswählen",
+  "idAssigned": "ID bereits vergeben!",
+  "dateAssigned": "Datum bereits vergeben!",
+  "resetPassword": "Passwort zurücksetzen",
+  "resetEmailSend": "Eine E-Mail mit Informationen zur Passwortzurücksetzung wurde an die angegebene E-Mail-Adresse gesendet.",
+  "noEmailAddress": "Bitte geben Sie eine E-Mail-Adresse ein.",
+  "filesAmount": "Keine Datei gewählt | Eine Datei gewählt | {n} Dateien gewählt",
+  "wrongFileType": "Falscher Dateityp!",
+  "fileTooBig": "Datei zu groß! (max. 2 MB)",
+  "pleaseChooseOption": "Bitte eine Option auswählen.",
+  "next": "Weiter",
+  "back": "Zurück",
+  "save": "Speichern",
+  "cancel": "Abbrechen",
+  "delete": "Löschen",
+  "search": "Suchen",
+  "download": "Download",
+  "confirm": "Bestätigen",
+  "close": "Schließen",
+  "reset": "Zurücksetzen",
+  "selectFile": "Datei auswählen",
+  "selectFiles": "Dateien auswählen",
+  "localization": "Ortung",
+  "objectSaved": "Objekt gespeichert!",
+  "objectDeleted": "Objekt gelöscht!",
+  "deletionRequested": "Löschung beantragt!",
+  "requestObjectDeletion": "Objektlöschung beantragen",
+  "requestedDeletions": "Beantragte Löschungen",
+  "inspectionSaved": "Inspektion gespeichert!",
+  "inspectionDeleted": "Inspektion gelöscht!",
+  "damageSaved": "Mangel/Schaden gespeichert!",
+  "deleteDamage": "Mangel/Schaden löschen",
+  "fixDamage": "Mangel/Schaden abschließen",
+  "unfixDamage": "Mangel/Schaden wiederaufnehmen",
+  "damageUnfixed": "Mangel/Schaden wiederaufgenommen",
+  "damageFixed": "Mangel/Schaden abgeschlossen!",
+  "thisDamageIsFixed": "Dieser Mangel/Schaden wurde als abgeschlossen markiert.",
+  "confirmDeleteDamage": "Bitte bestätigen Sie die Löschung des Mangels/Schadens.",
+  "damageDeleted": "Mangel/Schaden gelöscht!",
+  "objectPhoto": "Objektfoto",
+  "inspectionPhoto": "Inspektionsfoto",
+  "measurements": "Abmessungen",
+  "locationOnlyNecessary": "Verortung ist nur notwendig, wenn kein Plan vorhanden ist.",
+  "filter": "Filter",
+  "placeholderLocation": "{name}verortung",
+  "damageGroundPlan": "Grundrissverortung",
+  "damageLongitudinalSection": "Längsschnittsverortung",
+  "damageCrossSection": "Querschnittsverortung",
+  "damageModel": "3D-Modellverortung",
+  "assessmentSaved": "Bewertung gespeichert!",
+  "nItems": "Keine Einträge | Ein Eintrag | {n} Einträge",
+  "object": {
+    "name": "Objekt",
+    "id": "ID",
+    "materials": {
+      "name": "Baustoff",
+      "data": {
+        "stone": "Stein",
+        "wood": "Holz",
+        "brickwork": "Mauerwerk",
+        "steel": "Stahl",
+        "reinforcedConcrete": "Stahlbeton",
+        "prestressedConcrete": "Spannbeton",
+        "compositeConstruction": "Verbundkonstruktion"
+      }
     },
-    "inspection": {
-        "name": "Inspektion",
-        "inspector": "Objektprüfer",
-        "date": "Datum",
-        "types": {
-            "name": "Art der Inspektion",
-            "data": {
-                "continuousMonitoring": "Laufende Überwachung",
-                "check": "Kontrolle",
-                "inspection": "Prüfung",
-                "specialInspection": "Sonderprüfung"
-            }
-        },
-        "weather": {
-            "name": "Wetter",
-            "data": {
-                "dry": "trocken",
-                "wet": "feucht",
-                "snow": "Schnee"
-            }
-        },
-        "temperature": "Temperatur [°C]",
-        "photo": "Übersichtsfoto",
-        "additionalInfo": "Zusätzliche Infos"
+    "types": {
+      "name": "Brückenart",
+      "data": {
+        "railwayBridge": "Eisenbahnbrücke",
+        "roadBridge": "Straßenbrücke"
+      }
     },
-    "damage": {
-        "name": "Schaden/Mangel",
-        "allocations": {
-            "name": "Zuordnung",
-            "data": {
-                "substructure": {
-                    "name": "Unterbau",
-                    "data": {
-                        "pile": "Pfeiler",
-                        "flatFoundation": "Flachgründung",
-                        "abutment": "Widerlager",
-                        "pileFoundation": "Pfahlgründung",
-                        "embankmentSurface": "Böschungspflaster"
-                    }
-                },
-                "superstructure": {
-                    "name": "Überbau"
-                },
-                "equipment": {
-                    "name": "Ausrüstung",
-                    "data": {
-                        "bearing": "Lager",
-                        "sealing": "Abdichtung",
-                        "trafficSurface": "Fahrbahnbelag",
-                        "drainage": "Entwässerung",
-                        "edgeBeam": "Randbalken",
-                        "vehicleRestraintSystem": "Fahrzeugrückhaltesystem",
-                        "railing": "Geländer",
-                        "noiseProtection": "Lärmschutz"
-                    }
-                }
-            }
-        },
-        "component": "Bauteil",
-        "componentDetail": "Bauteil detailliert",
-        "types": {
-            "name": "Schadens-/Mangelart",
-            "data": {
-                "deformation": "Verformung",
-                "crack": "Riss",
-                "rust": "Rost",
-                "wetSpot": "nasse Stelle",
-                "leaching": "Auswaschung",
-                "exposedReinforcement": "freiliegende Bewehrung",
-                "weathering": "Verwitterung",
-                "spalling": "Abplatzung",
-                "gap": "Lücke",
-                "orientation": "Ausrichtung",
-                "tightness": "Dichtheit",
-                "corrosion": "Korrosion",
-                "otherDamage": "sonstiger Schaden"
-            }
-        },
-        "typeDetail": "Art detailliert",
-        "location": "Verortung",
-        "cause": "Ursache",
-        "description": "Beschreibung",
-        "photo": "Foto",
-        "measurement1": "Abmessung 1",
-        "measurement1Sm": "Abm. 1",
-        "measurement2": "Abmessung 2",
-        "measurement2Sm": "Abm. 2",
-        "limit": "Grenzwert für {msg}",
-        "limitSm": "Grenzw.",
-        "impact": "Auswirkungen",
-        "categories": {
-            "name": "Kategorisierung",
-            "data": {
-                "immediateActionLimit": "Soforteingriffsschwelle",
-                "interventionLimit": "Eingriffsschwelle",
-                "alertLimit": "Auslösewert"
-            }
-        },
-        "action": "Maßnahmen",
-        "period": "Überprüfungsfristen",
-        "additionalInfo": "Sonstige Informationen"
+    "systems": {
+      "name": "Statisches System",
+      "data": {
+        "singleSpanBeam": "Einfeldträger",
+        "continuousBeam": "Durchlaufträger",
+        "frameStructure": "Rahmentragwerk",
+        "archedStructure": "Bogentragwerk",
+        "trussStructure": "Fachwerktragwerk",
+        "suspensionBridge": "Hängebrücke",
+        "ropeBridge": "Seilbrücke",
+        "specialConstruction": "Sonderkonstruktion"
+      }
     },
-    "assessments": {
-        "substructure": "Unterbaubewertung",
-        "superstructure": "Überbaubewertung",
-        "equipment": "Ausrüstungsbewertung",
-        "object": "Objektbewertung",
-        "1": "Sehr guter Zustand",
-        "2": "Guter Zustand",
-        "3": "Ausreichender Zustand",
-        "4": "Mangelhafter Zustand",
-        "5": "Schlechter Zustand"
-    }
+    "crossSectionShapes": {
+      "name": "Querschnittsform",
+      "data": {
+        "slabs": "Platten",
+        "beams": "Balken",
+        "slabBeams": "Plattenbalken",
+        "boxGirder": "Hohlkasten",
+        "frame": "Rahmen",
+        "rolledBeams": "WIB – Walzträger in Beton",
+        "trough": "Trog"
+      }
+    },
+    "constructionYear": "Baujahr",
+    "routeCode": "Strecken-/Straßencode",
+    "routeName": "Strecken-/Straßenname",
+    "chainage": "Kilometrierung [km]",
+    "coords": "Koordinaten",
+    "spanLength": "Stützweite [m]",
+    "width": "Breite [m]",
+    "trafficRoutes": "Anzahl Verkehrswege",
+    "shortDescription": "Kurzbeschreibung",
+    "photo": "Foto",
+    "groundPlan": "Grundriss",
+    "longitudinalSection": "Längsschnitt",
+    "crossSection": "Querschnitt",
+    "techDescription": "Techn. Beschreibung",
+    "model": "3D-Modell",
+    "files": "Dateien"
+  },
+  "inspection": {
+    "name": "Inspektion",
+    "inspector": "Objektprüfer",
+    "date": "Datum",
+    "types": {
+      "name": "Art der Inspektion",
+      "data": {
+        "continuousMonitoring": "Laufende Überwachung",
+        "check": "Kontrolle",
+        "inspection": "Prüfung",
+        "specialInspection": "Sonderprüfung"
+      }
+    },
+    "weather": {
+      "name": "Wetter",
+      "data": {
+        "dry": "trocken",
+        "wet": "feucht",
+        "snow": "Schnee"
+      }
+    },
+    "temperature": "Temperatur [°C]",
+    "photo": "Übersichtsfoto",
+    "additionalInfo": "Zusätzliche Infos"
+  },
+  "damage": {
+    "name": "Schaden/Mangel",
+    "allocations": {
+      "name": "Zuordnung",
+      "data": {
+        "substructure": {
+          "name": "Unterbau",
+          "data": {
+            "pile": "Pfeiler",
+            "flatFoundation": "Flachgründung",
+            "abutment": "Widerlager",
+            "pileFoundation": "Pfahlgründung",
+            "embankmentSurface": "Böschungspflaster"
+          }
+        },
+        "superstructure": {
+          "name": "Überbau"
+        },
+        "equipment": {
+          "name": "Ausrüstung",
+          "data": {
+            "bearing": "Lager",
+            "sealing": "Abdichtung",
+            "trafficSurface": "Fahrbahnbelag",
+            "drainage": "Entwässerung",
+            "edgeBeam": "Randbalken",
+            "vehicleRestraintSystem": "Fahrzeugrückhaltesystem",
+            "railing": "Geländer",
+            "noiseProtection": "Lärmschutz"
+          }
+        }
+      }
+    },
+    "component": "Bauteil",
+    "componentDetail": "Bauteil detailliert",
+    "types": {
+      "name": "Schadens-/Mangelart",
+      "data": {
+        "deformation": "Verformung",
+        "crack": "Riss",
+        "rust": "Rost",
+        "wetSpot": "nasse Stelle",
+        "leaching": "Auswaschung",
+        "exposedReinforcement": "freiliegende Bewehrung",
+        "weathering": "Verwitterung",
+        "spalling": "Abplatzung",
+        "gap": "Lücke",
+        "orientation": "Ausrichtung",
+        "tightness": "Dichtheit",
+        "corrosion": "Korrosion",
+        "otherDamage": "sonstiger Schaden"
+      }
+    },
+    "typeDetail": "Art detailliert",
+    "location": "Verortung",
+    "cause": "Ursache",
+    "description": "Beschreibung",
+    "photo": "Foto",
+    "measurement1": "Abmessung 1",
+    "measurement1Sm": "Abm. 1",
+    "measurement2": "Abmessung 2",
+    "measurement2Sm": "Abm. 2",
+    "limit": "Grenzwert für {msg}",
+    "limitSm": "Grenzw.",
+    "impact": "Auswirkungen",
+    "categories": {
+      "name": "Kategorisierung",
+      "data": {
+        "immediateActionLimit": "Soforteingriffsschwelle",
+        "interventionLimit": "Eingriffsschwelle",
+        "alertLimit": "Auslösewert"
+      }
+    },
+    "action": "Maßnahmen",
+    "period": "Überprüfungsfristen",
+    "additionalInfo": "Sonstige Informationen"
+  },
+  "assessments": {
+    "substructure": "Unterbaubewertung",
+    "superstructure": "Überbaubewertung",
+    "equipment": "Ausrüstungsbewertung",
+    "object": "Objektbewertung",
+    "1": "Sehr guter Zustand",
+    "2": "Guter Zustand",
+    "3": "Ausreichender Zustand",
+    "4": "Mangelhafter Zustand",
+    "5": "Schlechter Zustand"
+  }
 }
