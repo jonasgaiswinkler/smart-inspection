@@ -3,6 +3,8 @@ const functions = require('firebase-functions');
 const nodemailer = require('nodemailer');
 const cors = require('cors')({ origin: true });
 const PDFDocument = require('pdfkit');
+const { DateTime } = require("luxon");
+const de = require("./locales/de.json");
 admin.initializeApp();
 
 let transporter = nodemailer.createTransport({
@@ -63,36 +65,187 @@ exports.deleteDamage = functions.https.onCall(async (data, context) => {
 });
 
 exports.createInspectionReport = functions.https.onCall(async (data, context) => {
-    if (context.auth && data.oid !== undefined && data.did !== undefined) {
-        const doc = new PDFDocument({
-            info: {
-                Title: "Test"
-            },
-            size: "A4"
-        });
-        const file = admin.storage().bucket().file('test/Testfile.pdf');
+    if (context.auth && data.oid !== undefined && data.iid !== undefined) {
+        const db = admin.firestore();
 
-        await new Promise((resolve, reject) => {
-            const stream = doc.pipe(file.createWriteStream({ metadata: { contentType: 'application/pdf' } }));
-
-            stream.on("finish", () => {
-                resolve();
+        const inspectionDoc = await db.collection("objects").doc(data.oid).collection("inspections").doc(data.iid).get();
+        if (inspectionDoc.exists) {
+            const inspection = inspectionDoc.data();
+            const damageSnap = await db.collection("objects").doc(data.oid).collection("damages").get();
+            const damagePromises = [];
+            for (const damageDoc of damageSnap.docs) {
+                damagePromises.push(async function () {
+                    const stateSnap = await db.collection("objects").doc(data.oid).collection("damages").doc(damageDoc.id).collection("states").orderBy("date").get();
+                    const states = stateSnap.docs.map((doc) => doc.data());
+                    return Object.assign(damageDoc.data(), {
+                        states: states
+                    });
+                }());
+            }
+            const damages = await Promise.all(damagePromises);
+            let locale;
+            if (data.locale === "de") {
+                locale = de;
+            } else {
+                locale = de;
+            }
+            const doc = new PDFDocument({
+                info: {
+                    Title: locale.inspectionReport
+                },
+                size: "A4"
             });
+            const file = admin.storage().bucket().file('test/Testfile.pdf');
 
-            addPageHeader(doc);
+            await new Promise(async (resolve, reject) => {
+                const stream = doc.pipe(file.createWriteStream({ metadata: { contentType: 'application/pdf' } }));
 
-            doc.end();
-        });
+                stream.on("finish", () => {
+                    resolve();
+                });
+
+                addPageHeader(doc);
+                await addInspectionContent(doc, locale, inspection, data.oid, data.iid);
+                for (const damage of damages) {
+                    doc.addPage();
+                    addPageHeader(doc);
+                    // eslint-disable-next-line no-await-in-loop
+                    await addDamageContent(doc, locale, damage, data.oid, data.iid, damage.did);
+                }
+
+                doc.end();
+            });
+        } else {
+            return { status: 404 };
+        }
         return { status: 200 }
     } else {
         return { status: 401 };
     }
 });
 
+async function addInspectionContent(doc, locale, inspection, oid, iid) {
+    const db = admin.firestore();
+    doc.fontSize(24).text(locale.inspectionReport).moveDown(0.5);
+    doc.fontSize(18).text(locale.object.name + " #" + oid + " - " + locale.inspection.name + " " + DateTime.fromISO(inspection.date).toFormat("dd.MM.yyyy")).moveDown();
+    doc.fontSize(12);
+    if (inspection.inspector) {
+        const userDoc = await db.collection("users").doc(inspection.inspector).get();
+        if (userDoc.exists) {
+            doc.text(locale.inspection.inspector + ": " + userDoc.data().name).moveDown(0.5);
+        }
+    }
+    if (inspection.type) {
+        doc.text(locale.inspection.types.name + ": " + locale.inspection.types.data[inspection.type]).moveDown(0.5);
+    }
+    if (inspection.weather) {
+        doc.text(locale.inspection.weather.name + ": " + locale.inspection.weather.data[inspection.weather]).moveDown(0.5);
+    }
+    if (inspection.temperature) {
+        doc.text(locale.inspection.temperature + ": " + inspection.temperature).moveDown(0.5);
+    }
+    if (inspection.additionalInfo) {
+        doc.text(locale.inspection.additionalInfo + ": " + inspection.additionalInfo).moveDown(0.5);
+    }
+    doc.moveDown(0.5);
+
+    const assessmentDoc = await db.collection("objects").doc(oid).collection("assessments").doc(iid).get();
+    if (assessmentDoc.exists) {
+        const assessment = assessmentDoc.data();
+        doc.fontSize(15).text(locale.assessment).moveDown(0.5);
+        doc.fontSize(12);
+        const addAssessmentGrade = function (doc, grade) {
+            let color;
+            if (grade === 1) {
+                color = "#92d050";
+            } else if (grade === 2) {
+                color = "#ffff00";
+            } else if (grade === 3) {
+                color = "#ffc000";
+            } else if (grade === 4) {
+                color = "#ff6600";
+            } else if (grade === 5) {
+                color = "#ff0000";
+            } else {
+                color = "black";
+            }
+            doc.fillColor(color).text(grade + " - " + locale.assessments[grade.toString()]).fillColor("black");
+        }
+        if (assessment.substructure) {
+            doc.text(locale.assessments.substructure + ": ", { continued: true });
+            addAssessmentGrade(doc, assessment.substructure);
+            doc.moveDown(0.5);
+        }
+        if (assessment.superstructure) {
+            doc.text(locale.assessments.superstructure + ": ", { continued: true });
+            addAssessmentGrade(doc, assessment.superstructure);
+            doc.moveDown(0.5);
+        }
+        if (assessment.equipment) {
+            doc.text(locale.assessments.equipment + ": ", { continued: true });
+            addAssessmentGrade(doc, assessment.equipment);
+            doc.moveDown(0.5);
+        }
+        if (assessment.object) {
+            doc.text(locale.assessments.object + ": ", { continued: true });
+            addAssessmentGrade(doc, assessment.object);
+            doc.moveDown(0.5);
+        }
+        doc.moveDown(0.5);
+    }
+
+    if (inspection.photo) {
+        const photo = await admin.storage().bucket().file("objects/" + oid + "/inspections/" + iid + "/" + inspection.photo).download();
+        doc.fontSize(15).text(locale.inspection.photo).moveDown(0.5);
+        doc.image(photo[0], undefined, undefined, { fit: [451, 350], align: "center" }).moveDown(1);
+    }
+}
+
+async function addDamageContent(doc, locale, damage, oid, iid, did) {
+    console.log(damage);
+    doc.fontSize(24).text(locale.inspectionReport).moveDown(0.5);
+    doc.fontSize(18).text(locale.damage.name + " #" + did + " - " + locale.inspection.name + " " + DateTime.fromISO(damage.date).toFormat("dd.MM.yyyy")).moveDown();
+    doc.fontSize(12);
+
+    if (damage.allocation) {
+        doc.text(locale.damage.allocations.name + ": " + locale.damage.allocations.data[damage.allocation].name);
+    }
+
+    if (damage.component) {
+        doc.text(locale.damage.component + ": " + locale.damage.allocations.data[damage.allocation].data[damage.component]);
+    }
+
+    if (damage.componentDetail) {
+        doc.text(locale.damage.componentDetail + ": " + damage.componentDetail);
+    }
+
+    if (damage.type) {
+        doc.text(locale.damage.types.name + ": " + locale.damage.types.data[damage.type]);
+    }
+
+    if (damage.typeDetail) {
+        doc.text(locale.damage.typeDetail + ": " + damage.typeDetail);
+    }
+
+    if (damage.location) {
+        doc.text(locale.damage.location + ": " + damage.location);
+    }
+
+    if (damage.cause) {
+        doc.text(locale.damage.cause + ": " + damage.cause);
+    }
+
+    if (damage.description) {
+        doc.text(locale.damage.description + ": " + damage.description);
+    }
+
+    doc.moveDown();
+    doc.fontSize(15).text(locale.measurements).moveDown(0.5);
+}
+
 function addPageHeader(doc) {
     const logoUrl = "assets/logo.png";
     doc.image(logoUrl, 495, 30, { fit: [70, 70] });
-    doc.fontSize(25).text("Smart Inspection").moveDown();
 }
 
 exports.notifyAdminLimit = functions.firestore.document('objects/{oid}/damages/{did}/states/{iid}').onWrite(async (change, context) => {

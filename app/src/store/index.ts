@@ -83,10 +83,10 @@ export default createStore({
     testPdf(context) {
       const functions = firebase.functions();
       return functions.httpsCallable("createInspectionReport")({
-        oid: "ssdf",
-        did: "kskd"
+        oid: "2837",
+        iid: "0MwLXrVbOltVwF2JCGUl",
       });
-    }
+    },
   },
   modules: {
     objectParams: objectParams,
