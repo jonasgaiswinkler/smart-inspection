@@ -84,6 +84,10 @@
   "damageModel": "3D-Modellverortung",
   "assessmentSaved": "Bewertung gespeichert!",
   "nItems": "Keine Einträge | Ein Eintrag | {n} Einträge",
+  "reports": "Berichte",
+  "newReport": "Neuer Bericht",
+  "objectReport": "Objektbericht",
+  "objectReports": "Objektberichte",
   "inspectionReport": "Inspektionsbericht",
   "object": {
     "name": "Objekt",

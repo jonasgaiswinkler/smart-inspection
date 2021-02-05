@@ -14,7 +14,7 @@ import Damage from "@/views/Damage.vue";
 import DamageList from "@/views/DamageList.vue";
 import Settings from "@/views/Settings.vue";
 import AssessmentForm from "@/views/AssessmentForm.vue";
-import ModelViewer from "@/components/ModelViewer.vue";
+import Reports from "@/views/Reports.vue";
 
 const base = "/";
 
@@ -79,6 +79,11 @@ const routes: Array<RouteRecordRaw> = [
     component: InspectionList,
   },
   {
+    path: "/object/:oid/reports",
+    name: "ObjectReports",
+    component: Reports,
+  },
+  {
     path: "/object/:oid/inspection/:idate",
     name: "Inspection",
     component: Inspection,
@@ -123,11 +128,6 @@ const routes: Array<RouteRecordRaw> = [
     name: "Settings",
     component: Settings,
   },
-  {
-    path: "/model",
-    name: "Model",
-    component: ModelViewer
-  }
 ];
 
 const router = createRouter({
