@@ -72,9 +72,12 @@ exports.deleteDamage = functions.https.onCall(async (data, context) => {
     }
 });
 
-exports.createInspectionReport = functions.https.onCall(async (data, context) => {
-    if (context.auth && data.oid !== undefined && data.iid !== undefined) {
+exports.createReport = functions.https.onCall(async (data, context) => {
+    if (context.auth && data.oid && data.iid) {
         const db = admin.firestore();
+
+        const reportDoc = await db.collection("objects").doc(data.oid).collection("reports").doc();
+        const rid = reportDoc.id;
 
         const inspectionDoc = await db.collection("objects").doc(data.oid).collection("inspections").doc(data.iid).get();
         if (inspectionDoc.exists) {
@@ -83,7 +86,7 @@ exports.createInspectionReport = functions.https.onCall(async (data, context) =>
             const damagePromises = [];
             for (const damageDoc of damageSnap.docs) {
                 damagePromises.push(async function () {
-                    const stateSnap = await db.collection("objects").doc(data.oid).collection("damages").doc(damageDoc.id).collection("states").orderBy("date").get();
+                    const stateSnap = await db.collection("objects").doc(data.oid).collection("damages").doc(damageDoc.id).collection("states").orderBy("date").where("date", "<=", inspection.date).get();
                     const states = stateSnap.docs.map((doc) => Object.assign(doc.data(), {
                         iid: doc.id
                     }));
@@ -103,19 +106,28 @@ exports.createInspectionReport = functions.https.onCall(async (data, context) =>
 
             const content = [];
 
+            let title = locale.inspectionReport;
+            if (data.type === "object") {
+                title = locale.objectReport;
+            }
+
             const objectDoc = await db.collection("objects").doc(data.oid).get();
-            await addObjectContent(content, locale, locale.inspectionReport, objectDoc.data(), data.oid);
-            await addInspectionContent(content, locale, locale.inspectionReport, inspection, data.oid, data.iid);
+            await addObjectContent(content, locale, title, objectDoc.data(), data.oid, inspection);
+
+            if (data.type === "inspection") {
+                await addInspectionContent(content, locale, title, inspection, data.oid, data.iid);
+            }
+
 
             for (const damage of damages) {
                 // eslint-disable-next-line no-await-in-loop
-                await addDamageContent(content, locale, locale.inspectionReport, damage, data.oid, data.iid, damage.did);
+                await addDamageContent(content, locale, title, damage, data.oid, data.iid, damage.did);
             }
 
             const doc = printer.createPdfKitDocument({
                 content: content,
                 info: {
-                    title: locale.inspectionReport,
+                    title: title,
                     author: 'Smart Inspection'
                 },
                 defaultStyle: {
@@ -124,7 +136,7 @@ exports.createInspectionReport = functions.https.onCall(async (data, context) =>
                 }, styles: {
                     title: {
                         fontSize: 24,
-                        margin: [0, 0, 0, 8]
+                        margin: [0, 0, 0, 6]
                     },
                     header: {
                         fontSize: 18,
@@ -137,8 +149,8 @@ exports.createInspectionReport = functions.https.onCall(async (data, context) =>
                 },
                 header: {
                     image: "assets/logo.png",
-                    absolutePosition: { x: 495, y: 30 },
-                    fit: [70, 70]
+                    absolutePosition: { x: 520, y: 25 },
+                    fit: [50, 50]
                 },
                 footer: function (currentPage) {
                     return {
@@ -149,9 +161,12 @@ exports.createInspectionReport = functions.https.onCall(async (data, context) =>
                     }
                 },
                 pageSize: "A4",
-                pageMargins: [50, 60, 50, 60]
+                pageMargins: [50, 80, 50, 60],
+                pageBreakBefore(currentNode, followingNodesOnPage, nodesOnNextPage, previousNodesOnPage) {
+                    return currentNode.pageNumbers.length > 1 && currentNode.unbreakable;
+                }
             });
-            const file = admin.storage().bucket().file('test/Inspektionsbericht.pdf');
+            const file = admin.storage().bucket().file('objects/' + data.oid + '/reports/' + rid + '/Bericht.pdf');
 
             await new Promise(async (resolve, reject) => {
                 const stream = doc.pipe(file.createWriteStream({ metadata: { contentType: 'application/pdf' } }));
@@ -162,6 +177,14 @@ exports.createInspectionReport = functions.https.onCall(async (data, context) =>
 
                 doc.end();
             });
+
+            await reportDoc.set({
+                created: admin.firestore.FieldValue.serverTimestamp(),
+                date: inspection.date,
+                iid: data.iid,
+                type: data.type,
+                locale: data.locale || "de"
+            });
         } else {
             return { status: 404 };
         }
@@ -171,7 +194,7 @@ exports.createInspectionReport = functions.https.onCall(async (data, context) =>
     }
 });
 
-async function addObjectContent(content, locale, title, object, oid) {
+async function addObjectContent(content, locale, title, object, oid, inspection) {
     const db = admin.firestore();
     content.push({
         text: title,
@@ -183,74 +206,95 @@ async function addObjectContent(content, locale, title, object, oid) {
         style: "header"
     });
 
+    const table = [];
+
     if (object.material) {
-        content.push(locale.object.materials.name + ": " + locale.object.materials.data[object.material]);
+        table.push([locale.object.materials.name + ":", locale.object.materials.data[object.material]])
     }
 
     if (object.type) {
-        content.push(locale.object.types.name + ": " + locale.object.types.data[object.type]);
+        table.push([locale.object.types.name + ":", locale.object.types.data[object.type]]);
     }
 
     if (object.system) {
-        content.push(locale.object.systems.name + ": " + locale.object.systems.data[object.system]);
+        table.push([locale.object.systems.name + ":", locale.object.systems.data[object.system]]);
     }
 
     if (object.crossSectionShape) {
-        content.push(locale.object.crossSectionShapes.name + ": " + locale.object.crossSectionShapes.data[object.crossSectionShape]);
+        table.push([locale.object.crossSectionShapes.name + ":", locale.object.crossSectionShapes.data[object.crossSectionShape]]);
     }
 
     if (object.constructionYear) {
-        content.push(locale.object.constructionYear + ": " + object.constructionYear);
+        table.push([locale.object.constructionYear + ":", object.constructionYear]);
     }
 
     if (object.routeCode) {
-        content.push(locale.object.routeCode + ": " + object.routeCode);
+        table.push([locale.object.routeCode + ":", object.routeCode]);
     }
 
     if (object.routeName) {
-        content.push(locale.object.routeName + ": " + object.routeName);
+        table.push([locale.object.routeName + ":", object.routeName]);
     }
 
     if (object.chainage) {
-        content.push(locale.object.chainage + ": " + object.chainage);
+        table.push([locale.object.chainage + ":", object.chainage]);
     }
 
     if (object.spanLength) {
-        content.push(locale.object.spanLength + ": " + object.spanLength);
+        table.push([locale.object.spanLength + ":", object.spanLength]);
     }
 
     if (object.width) {
-        content.push(locale.object.width + ": " + object.width);
+        table.push([locale.object.width + ":", object.width]);
     }
 
     if (object.trafficRoutes) {
-        content.push(locale.object.trafficRoutes + ": " + object.trafficRoutes);
+        table.push([locale.object.trafficRoutes + ":", object.trafficRoutes]);
     }
 
     if (object.shortDescription) {
-        content.push(locale.object.shortDescription + ": " + object.shortDescription);
+        table.push([locale.object.shortDescription + ":", object.shortDescription]);
     }
 
-    const assessmentSnap = await db.collection("objects").doc(oid).collection("assessments").orderBy("date", "desc").limit(1).get();
+    content.push({
+        table: {
+            body: table
+        },
+        layout: "noBorders"
+    });
+
+    hr(content);
+
+    const assessmentSnap = await db.collection("objects").doc(oid).collection("assessments").orderBy("date", "desc").where("date", "<=", inspection.date).limit(1).get();
     if (!assessmentSnap.empty) {
         const assessmentDoc = assessmentSnap.docs[0];
         const assessment = assessmentDoc.data();
         addAssessmentContent(content, locale, locale.assessment + " - " + locale.inspection.name + " " + DateTime.fromISO(assessment.date).toFormat("dd.MM.yyyy"), assessment);
+        hr(content);
     }
 
     if (object.photo) {
         const photo = await admin.storage().bucket().file("objects/" + oid + "/" + object.photo).download();
-        content.push({
+        const photoStack = [];
+        photoStack.push({
             text: locale.object.photo,
             style: "subheader",
             margin: [0, 6, 0, 6]
         });
-        content.push({
+        photoStack.push({
             image: photo[0],
             fit: [451, 350],
             alignment: "center",
         });
+        content.push({
+            stack: photoStack,
+            unbreakable: true
+        })
     }
+}
+
+function hr(content) {
+    content.push({ canvas: [{ type: 'line', x1: 0, y1: 0, x2: 595 - 2 * 50, y2: 0, lineWidth: 1 }], margin: [0, 5] });
 }
 
 async function addInspectionContent(content, locale, title, inspection, oid, iid) {
@@ -266,42 +310,59 @@ async function addInspectionContent(content, locale, title, inspection, oid, iid
         style: "header"
     });
 
+    const table = [];
+
     if (inspection.inspector) {
         const userDoc = await db.collection("users").doc(inspection.inspector).get();
         if (userDoc.exists) {
-            content.push(locale.inspection.inspector + ": " + userDoc.data().name)
+            table.push([locale.inspection.inspector + ":", userDoc.data().name]);
         }
     }
     if (inspection.type) {
-        content.push(locale.inspection.types.name + ": " + locale.inspection.types.data[inspection.type])
+        table.push([locale.inspection.types.name + ":", locale.inspection.types.data[inspection.type]]);
     }
     if (inspection.weather) {
-        content.push(locale.inspection.weather.name + ": " + locale.inspection.weather.data[inspection.weather])
+        table.push([locale.inspection.weather.name + ":", locale.inspection.weather.data[inspection.weather]]);
     }
     if (inspection.temperature) {
-        content.push(locale.inspection.temperature + ": " + inspection.temperature)
+        table.push([locale.inspection.temperature + ":", inspection.temperature]);
     }
     if (inspection.additionalInfo) {
-        content.push(locale.inspection.additionalInfo + ": " + inspection.additionalInfo)
+        table.push([locale.inspection.additionalInfo + ":", inspection.additionalInfo]);
     }
+
+    content.push({
+        table: {
+            body: table
+        },
+        layout: "noBorders"
+    });
+
+    hr(content);
 
     const assessmentDoc = await db.collection("objects").doc(oid).collection("assessments").doc(iid).get();
     if (assessmentDoc.exists) {
         const assessment = assessmentDoc.data();
         addAssessmentContent(content, locale, locale.assessment, assessment);
+        hr(content);
     }
 
     if (inspection.photo) {
         const photo = await admin.storage().bucket().file("objects/" + oid + "/inspections/" + iid + "/" + inspection.photo).download();
-        content.push({
+        const photoStack = [];
+        photoStack.push({
             text: locale.inspection.photo,
             style: "subheader",
             margin: [0, 6, 0, 6]
         });
-        content.push({
+        photoStack.push({
             image: photo[0],
             fit: [451, 350],
             alignment: "center",
+        });
+        content.push({
+            stack: photoStack,
+            unbreakable: true
         });
     }
 }
@@ -312,6 +373,7 @@ async function addAssessmentContent(content, locale, title, assessment) {
         style: "subheader",
         margin: [0, 6, 0, 6]
     });
+    const table = [];
     const addAssessmentGrade = function (text, grade) {
         let color;
         if (grade === 1) {
@@ -327,28 +389,33 @@ async function addAssessmentContent(content, locale, title, assessment) {
         } else {
             color = "black";
         }
-        content.push({
-            text: [
-                text,
-                {
-                    text: grade + " - " + locale.assessments[grade.toString()],
-                    color: color
-                }
-            ]
-        })
+        table.push([
+            text,
+            {
+                text: grade + " - " + locale.assessments[grade.toString()],
+                color: color
+            }
+        ])
     }
     if (assessment.substructure) {
-        addAssessmentGrade(locale.assessments.substructure + ": ", assessment.substructure);
+        addAssessmentGrade(locale.assessments.substructure + ":", assessment.substructure);
     }
     if (assessment.superstructure) {
-        addAssessmentGrade(locale.assessments.superstructure + ": ", assessment.superstructure);
+        addAssessmentGrade(locale.assessments.superstructure + ":", assessment.superstructure);
     }
     if (assessment.equipment) {
-        addAssessmentGrade(locale.assessments.equipment + ": ", assessment.equipment);
+        addAssessmentGrade(locale.assessments.equipment + ":", assessment.equipment);
     }
     if (assessment.object) {
-        addAssessmentGrade(locale.assessments.object + ": ", assessment.object);
+        addAssessmentGrade(locale.assessments.object + ":", assessment.object);
     }
+
+    content.push({
+        table: {
+            body: table,
+        },
+        layout: "noBorders"
+    });
 }
 
 async function addDamageContent(content, locale, title, damage, oid, iid, did) {
@@ -372,37 +439,48 @@ async function addDamageContent(content, locale, title, damage, oid, iid, did) {
         style: "header"
     });
 
+    const tableData = [];
+
     if (damage.allocation) {
-        content.push(locale.damage.allocations.name + ": " + locale.damage.allocations.data[damage.allocation].name)
+        tableData.push([locale.damage.allocations.name + ":", locale.damage.allocations.data[damage.allocation].name]);
     }
 
     if (damage.component) {
-        content.push(locale.damage.component + ": " + locale.damage.allocations.data[damage.allocation].data[damage.component]);
+        tableData.push([locale.damage.component + ":", locale.damage.allocations.data[damage.allocation].data[damage.component]]);
     }
 
     if (damage.componentDetail) {
-        content.push(locale.damage.componentDetail + ": " + damage.componentDetail);
+        tableData.push([locale.damage.componentDetail + ":", damage.componentDetail]);
     }
 
     if (damage.type) {
-        content.push(locale.damage.types.name + ": " + locale.damage.types.data[damage.type]);
+        tableData.push([locale.damage.types.name + ":", locale.damage.types.data[damage.type]]);
     }
 
     if (damage.typeDetail) {
-        content.push(locale.damage.typeDetail + ": " + damage.typeDetail);
+        tableData.push([locale.damage.typeDetail + ":", damage.typeDetail]);
     }
 
     if (damage.location) {
-        content.push(locale.damage.location + ": " + damage.location);
+        tableData.push([locale.damage.location + ":", damage.location]);
     }
 
     if (damage.cause) {
-        content.push(locale.damage.cause + ": " + damage.cause);
+        tableData.push([locale.damage.cause + ":", damage.cause]);
     }
 
     if (damage.description) {
-        content.push(locale.damage.description + ": " + damage.description);
+        tableData.push([locale.damage.description + ":", damage.description]);
     }
+
+    content.push({
+        table: {
+            body: tableData,
+        },
+        layout: "noBorders"
+    });
+
+    hr(content);
 
     if (currentState) {
         content.push({
@@ -451,57 +529,82 @@ async function addDamageContent(content, locale, title, damage, oid, iid, did) {
             margin: [0, 0, 0, 6]
         });
 
+        hr(content);
+
+        const tableState = [];
+
         if (currentState.limit) {
-            content.push(locale.damage.limitSm + ": " + currentState.limit.value + " " + currentState.limit.unit);
+            tableState.push([locale.damage.limitSm + ":", currentState.limit.value + " " + currentState.limit.unit]);
         }
 
         if (currentState.impact) {
-            content.push(locale.damage.impact + ": " + currentState.impact);
+            tableState.push([locale.damage.impact + ":", currentState.impact]);
         }
 
         if (currentState.category) {
-            content.push(locale.damage.categories.name + ": " + locale.damage.categories.data[currentState.category]);
+            tableState.push([locale.damage.categories.name + ":", locale.damage.categories.data[currentState.category]]);
         }
 
         if (currentState.action) {
-            content.push(locale.damage.action + ": " + currentState.action);
+            tableState.push([locale.damage.action + ":", currentState.action]);
         }
 
         if (currentState.period) {
-            content.push(locale.damage.period + ": " + currentState.period);
+            tableState.push([locale.damage.period + ":", currentState.period]);
         }
 
         if (currentState.additionalInfo) {
-            content.push(locale.damage.additionalInfo + ": " + currentState.additionalInfo);
+            tableState.push([locale.damage.additionalInfo + ":", currentState.additionalInfo]);
         }
 
+        content.push({
+            table: {
+                body: tableState,
+            },
+            layout: "noBorders"
+        });
+
+        hr(content);
+
         if (currentState.photo) {
-            content.push({
+            const image = await admin.storage().bucket().file("objects/" + oid + "/damages/" + did + "/states/" + currentState.iid + "/" + currentState.photo).download();
+
+            const photoStack = [];
+            photoStack.push({
                 text: locale.damage.photo,
                 style: "subheader",
-                margin: [0, 6, 0, 6],
+                margin: [0, 6, 0, 6]
             });
-            const image = await admin.storage().bucket().file("objects/" + oid + "/damages/" + did + "/states/" + currentState.iid + "/" + currentState.photo).download();
-            content.push({
+            photoStack.push({
                 image: image[0],
                 fit: [451, 350],
                 alignment: "center",
+            });
+            content.push({
+                stack: photoStack,
+                unbreakable: true
             });
         }
     }
 
     const addLocation = async function (location, text, file) {
         if (damage[location]) {
-            content.push({
+            const image = await admin.storage().bucket().file("objects/" + oid + "/damages/" + did + "/" + file + ".png").download();
+
+            const photoStack = [];
+            photoStack.push({
                 text: locale[text],
                 style: "subheader",
-                margin: [0, 6, 0, 6],
+                margin: [0, 6, 0, 6]
             });
-            const image = await admin.storage().bucket().file("objects/" + oid + "/damages/" + did + "/" + file + ".png").download();
-            content.push({
+            photoStack.push({
                 image: image[0],
                 fit: [451, 350],
                 alignment: "center",
+            });
+            content.push({
+                stack: photoStack,
+                unbreakable: true
             });
         }
     }
@@ -526,6 +629,16 @@ const toMillimetre = function (measurement) {
     }
     return x;
 };
+
+exports.deleteReport = functions.https.onCall(async (data, context) => {
+    if (context.auth && data.oid && data.rid) {
+        await admin.firestore().collection("objects").doc(data.oid).collection("reports").doc(data.rid).delete();
+        await admin.storage().bucket().deleteFiles({ prefix: `objects/${data.oid}/reports/${data.rid}` });
+        return { status: 200 };
+    } else {
+        return { status: 400 };
+    }
+});
 
 exports.notifyAdminLimit = functions.firestore.document('objects/{oid}/damages/{did}/states/{iid}').onWrite(async (change, context) => {
     const document = change.after.exists ? change.after.data() : null;

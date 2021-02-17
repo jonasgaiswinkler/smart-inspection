@@ -138,7 +138,7 @@
                           </ion-select>
                         </ion-item>
                         <p>
-                          {{ $t("nItems", {n: inspections.length}) }}
+                          {{ $t("nItems", { n: inspections.length }) }}
                         </p>
                       </ion-col>
                     </ion-row>
@@ -172,6 +172,9 @@
                     <ion-label>{{ inspection.text }}</ion-label>
                   </ion-item>
                 </template>
+                <ion-item v-if="!inspections">
+                  <ion-label>{{ $t("noEntries") }}</ion-label>
+                </ion-item>
               </ion-list>
             </ion-col>
           </ion-row>

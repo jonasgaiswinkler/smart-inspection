@@ -110,26 +110,24 @@ export default defineComponent({
       if (this.location != null) {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
+        this.zoom = 1;
+        await this.renderFile();
+
+        console.log("getBlob");
+        console.log(this.renderTask);
+
         if (this.renderTask != null) {
           await this.renderTask.promise;
         }
 
-        this.drawMarker(
-          this.bctx,
-          this.location.x,
-          this.location.y
-        );
+        this.drawMarker(this.bctx, this.location.x, this.location.y);
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         const vm = this;
         return await new Promise(function(resolve, reject) {
           vm.background.toBlob(function(blob) {
             vm.bctx.clearRect(0, 0, vm.background.width, vm.background.height);
             vm.renderFile();
-            vm.drawMarker(
-              vm.ctx,
-              vm.location.x,
-              vm.location.y
-            );
+            vm.drawMarker(vm.ctx, vm.location.x, vm.location.y);
             resolve(blob);
           });
         });
@@ -188,10 +186,7 @@ export default defineComponent({
         this.canvas.height = viewport.height;
 
         if (this.location != null) {
-          this.placeMarker(
-            this.location.x,
-            this.location.y
-          );
+          this.placeMarker(this.location.x, this.location.y);
         }
 
         this.renderPDF(viewport);
@@ -212,14 +207,11 @@ export default defineComponent({
         this.canvas.height = imgHeight;
         this.bctx.drawImage(this.image, 0, 0, imgWidth, imgHeight); // Or at whatever offset you like
         if (this.location != null) {
-          this.placeMarker(
-            this.location.x,
-            this.location.y
-          );
+          this.placeMarker(this.location.x, this.location.y);
         }
       }
     },
-    renderPDF: debounce(async function(viewport) {
+    renderPDF: async function(viewport) {
       this.renderTask = this.page.render({
         canvasContext: this.bctx,
         viewport: viewport,
@@ -227,7 +219,7 @@ export default defineComponent({
       this.renderTask.promise.then(() => {
         this.renderTask = null;
       });
-    }, 1),
+    },
     getPage(renderPage) {
       PDFJS.getDocument(this.url).promise.then((doc) => {
         this.doc = doc;

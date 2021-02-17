@@ -36,7 +36,12 @@
           >
             <ion-col size-md="6" size-lg="6" size-xs="12" class="height-100">
               <ion-row class="height-100">
-                <ion-col size-lg="8" size-md="8" size-xs="12" class="overflow-scroll">
+                <ion-col
+                  size-lg="8"
+                  size-md="8"
+                  size-xs="12"
+                  class="overflow-scroll"
+                >
                   <template v-if="damageData != null">
                     <h1 v-if="damageData.isFixed === true">
                       {{ $t("thisDamageIsFixed") }}
@@ -189,43 +194,56 @@
                       }}
                     </li>
                   </ul>
-                  <ion-img
+                  <img
                     v-if="
                       currentDamageState != null &&
                         currentDamageState.photoUrl != null
                     "
                     :src="currentDamageState.photoUrl"
                     :alt="$t('inspectionPhoto')"
-                  ></ion-img>
-                  <ion-img
+                    id="damagePhoto"
+                    @click="showImage('damagePhoto')"
+                    style="cursor: pointer;"
+                  />
+                  <img
                     v-if="
                       damageData != null && damageData.imageGroundPlan != null
                     "
                     :src="damageData.imageGroundPlan"
                     :alt="$t('damageGroundPlan')"
-                  ></ion-img>
-                  <ion-img
+                    id="damageGroundPlan"
+                    @click="showImage('damageGroundPlan')"
+                    style="cursor: pointer;"
+                  />
+                  <img
                     v-if="
                       damageData != null &&
                         damageData.imageLongitudinalSection != null
                     "
                     :src="damageData.imageLongitudinalSection"
                     :alt="$t('damageLongitudinalSection')"
-                  ></ion-img>
-                  <ion-img
+                    id="damageLongitudinalSection"
+                    @click="showImage('damageLongitudinalSection')"
+                    style="cursor: pointer;"
+                  />
+                  <img
                     v-if="
                       damageData != null && damageData.imageCrossSection != null
                     "
                     :src="damageData.imageCrossSection"
                     :alt="$t('damageCrossSection')"
-                  ></ion-img>
-                  <ion-img
-                    v-if="
-                      damageData != null && damageData.imageModel != null
-                    "
+                    id="damageCrossSection"
+                    @click="showImage('damageCrossSection')"
+                    style="cursor: pointer;"
+                  />
+                  <img
+                    v-if="damageData != null && damageData.imageModel != null"
                     :src="damageData.imageModel"
                     :alt="$t('damageModel')"
-                  ></ion-img>
+                    id="damageModel"
+                    @click="showImage('damageModel')"
+                    style="cursor: pointer;"
+                  />
                 </ion-col>
                 <ion-col
                   size-lg="4"
@@ -388,6 +406,8 @@ import {
   faCheck,
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
+import "viewerjs/dist/viewer.css";
+import Viewer from "viewerjs";
 
 export default defineComponent({
   name: "Damage",
@@ -400,7 +420,7 @@ export default defineComponent({
     IonRow,
     IonGrid,
     IonCol,
-    IonImg,
+    //IonImg,
     //IonItem,
     //IonSelect,
     //IonSelectOption,
@@ -585,6 +605,14 @@ export default defineComponent({
         });
     };
 
+    const showImage = function(id) {
+      const viewer = new Viewer(document.getElementById(id), {
+        navbar: false,
+        title: false,
+      });
+      viewer.show();
+    };
+
     return {
       buttons,
       push,
@@ -603,6 +631,7 @@ export default defineComponent({
       damageStates,
       idate,
       toMillimetre,
+      showImage,
     };
   },
 });

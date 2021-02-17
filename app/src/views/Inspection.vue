@@ -34,12 +34,20 @@
           >
             <ion-col size-md="6" size-lg="6" size-xs="12" class="height-100">
               <ion-row class="height-100">
-                <ion-col size-lg="8" size-md="8" size-xs="12" class="overflow-scroll">
-                  <ion-img
+                <ion-col
+                  size-lg="8"
+                  size-md="8"
+                  size-xs="12"
+                  class="overflow-scroll"
+                >
+                  <img
                     v-if="inspectionPhotoUrl != null"
                     :src="inspectionPhotoUrl"
                     :alt="$t('inspectionPhoto')"
-                  ></ion-img>
+                    id="inspectionPhoto"
+                    @click="showImage('inspectionPhoto')"
+                    style="cursor: pointer;"
+                  />
                   <template v-if="inspectionData != null">
                     <p v-if="inspectionData.additionalInfo != null">
                       {{ inspectionData.additionalInfo }}
@@ -283,6 +291,8 @@ import {
   faList,
   faExclamationTriangle,
 } from "@fortawesome/free-solid-svg-icons";
+import "viewerjs/dist/viewer.css";
+import Viewer from "viewerjs";
 
 export default defineComponent({
   name: "Inspection",
@@ -295,7 +305,7 @@ export default defineComponent({
     IonRow,
     IonGrid,
     IonCol,
-    IonImg,
+    //IonImg,
     //IonItem,
     //IonSelect,
     //IonSelectOption,
@@ -421,6 +431,14 @@ export default defineComponent({
       }
     };
 
+    const showImage = function(id) {
+      const viewer = new Viewer(document.getElementById(id), {
+        navbar: false,
+        title: false,
+      });
+      viewer.show();
+    };
+
     return {
       buttons,
       push,
@@ -434,6 +452,7 @@ export default defineComponent({
       faSquare,
       assessment,
       getAssessmentColor,
+      showImage,
     };
   },
 });

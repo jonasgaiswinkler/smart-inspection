@@ -20,6 +20,10 @@
           fill="clear"
           :aria-label="$t(previousPage)"
           :title="$t(previousPage)"
+          ><font-awesome-icon
+            :icon="faArrowLeft"
+            style="margin-right: 10px"
+          ></font-awesome-icon
           >{{ $t(previousPage) }}</ion-button
         >
         <div style="flex: 1"></div>
@@ -31,8 +35,12 @@
           class="ion-margin-start"
           :aria-label="$t(nextPage)"
           :title="$t(nextPage)"
-          >{{ $t(nextPage) }}</ion-button
-        >
+          >{{ $t(nextPage)
+          }}<font-awesome-icon
+            :icon="faArrowRight"
+            style="margin-left: 10px"
+          ></font-awesome-icon
+        ></ion-button>
         <ion-button
           v-if="$route.name == 'EditDamage' && nextPage == 'damageState'"
           :disabled="isLoading"
@@ -77,6 +85,8 @@ import { useI18n } from "vue-i18n";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import ModelViewer from "@/components/ModelViewer";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faArrowRight, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 export default defineComponent({
   name: "DamageModel",
@@ -85,6 +95,7 @@ export default defineComponent({
     IonRow,
     IonSpinner,
     IonButton,
+    "font-awesome-icon": FontAwesomeIcon,
   },
   emits: ["next", "back", "saveedit"],
   props: [
@@ -160,6 +171,8 @@ export default defineComponent({
       damageParams,
       setDamageParam,
       modelRef,
+      faArrowRight,
+      faArrowLeft,
     };
   },
 });

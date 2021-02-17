@@ -14,6 +14,7 @@ export default {
         list: null,
         isLoading: false,
         assessment: null,
+        selectedReport: null
     }),
     mutations: {
         setIid(state, iid) {
@@ -32,6 +33,7 @@ export default {
             state.data = null;
             state.photoUrl = null;
             state.assessment = null;
+            state.selectedReport = null;
         },
         setList(state, list) {
             state.list = list;
@@ -42,6 +44,9 @@ export default {
         setAssessment(state, assessment) {
             state.assessment = assessment;
         },
+        setSelectedReport(state, selectedReport) {
+            state.selectedReport = selectedReport;
+        }
     },
     getters: {
 
@@ -102,9 +107,11 @@ export default {
             if (global) {
                 const list = await getGlobalInspections();
                 context.commit('setList', list);
+                context.commit('setSelectedReport', null);
             } else {
                 const list = await getObjectInspections(oid);
                 context.commit('setList', list);
+                context.commit('setSelectedReport', list[list.length - 1].iid);
             }
             context.commit("setIsLoading", false);
         },
@@ -131,6 +138,7 @@ const getObjectInspections = async function (oid) {
         .collection("objects")
         .doc(oid)
         .collection("inspections")
+        .orderBy("date")
         .get();
 
     const list = [];

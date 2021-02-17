@@ -36,31 +36,101 @@
               <h2 v-if="$route.name === 'ObjectReports'">
                 {{ $t("objectReports") }}
               </h2>
+              <div>
+                <ion-radio-group :value="reportMode" @ionChange="setReportMode">
+                  <ion-item>
+                    <ion-label>{{ $t("objectReport") }}</ion-label>
+                    <ion-radio slot="start" value="object"></ion-radio>
+                  </ion-item>
+
+                  <ion-item v-if="inspections">
+                    <ion-label>{{ $t("inspectionReport") }}</ion-label>
+                    <ion-select
+                      v-if="inspections"
+                      :value="selectedInspection"
+                      interface="popover"
+                      @ionChange="changeSelectedInspection"
+                    >
+                      <ion-select-option
+                        v-for="inspection in inspections"
+                        :key="inspection.iid"
+                        :value="inspection.iid"
+                        >{{ inspection.text }}</ion-select-option
+                      >
+                    </ion-select>
+                    <ion-radio slot="start" value="inspection"></ion-radio>
+                  </ion-item>
+                </ion-radio-group>
+                <ion-item>
+                  <ion-label>{{ $t("language") }}</ion-label>
+                  <ion-select
+                    :value="locale"
+                    interface="popover"
+                    @ionChange="changeLocale"
+                  >
+                    <ion-select-option value="de">de</ion-select-option>
+                  </ion-select>
+                </ion-item>
+                <ion-row class="ion-align-items-center">
+                  <div style="flex: 1"></div>
+                  <ion-spinner
+                    v-if="reportIsLoading"
+                    color="primary"
+                  ></ion-spinner>
+                  <ion-button
+                    @click="$store.dispatch('object/createReport')"
+                    :disabled="reportIsLoading"
+                    class="ion-margin-start"
+                    ><font-awesome-icon
+                      :icon="faPlus"
+                      style="margin-right: 10px"
+                    ></font-awesome-icon
+                    >{{ $t("newReport") }}</ion-button
+                  >
+                </ion-row>
+              </div>
+              <hr />
+              <h3>
+                {{ $t("list") }}
+              </h3>
               <ion-progress-bar
-                v-if="isLoading"
+                v-if="reportsIsLoading"
                 type="indeterminate"
               ></ion-progress-bar>
-              <div>
-                <ion-button
-                  ><font-awesome-icon
-                    :icon="faPlus"
-                    style="margin-right: 10px"
-                  ></font-awesome-icon
-                  >{{ $t("newReport") }}</ion-button
-                >
-              </div>
+
               <ion-list>
                 <ion-list-header>
-                  <ion-label>{{ $t("inspection.date") }}</ion-label>
-                </ion-list-header>
-                <ion-item v-for="doc in requestedObjects" :key="doc.id">
-                  <div style="float: left; width: 100px">
-                    <ion-label>{{ doc.id }}</ion-label>
+                  <div style="float: left; width: 130px">
+                    <ion-label>{{ $t("creationDate") }}</ion-label>
                   </div>
-                  <div style="float: left;">
+                  <div style="float: left; width: 130px">
+                    <ion-label> {{ $t("inspection.name") }} </ion-label>
+                  </div>
+                  <div
+                    class="ion-hide-sm-down"
+                    style="float: left; width: 130px"
+                  >
+                    <ion-label> {{ $t("language") }} </ion-label>
+                  </div>
+                </ion-list-header>
+                <ion-item v-for="report in reports" :key="report.rid">
+                  <div style="float: left; width: 130px">
+                    <ion-label>{{ report.createdString }}</ion-label>
+                  </div>
+                  <div style="float: left; width: 130px">
                     <ion-label>
-                      {{ doc.chainage }}
+                      {{
+                        report.type === "inspection"
+                          ? report.inspectionString
+                          : ""
+                      }}
                     </ion-label>
+                  </div>
+                  <div
+                    class="ion-hide-sm-down"
+                    style="float: left; width: 130px"
+                  >
+                    <ion-label>{{ report.locale }}</ion-label>
                   </div>
                   <!--<div style="float: left; width: 60%">
                     <ion-label>
@@ -68,7 +138,8 @@
                     </ion-label>
                   </div>-->
                   <ion-button
-                    @click="restoreObject(doc.id)"
+                    :href="report.url"
+                    target="_blank"
                     fill="clear"
                     slot="end"
                     :title="$t('restoreObject')"
@@ -76,11 +147,11 @@
                   >
                     <font-awesome-icon
                       slot="icon-only"
-                      :icon="faRedo"
+                      :icon="faDownload"
                     ></font-awesome-icon>
                   </ion-button>
                   <ion-button
-                    @click="deleteObject(doc.id)"
+                    @click="deleteReport(report.rid)"
                     fill="clear"
                     slot="end"
                     style="margin-left: 0.25em"
@@ -92,6 +163,9 @@
                       :icon="faTrash"
                     ></font-awesome-icon>
                   </ion-button>
+                </ion-item>
+                <ion-item v-if="!reports">
+                  <ion-label>{{ $t("noEntries") }}</ion-label>
                 </ion-item>
               </ion-list>
             </ion-col>
@@ -114,6 +188,8 @@ import {
   IonGrid,
   IonCol,
   IonItem,
+  IonRadio,
+  IonRadioGroup,
   IonInput,
   IonButton,
   IonList,
@@ -147,12 +223,13 @@ import {
   faTrash,
   faList,
   faSquare,
+  faDownload,
   faExclamationTriangle,
 } from "@fortawesome/free-solid-svg-icons";
 import { faWpforms } from "@fortawesome/free-brands-svg-icons";
 
 export default defineComponent({
-  name: "NewObjectData",
+  name: "Reports",
   components: {
     IonContent,
     IonHeader,
@@ -166,8 +243,8 @@ export default defineComponent({
     IonListHeader,
     //IonImg,
     IonItem,
-    //IonSelect,
-    //IonSelectOption,
+    IonSelect,
+    IonSelectOption,
     //IonInput,
     IonButton,
     IonLabel,
@@ -176,7 +253,8 @@ export default defineComponent({
     IonButtons,
     IonSpinner,
     IonProgressBar,
-    //IonSpinner,
+    IonRadio,
+    IonRadioGroup,
     //IonTextarea,
     "font-awesome-icon": FontAwesomeIcon,
     //"font-awesome-layers": FontAwesomeLayers,
@@ -194,12 +272,106 @@ export default defineComponent({
     // define oid
     const oid = computed(() => store.state.object.oid);
 
+    // define inspection list
+    const inspections = computed(() => store.state.inspection.list);
+
+    // define selected inspection
+    const selectedInspection = computed(
+      () => store.state.inspection.selectedReport
+    );
+
+    const reportMode = computed(() => store.state.object.reportMode);
+    const setReportMode = function(event) {
+      let mode = event?.detail?.value;
+      if (mode !== "object" && mode !== "inspection") {
+        mode = "inspection";
+      }
+      if (mode !== reportMode.value) {
+        store.commit("object/setReportMode", mode);
+      }
+    };
+
+    const changeSelectedInspection = function(event) {
+      const rid = event?.detail?.value;
+      if (rid !== selectedInspection.value) {
+        store.commit("inspection/setSelectedReport", rid);
+      }
+    };
+
+    const locale = computed(() => store.state.object.reportLocale);
+
+    const changeLocale = function(event) {
+      const locale = event?.detail?.value;
+      if (locale !== locale.value) {
+        store.commit("object/setReportLocale", locale);
+      }
+    };
+
+    const reportIsLoading = computed(() => store.state.object.reportIsLoading);
+    const reportsIsLoading = computed(
+      () => store.state.object.reportsIsLoading
+    );
+
+    const reports = computed(() => store.state.object.reports);
+
+    // request deletion function
+    const deleteReport = async function(rid) {
+      const alert = await alertController.create({
+        header: i18n.t("deleteReport"),
+        message: i18n.t("confirmDeleteReport", { oid: rid }),
+        buttons: [
+          {
+            text: i18n.t("cancel"),
+            role: "cancel",
+          },
+          {
+            text: i18n.t("confirm"),
+            handler: async () => {
+              store.commit("object/setReportsIsLoading", true);
+              try {
+                await store.dispatch("object/deleteReport", rid);
+
+                const toast = await toastController.create({
+                  message: i18n.t("reportDeleted"),
+                  duration: 2000,
+                  color: "success",
+                });
+                toast.present();
+              } catch (error) {
+                console.error(error);
+                const toast = await toastController.create({
+                  message: error,
+                  duration: 2000,
+                  color: "danger",
+                });
+                toast.present();
+              }
+              store.commit("object/setReportsIsLoading", false);
+            },
+          },
+        ],
+      });
+      return alert.present();
+    };
+
     return {
       faTrash,
       oid,
       arrowBack,
       faSquare,
       faPlus,
+      faDownload,
+      inspections,
+      selectedInspection,
+      changeSelectedInspection,
+      reportMode,
+      setReportMode,
+      reportIsLoading,
+      reports,
+      reportsIsLoading,
+      deleteReport,
+      locale,
+      changeLocale,
     };
   },
 });

@@ -91,6 +91,10 @@
         fill="clear"
         :aria-label="$t(previousPage)"
         :title="$t(previousPage)"
+        ><font-awesome-icon
+          :icon="faArrowLeft"
+          style="margin-right: 10px"
+        ></font-awesome-icon
         >{{ $t(previousPage) }}</ion-button
       >
       <div style="flex: 1"></div>
@@ -140,6 +144,8 @@ import { locate } from "ionicons/icons";
 import { useRouter } from "vue-router";
 import FileInput from "@/components/FileInput";
 import MeasurementInput from "@/components/MeasurementInput";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 export default defineComponent({
   name: "DamageState",
@@ -157,6 +163,7 @@ export default defineComponent({
     //IonNote,
     "file-input": FileInput,
     "measurement-input": MeasurementInput,
+    "font-awesome-icon": FontAwesomeIcon,
   },
   emits: ["back", "save"],
   props: ["previousPage"],
@@ -217,6 +224,7 @@ export default defineComponent({
       damageOptions,
       isLoading,
       submit,
+      faArrowLeft,
     };
   },
 });

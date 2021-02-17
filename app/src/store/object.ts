@@ -14,6 +14,11 @@ export default {
     list: null,
     isLoading: false,
     currentAssessment: null,
+    reports: null,
+    reportMode: "object",
+    reportIsLoading: false,
+    reportsIsLoading: false,
+    reportLocale: "de",
   }),
   mutations: {
     setOid(state: any, oid: string) {
@@ -29,6 +34,7 @@ export default {
       state.data = null;
       state.photoUrl = null;
       state.currentAssessment = null;
+      state.reports = null;
     },
     setRequestedObjects(state: any, requestedObjects: any) {
       state.requestedObjects = requestedObjects;
@@ -41,6 +47,21 @@ export default {
     },
     setCurrentAssessment(state: any, currentAssessment: any) {
       state.currentAssessment = currentAssessment;
+    },
+    setReports(state: any, reports: any) {
+      state.reports = reports;
+    },
+    setReportMode(state: any, reportMode: any) {
+      state.reportMode = reportMode;
+    },
+    setReportIsLoading(state: any, reportIsLoading: any) {
+      state.reportIsLoading = reportIsLoading;
+    },
+    setReportsIsLoading(state: any, reportsIsLoading: any) {
+      state.reportsIsLoading = reportsIsLoading;
+    },
+    setReportLocale(state: any, locale: any) {
+      state.locale = locale;
     },
   },
   getters: {},
@@ -106,6 +127,54 @@ export default {
         }
       } else {
         return { status: 400 };
+      }
+    },
+    async loadReports(context: any) {
+      const db = firebase.firestore();
+      const oid = context.state.oid;
+      if (oid) {
+        context.commit("setReportsIsLoading", true);
+        try {
+          const reportsSnap = await db
+            .collection("objects")
+            .doc(oid)
+            .collection("reports")
+            .orderBy("created")
+            .get();
+          if (!reportsSnap.empty) {
+            const reports = [];
+
+            const storage = firebase.storage();
+
+            const getReport = async function(doc: any) {
+              const object = {
+                rid: doc.id,
+                ...doc.data(),
+              };
+              const url = await storage
+                .ref("/objects/" + oid + "/reports/" + doc.id + "/Bericht.pdf")
+                .getDownloadURL();
+              object.url = url;
+              object.inspectionString = new Date(
+                object.date
+              ).toLocaleDateString("de-DE");
+              object.createdString = object.created
+                .toDate()
+                .toLocaleDateString("de-DE");
+              return object;
+            };
+
+            for (const reportDoc of reportsSnap.docs) {
+              reports.push(getReport(reportDoc));
+            }
+            context.commit("setReports", await Promise.all(reports));
+          } else {
+            context.commit("setReports", null);
+          }
+        } catch (error) {
+          console.error(error);
+        }
+        context.commit("setReportsIsLoading", false);
       }
     },
     loadList(context: any) {
@@ -193,6 +262,49 @@ export default {
         } else {
           context.dispatch("getRequestedObjects");
           context.dispatch("loadList");
+        }
+      }
+    },
+    async createReport(context: any) {
+      const list = context.rootState.inspection.list;
+      if (context.state.oid && list) {
+        context.commit("setReportIsLoading", true);
+        try {
+          let iid;
+          if (context.state.reportMode === "object") {
+            iid = list[list.length - 1].iid;
+          } else if (context.state.reportMode === "inspection") {
+            iid = context.rootState.inspection.selectedReport;
+          }
+          const result = await firebase
+            .functions()
+            .httpsCallable("createReport")({
+            oid: context.state.oid,
+            iid: iid,
+            type: context.state.reportMode,
+            locale: context.state.reportLocale,
+          });
+          // if (result.data.status !== 200) {
+          //   throw new Error("Error in deleting object!");
+          // } else {
+          //   //
+          // }
+          context.dispatch("loadReports");
+        } catch (error) {
+          console.error(error);
+        }
+        context.commit("setReportIsLoading", false);
+      }
+    },
+    async deleteReport(context: any, rid: string) {
+      if (rid && context.state.oid) {
+        const result = await firebase
+          .functions()
+          .httpsCallable("deleteReport")({ oid: context.state.oid, rid: rid });
+        if (result.data.status !== 200) {
+          throw new Error("Error in deleting report!");
+        } else {
+          context.dispatch("loadReports");
         }
       }
     },

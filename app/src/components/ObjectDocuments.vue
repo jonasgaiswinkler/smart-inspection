@@ -63,7 +63,7 @@
       readonly
       :value="
         objectParams.files != null
-          ? $t('filesAmount', objectParams.files.data.length)
+          ? $tc('filesAmount', objectParams.files.data.length)
           : null
       "
       class="ion-text-right"
@@ -114,6 +114,10 @@
       fill="clear"
       :aria-label="$t('objectData')"
       :title="$t('objectData')"
+      ><font-awesome-icon
+        :icon="faArrowLeft"
+        style="margin-right: 10px"
+      ></font-awesome-icon
       >{{ $t("objectData") }}</ion-button
     >
     <div style="flex: 1"></div>
@@ -157,7 +161,11 @@ import { useI18n } from "vue-i18n";
 import { useStore } from "vuex";
 import { Plugins } from "@capacitor/core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faFileUpload, faTimes } from "@fortawesome/free-solid-svg-icons";
+import {
+  faFileUpload,
+  faTimes,
+  faArrowLeft,
+} from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "vue-router";
 import FileInput from "@/components/FileInput";
 
@@ -285,6 +293,7 @@ export default defineComponent({
     return {
       faFileUpload,
       faTimes,
+      faArrowLeft,
       objectParams,
       setObjectParam,
       saveObject,

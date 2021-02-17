@@ -44,7 +44,7 @@ import firebaseConfig from "@/firebase.json";
 
 firebase.initializeApp(firebaseConfig);
 
-//firebase.functions().useFunctionsEmulator("http://localhost:5001");
+firebase.functions().useFunctionsEmulator("http://localhost:5001");
 
 /* promise for initial auth state */
 let authPromise = new Promise((resolve, reject) => {
@@ -99,8 +99,9 @@ router.beforeEach(async function(to, from, next) {
         }
       }
 
-      if (to.name === "InspectionListObject") {
+      if (to.name === "InspectionListObject" || to.name === "ObjectReports") {
         store.dispatch("inspection/loadList", false);
+        store.dispatch("object/loadReports");
       }
 
       if (
@@ -191,7 +192,7 @@ Plugins.Device.getInfo().then((info) => {
 
 const app = createApp(App)
   .use(store)
-  .use(IonicVue, { animated: true })
+  .use(IonicVue, { mode: "md", animated: false })
   .use(router)
   .use(i18n);
 

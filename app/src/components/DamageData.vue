@@ -133,8 +133,12 @@
         class="ion-margin-start"
         :aria-label="$t(nextPage)"
         :title="$t(nextPage)"
-        >{{ $t(nextPage) }}</ion-button
-      >
+        >{{ $t(nextPage)
+        }}<font-awesome-icon
+          :icon="faArrowRight"
+          style="margin-left: 10px"
+        ></font-awesome-icon
+      ></ion-button>
     </ion-row>
   </form>
 </template>
@@ -172,6 +176,8 @@ import { locate } from "ionicons/icons";
 import { useRouter } from "vue-router";
 import FileInput from "@/components/FileInput";
 import MeasurementInput from "@/components/MeasurementInput";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
 export default defineComponent({
   name: "DamageData",
@@ -188,6 +194,7 @@ export default defineComponent({
     IonTextarea,
     IonSpinner,
     IonNote,
+    "font-awesome-icon": FontAwesomeIcon,
     //"file-input": FileInput,
     //"measurement-input": MeasurementInput,
   },
@@ -272,6 +279,7 @@ export default defineComponent({
       errorComponent,
       errorType,
       submit,
+      faArrowRight,
     };
   },
 });

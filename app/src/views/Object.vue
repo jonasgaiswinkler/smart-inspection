@@ -40,11 +40,14 @@
                   size-xs="12"
                   class="overflow-scroll"
                 >
-                  <ion-img
+                  <img
                     v-if="objectPhotoUrl != null"
                     :src="objectPhotoUrl"
                     :alt="$t('objectPhoto')"
-                  ></ion-img>
+                    id="objectPhoto"
+                    @click="showImage('objectPhoto')"
+                    style="cursor: pointer;"
+                  />
                   <template v-if="objectData != null">
                     <p>{{ objectData.shortDescription }}</p>
                     <ul>
@@ -338,6 +341,8 @@ import {
   faExclamationTriangle,
 } from "@fortawesome/free-solid-svg-icons";
 import { faWpforms } from "@fortawesome/free-brands-svg-icons";
+import "viewerjs/dist/viewer.css";
+import Viewer from "viewerjs";
 
 export default defineComponent({
   name: "NewObjectData",
@@ -350,7 +355,7 @@ export default defineComponent({
     IonRow,
     IonGrid,
     IonCol,
-    IonImg,
+    //IonImg,
     //IonItem,
     //IonSelect,
     //IonSelectOption,
@@ -484,6 +489,14 @@ export default defineComponent({
       }
     };
 
+    const showImage = function(id) {
+      const viewer = new Viewer(document.getElementById(id), {
+        navbar: false,
+        title: false,
+      });
+      viewer.show();
+    };
+
     return {
       buttons,
       push,
@@ -497,6 +510,7 @@ export default defineComponent({
       faSquare,
       currentAssessment,
       getAssessmentColor,
+      showImage,
     };
   },
 });

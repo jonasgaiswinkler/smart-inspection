@@ -208,8 +208,12 @@
         class="ion-margin-start"
         :aria-label="$t('objectDocuments')"
         :title="$t('objectDocuments')"
-        >{{ $t("objectDocuments") }}</ion-button
-      >
+        >{{ $t("objectDocuments")
+        }}<font-awesome-icon
+          :icon="faArrowRight"
+          style="margin-left: 10px"
+        ></font-awesome-icon
+      ></ion-button>
     </ion-row>
   </form>
 </template>
@@ -243,6 +247,8 @@ import { useStore } from "vuex";
 import { Plugins } from "@capacitor/core";
 import { locate } from "ionicons/icons";
 import { useRouter } from "vue-router";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
 export default defineComponent({
   name: "NewObjectData",
@@ -257,6 +263,7 @@ export default defineComponent({
     IonIcon,
     IonTextarea,
     IonSpinner,
+    "font-awesome-icon": FontAwesomeIcon,
   },
   emits: ["next"],
   setup(props, { emit }) {
@@ -386,6 +393,7 @@ export default defineComponent({
       errorSystem,
       errorCrossSectionShape,
       setObjectCoord,
+      faArrowRight,
     };
   },
 });
