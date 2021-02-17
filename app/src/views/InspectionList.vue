@@ -137,9 +137,19 @@
                             >
                           </ion-select>
                         </ion-item>
-                        <p>
-                          {{ $t("nItems", { n: inspections.length }) }}
-                        </p>
+                        <ion-row
+                          ><p>
+                            {{ $t("nItems", { n: inspections.length }) }}
+                          </p>
+                          <div style="flex: 1;"></div>
+                          <ion-button
+                            :aria-label="$t('ok')"
+                            :title="$t('ok')"
+                            @click="showModal = false"
+                          >
+                            {{ $t("ok") }}
+                          </ion-button>
+                        </ion-row>
                       </ion-col>
                     </ion-row>
                   </ion-grid>

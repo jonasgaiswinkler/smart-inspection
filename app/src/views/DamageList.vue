@@ -185,9 +185,19 @@
                             >
                           </ion-select>
                         </ion-item>
-                        <p>
-                          {{ $t("nItems", { n: damages.length }) }}
-                        </p>
+                        <ion-row
+                          ><p>
+                            {{ $t("nItems", { n: damages.length }) }}
+                          </p>
+                          <div style="flex: 1;"></div>
+                          <ion-button
+                            :aria-label="$t('ok')"
+                            :title="$t('ok')"
+                            @click="showModal = false"
+                          >
+                            {{ $t("ok") }}
+                          </ion-button>
+                        </ion-row>
                       </ion-col>
                     </ion-row>
                   </ion-grid>
