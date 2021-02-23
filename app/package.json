@@ -26,6 +26,7 @@
     "debounce": "^1.2.0",
     "firebase": "^7.24.0",
     "jest-haste-map": "^26.6.2",
+    "json2csv": "^5.0.6",
     "pdfjs-dist": "^2.6.347",
     "register-service-worker": "^1.7.2",
     "viewerjs": "^1.9.0",
@@ -37,6 +38,7 @@
   "devDependencies": {
     "@capacitor/cli": "^2.4.6",
     "@types/jest": "^24.0.19",
+    "@types/json2csv": "^5.0.1",
     "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.33.0",
     "@vue/cli-plugin-babel": "^4.5.11",

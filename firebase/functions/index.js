@@ -1,4 +1,5 @@
 const admin = require('firebase-admin');
+const firebase_tools = require('firebase-tools');
 const functions = require('firebase-functions');
 const nodemailer = require('nodemailer');
 const cors = require('cors')({ origin: true });
@@ -34,15 +35,39 @@ exports.setPermissions = functions.https.onCall(async (data, context) => {
     }
 });
 
-exports.deleteObject = functions.https.onCall(async (data, context) => {
-    if (context.auth && context.auth.token.role === "admin" && data.oid !== undefined) {
-        await admin.firestore().collection("objects").doc(data.oid).delete();
+exports.deleteObject = functions
+    .runWith({
+        timeoutSeconds: 540,
+        memory: '2GB'
+    })
+    .https.onCall(async (data, context) => {
+        // Only allow admin users to execute this function.
+        if (!(context.auth && context.auth.token.role === "admin" && data.oid !== undefined)) {
+            throw new functions.https.HttpsError(
+                'permission-denied',
+                'Must be an administrative user to initiate delete.'
+            );
+        }
+
+        const path = "objects/" + data.oid;
+        console.log(
+            `User ${context.auth.uid} has requested to delete path ${path}`
+        );
+
+        // Run a recursive delete on the given document or collection path.
+        // The 'token' must be set in the functions config, and can be generated
+        // at the command line by running 'firebase login:ci'.
+        await firebase_tools.firestore
+            .delete(path, {
+                project: process.env.GCLOUD_PROJECT,
+                recursive: true,
+                yes: true,
+                token: functions.config().fb.token
+            });
+
         await admin.storage().bucket().deleteFiles({ prefix: `objects/${data.oid}/` });
         return { status: 200 };
-    } else {
-        return { status: 401 };
-    }
-});
+    });
 
 exports.deleteInspection = functions.https.onCall(async (data, context) => {
     if (context.auth && data.oid !== undefined && data.iid !== undefined) {

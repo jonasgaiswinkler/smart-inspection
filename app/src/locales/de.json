@@ -97,6 +97,7 @@
   "confirmDeleteReport": "Bitte bestätigen Sie die Löschung des Berichts.",
   "reportDeleted": "Bericht gelöscht!",
   "noEntries": "Keine Einträge",
+  "exportAsCSV": "Exportieren als CSV",
   "object": {
     "name": "Objekt",
     "id": "ID",

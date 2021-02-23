@@ -266,6 +266,30 @@
                       class="tile flex-grow-1"
                     >
                       <ion-button
+                        @click="getCSV"
+                        class="flex-grow-1 width-100"
+                        fill="outline"
+                        expand="block"
+                        :aria-label="$t('exportAsCSV')"
+                        :title="$t('exportAsCSV')"
+                      >
+                        <font-awesome-icon
+                          class="button-icon"
+                          :icon="faFileCsv"
+                        ></font-awesome-icon>
+                      </ion-button>
+                      <div
+                        class="text-overflow"
+                        v-html="$t('exportAsCSV')"
+                      ></div>
+                    </ion-col>
+                    <ion-col
+                      size-md="12"
+                      size-lg="12"
+                      size-xs="6"
+                      class="tile flex-grow-1"
+                    >
+                      <ion-button
                         @click="requestObjectDeletion"
                         class="flex-grow-1 width-100"
                         fill="outline"
@@ -339,13 +363,14 @@ import {
   faList,
   faSquare,
   faExclamationTriangle,
+  faFileCsv,
 } from "@fortawesome/free-solid-svg-icons";
 import { faWpforms } from "@fortawesome/free-brands-svg-icons";
 import "viewerjs/dist/viewer.css";
 import Viewer from "viewerjs";
 
 export default defineComponent({
-  name: "NewObjectData",
+  name: "Object",
   components: {
     IonContent,
     IonHeader,
@@ -497,6 +522,18 @@ export default defineComponent({
       viewer.show();
     };
 
+    const getCSV = async function() {
+      const csv = await store.dispatch("object/getCSV");
+
+      const encodedUri = "data:text/csv;charset=utf-8," + encodeURI(csv);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "object.csv");
+      document.body.appendChild(link);
+
+      link.click();
+    };
+
     return {
       buttons,
       push,
@@ -511,7 +548,12 @@ export default defineComponent({
       currentAssessment,
       getAssessmentColor,
       showImage,
+      getCSV,
+      faFileCsv,
     };
+  },
+  mounted() {
+    console.log();
   },
 });
 </script>

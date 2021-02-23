@@ -3,6 +3,7 @@ import * as firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/storage";
 import "firebase/functions";
+import { parse } from "json2csv";
 
 export default {
   namespaced: true,
@@ -305,6 +306,116 @@ export default {
           throw new Error("Error in deleting report!");
         } else {
           context.dispatch("loadReports");
+        }
+      }
+    },
+    async getCSV(context: any) {
+      const oid = context.state.oid;
+      if (oid) {
+        const db = firebase.firestore();
+        const damageSnap = await db
+          .collection("objects")
+          .doc(oid)
+          .collection("damages")
+          .get();
+
+        if (damageSnap.empty) {
+          return;
+        }
+
+        const damagePromises = [];
+
+        const getDamage = async function(damageDoc: any) {
+          const stateSnap = await damageDoc.ref
+            .collection("states")
+            .orderBy("date")
+            .get();
+          const states = [];
+          for (const state of stateSnap.docs) {
+            states.push(state.data());
+          }
+          return {
+            ...damageDoc.data(),
+            id: damageDoc.id,
+            states: states,
+          };
+        };
+
+        for (const damageDoc of damageSnap.docs) {
+          damagePromises.push(getDamage(damageDoc));
+        }
+
+        const toMillimetre = function(measurement: any) {
+          if (!measurement) {
+            return null;
+          }
+          let x = measurement.value;
+          if (measurement.unit === "cm") {
+            x = x * 10;
+          } else if (measurement.unit === "dm") {
+            x = x * 100;
+          } else if (measurement.unit === "m") {
+            x = x * 1000;
+          }
+          return x;
+        };
+
+        const damages = await Promise.all(damagePromises);
+
+        const data = [];
+        for (const damage of damages) {
+          const firstRow: any = {
+            damage: damage.id,
+          };
+
+          if (damage.measurement1Name) {
+            firstRow.measurement1 = damage.measurement1Name;
+          }
+
+          if (damage.states.length > 0) {
+            firstRow.limit = toMillimetre(
+              damage.states[damage.states.length - 1].limit
+            );
+          }
+
+          if (damage.measurement2Name) {
+            firstRow.measurement2 = damage.measurement2Name;
+          }
+
+          data.push(firstRow);
+
+          for (const state of damage.states) {
+            const newRow: any = {
+              date: state.date,
+            };
+
+            if (damage.measurement1Name && state.measurement1) {
+              newRow.measurement1 = toMillimetre(state.measurement1);
+            }
+
+            if (damage.measurement2Name && state.measurement2) {
+              newRow.measurement2 = toMillimetre(state.measurement2);
+            }
+
+            data.push(newRow);
+          }
+        }
+
+        const fields = [
+          "damage",
+          "date",
+          "measurement1",
+          "limit",
+          "measurement2",
+        ];
+        const opts = { fields };
+
+        try {
+          const csv = parse(data, opts);
+          return csv;
+        } catch (err) {
+          console.error(err);
+          return;
         }
       }
     },
