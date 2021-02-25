@@ -668,9 +668,9 @@ export default defineComponent({
 
 .text-overflow {
   width: 100%;
-  white-space: nowrap;
+  /* white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: ellipsis; */
 }
 
 .background-primary {

@@ -236,26 +236,10 @@
                         :aria-label="$t(button.name)"
                         :title="$t(button.name)"
                       >
-                        <font-awesome-layers class="button-icon">
-                          <font-awesome-icon
-                            :icon="button.icon"
-                            class="height-100 width-100"
-                          />
-                          <font-awesome-icon
-                            v-if="button.iconSecondary !== undefined"
-                            :icon="faSquare"
-                            style="color: white"
-                            transform="down-5 right-5 shrink-8"
-                            class="height-100 width-100"
-                          />
-                          <font-awesome-icon
-                            v-if="button.iconSecondary !== undefined"
-                            :icon="button.iconSecondary"
-                            transform="down-5 right-5 shrink-20 rotate-180"
-                            class="height-100 width-100"
-                            fixed-width
-                          />
-                        </font-awesome-layers>
+                        <font-awesome-icon
+                          :icon="button.icon"
+                          class="button-icon"
+                        />
                       </ion-button>
                       <div class="text-overflow" v-html="$t(button.name)"></div>
                     </ion-col>
@@ -368,6 +352,7 @@ import {
 import { faWpforms } from "@fortawesome/free-brands-svg-icons";
 import "viewerjs/dist/viewer.css";
 import Viewer from "viewerjs";
+import { faInspectionList, faDamageList } from "@/icons";
 
 export default defineComponent({
   name: "Object",
@@ -394,7 +379,6 @@ export default defineComponent({
     //IonSpinner,
     //IonTextarea,
     "font-awesome-icon": FontAwesomeIcon,
-    "font-awesome-layers": FontAwesomeLayers,
   },
   setup() {
     // Define store
@@ -424,14 +408,12 @@ export default defineComponent({
       },
       {
         name: "inspectionList",
-        icon: faList,
-        iconSecondary: faWpforms,
+        icon: faInspectionList,
         route: "InspectionListObject",
       },
       {
         name: "damageList",
-        icon: faList,
-        iconSecondary: faExclamationTriangle,
+        icon: faDamageList,
         route: "DamageListObject",
       },
       {
@@ -589,9 +571,9 @@ export default defineComponent({
 
 .text-overflow {
   width: 100%;
-  white-space: nowrap;
+  /* white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: ellipsis; */
 }
 
 @media (min-width: 576px) {

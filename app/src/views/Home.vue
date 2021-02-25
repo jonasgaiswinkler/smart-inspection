@@ -37,21 +37,10 @@
                     :aria-label="$t(button.name)"
                     :title="$t(button.name)"
                   >
-                    <font-awesome-layers class="button-icon">
-                      <font-awesome-icon :icon="button.icon" />
-                      <font-awesome-icon
-                        v-if="button.iconSecondary !== undefined"
-                        :icon="faSquare"
-                        style="color: white"
-                        transform="down-5 right-5 shrink-8"
-                      />
-                      <font-awesome-icon
-                        v-if="button.iconSecondary !== undefined"
-                        :icon="button.iconSecondary"
-                        transform="down-5 right-3 shrink-20 rotate-180"
-                        fixed-width
-                      />
-                    </font-awesome-layers>
+                    <font-awesome-icon
+                      class="button-icon"
+                      :icon="button.icon"
+                    />
                   </ion-button>
                   <div class="ion-hide-sm-down text-overflow">
                     <h1>{{ $t(button.name) }}</h1>
@@ -117,7 +106,7 @@ import {
   IonGrid,
   IonCol,
   IonButton,
-  IonSpinner
+  IonSpinner,
 } from "@ionic/vue";
 import { computed, defineComponent, reactive } from "vue";
 import { useRouter } from "vue-router";
@@ -137,6 +126,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faWpforms } from "@fortawesome/free-brands-svg-icons";
 import { useStore } from "vuex";
+import { faObjectList, faInspectionList } from "@/icons";
 
 export default defineComponent({
   name: "Home",
@@ -166,8 +156,7 @@ export default defineComponent({
     const buttons = reactive([
       {
         name: "objectList",
-        icon: faList,
-        iconSecondary: faArchway,
+        icon: faObjectList,
         route: "ObjectList",
       },
       {
@@ -177,8 +166,7 @@ export default defineComponent({
       },
       {
         name: "inspectionList",
-        icon: faList,
-        iconSecondary: faWpforms,
+        icon: faInspectionList,
         route: "InspectionListGlobal",
       },
       {
@@ -244,8 +232,8 @@ export default defineComponent({
 
 .text-overflow {
   width: 100%;
-  white-space: nowrap;
+  /* white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: ellipsis; */
 }
 </style>

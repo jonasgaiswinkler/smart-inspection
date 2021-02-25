@@ -26,6 +26,7 @@ export default createStore({
     userRole: null,
     isLoading: true,
     redirect: null,
+    loginIsLoading: false,
   },
   mutations: {
     setUser(state, user) {
@@ -43,19 +44,40 @@ export default createStore({
     setRedirect(state, redirect) {
       state.redirect = redirect;
     },
+    setLoginIsLoading(state, loginIsLoading) {
+      state.loginIsLoading = loginIsLoading;
+    },
   },
   actions: {
     // firebase login
     login(context, payload) {
+      context.commit("setLoginIsLoading", true);
       return firebase
         .auth()
-        .signInWithEmailAndPassword(payload.email, payload.password);
+        .signInWithEmailAndPassword(payload.email, payload.password)
+        .then((value) => {
+          context.commit("setLoginIsLoading", false);
+        })
+        .catch((error) => {
+          context.commit("setLoginIsLoading", false);
+          throw error;
+        });
     },
     logout(context) {
       return firebase.auth().signOut();
     },
     resetPassword(context, email) {
-      return firebase.auth().sendPasswordResetEmail(email);
+      context.commit("setLoginIsLoading", true);
+      return firebase
+        .auth()
+        .sendPasswordResetEmail(email)
+        .then((value) => {
+          context.commit("setLoginIsLoading", false);
+        })
+        .catch((error) => {
+          context.commit("setLoginIsLoading", false);
+          throw error;
+        });
     },
     async loadUsers(context) {
       const usersSnap = await firebase

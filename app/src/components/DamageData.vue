@@ -100,14 +100,14 @@
       ></ion-input>
     </ion-item>
     <ion-item :disabled="isLoading">
-      <ion-label>{{ $t("damage.location") }}*</ion-label>
+      <ion-label>{{ $t("damage.location") }}</ion-label>
       <ion-input
         @ionInput="setDamageParam('location', $event.target.value)"
         :value="damageParams.location"
         class="ion-text-right"
       ></ion-input>
     </ion-item>
-    <ion-note>*{{ $t("locationOnlyNecessary") }}</ion-note>
+    <ion-note>{{ $t("locationOnlyNecessary") }}</ion-note>
     <ion-item :disabled="isLoading">
       <ion-label>{{ $t("damage.cause") }}</ion-label>
       <ion-input

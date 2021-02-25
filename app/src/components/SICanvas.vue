@@ -138,7 +138,10 @@ export default defineComponent({
     drawMarker(ctx, x, y) {
       ctx.save();
       ctx.translate(x * this.scale, y * this.scale);
-
+      this.$refs.frame.scrollLeft =
+        x * this.scale - this.$refs.frame.clientWidth / 2;
+      this.$refs.frame.scrollTop =
+        y * this.scale - this.$refs.frame.clientHeight / 2;
       ctx.beginPath();
       ctx.moveTo(0, 0);
       ctx.bezierCurveTo(2, -10, -25, -35, 0, -40);
@@ -158,6 +161,7 @@ export default defineComponent({
     },
     renderFile: async function() {
       if (this.getFileExtension === ".pdf" && this.page != null) {
+        this.$store.commit("damageParams/setIsLoading", true);
         if (this.renderTask != null) {
           //this.renderTask.cancel();
           try {
@@ -209,6 +213,7 @@ export default defineComponent({
         if (this.location != null) {
           this.placeMarker(this.location.x, this.location.y);
         }
+        this.$store.commit("damageParams/setIsLoading", false);
       }
     },
     renderPDF: async function(viewport) {
@@ -218,9 +223,11 @@ export default defineComponent({
       });
       this.renderTask.promise.then(() => {
         this.renderTask = null;
+        this.$store.commit("damageParams/setIsLoading", false);
       });
     },
     getPage(renderPage) {
+      this.$store.commit("damageParams/setIsLoading", true);
       PDFJS.getDocument(this.url).promise.then((doc) => {
         this.doc = doc;
         doc.getPage(1).then((page) => {

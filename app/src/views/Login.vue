@@ -12,7 +12,12 @@
     </ion-header>
 
     <ion-content :fullscreen="true">
-      <form class="height-100" id="login" @submit.stop.prevent="submit">
+      <form
+        class="height-100"
+        id="login"
+        @submit.stop.prevent="submit"
+        @keyup.enter="submit"
+      >
         <ion-grid class="height-100">
           <ion-row
             color="primary"
@@ -42,7 +47,11 @@
                     required
                   ></ion-input>
                 </ion-item>
-                <ion-item v-if="!showResetPassword">
+                <ion-item
+                  :style="{
+                    visibility: showResetPassword ? 'hidden' : 'visible',
+                  }"
+                >
                   <ion-input
                     v-model="password"
                     name="password"
@@ -54,9 +63,15 @@
               </div>
               <ion-row
                 v-if="!showResetPassword"
-                class="ion-padding ion-float-right"
+                class="ion-padding ion-float-right ion-align-items-center"
               >
+                <ion-spinner
+                  v-if="loginIsLoading"
+                  class="ion-margin-end"
+                  color="primary"
+                ></ion-spinner>
                 <ion-button
+                  :disabled="loginIsLoading"
                   type="submit"
                   :aria-label="$t('login')"
                   :title="$t('login')"
@@ -77,9 +92,15 @@
               </ion-row>
               <ion-row
                 v-if="showResetPassword"
-                class="ion-padding ion-float-right"
+                class="ion-padding ion-float-right ion-align-items-center"
               >
+                <ion-spinner
+                  v-if="loginIsLoading"
+                  class="ion-margin-end"
+                  color="primary"
+                ></ion-spinner>
                 <ion-button
+                  :disabled="loginIsLoading"
                   @click="resetPassword"
                   :aria-label="$t('resetPassword')"
                   :title="$t('resetPassword')"
@@ -108,7 +129,7 @@
 
 <script lang="ts">
 // Imports
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import {
   IonContent,
   IonHeader,
@@ -165,7 +186,7 @@ export default defineComponent({
     const showResetPassword = ref(false);
 
     // Define reset password method
-    const resetPassword = async function () {
+    const resetPassword = async function() {
       if (email.value !== "") {
         try {
           await store.dispatch("resetPassword", email.value);
@@ -221,7 +242,16 @@ export default defineComponent({
       }
     };
 
-    return { email, password, submit, showResetPassword, resetPassword };
+    const loginIsLoading = computed(() => store.state.loginIsLoading);
+
+    return {
+      email,
+      password,
+      submit,
+      showResetPassword,
+      resetPassword,
+      loginIsLoading,
+    };
   },
 });
 </script>

@@ -204,6 +204,7 @@
     <ion-row class="ion-float-right ion-align-items-center">
       <ion-spinner v-if="isLoading" color="primary"></ion-spinner>
       <ion-button
+        :disabled="isLoading"
         type="submit"
         class="ion-margin-start"
         :aria-label="$t('objectDocuments')"
