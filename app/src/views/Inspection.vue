@@ -32,7 +32,7 @@
             color="primary"
             class="ion-justify-content-center height-100"
           >
-            <ion-col size-md="6" size-lg="6" size-xs="12" class="height-100">
+            <ion-col size-md="12" size-lg="6" size-xs="12" class="height-100">
               <ion-row class="height-100">
                 <ion-col
                   size-lg="8"
@@ -475,6 +475,13 @@ export default defineComponent({
   /* white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis; */
+}
+
+@media (max-width: 576px) {
+  .text-overflow {
+    line-height: 1em;
+    height: 3em;
+  }
 }
 
 @media (min-width: 576px) {

@@ -36,7 +36,7 @@
             color="primary"
             class="ion-justify-content-center height-100"
           >
-            <ion-col size-md="6" size-lg="6" size-xs="12">
+            <ion-col size-md="12" size-lg="6" size-xs="12">
               <ion-row class="ion-align-items-center">
                 <ion-searchbar
                   debounce="100"

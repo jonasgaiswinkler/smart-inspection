@@ -14,6 +14,7 @@ const printer = new PdfPrinter({
 });
 const { DateTime } = require("luxon");
 const de = require("./locales/de.json");
+const en = require("./locales/en.json");
 admin.initializeApp();
 
 let transporter = nodemailer.createTransport({
@@ -123,8 +124,8 @@ exports.createReport = functions.https.onCall(async (data, context) => {
             }
             const damages = await Promise.all(damagePromises);
             let locale;
-            if (data.locale === "de") {
-                locale = de;
+            if (data.locale === "en") {
+                locale = en;
             } else {
                 locale = de;
             }

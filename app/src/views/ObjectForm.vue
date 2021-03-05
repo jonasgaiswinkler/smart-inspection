@@ -29,7 +29,7 @@
           style="height: 100%;"
           class="ion-justify-content-center"
         >
-          <ion-col size-md="6" size-lg="6" size-xs="12">
+          <ion-col size-md="12" size-lg="6" size-xs="12">
             <object-data
               v-if="selectedSegment === 'objectData'"
               @next="selectedSegment = 'objectDocuments'"

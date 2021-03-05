@@ -61,8 +61,8 @@ export default {
     setReportsIsLoading(state: any, reportsIsLoading: any) {
       state.reportsIsLoading = reportsIsLoading;
     },
-    setReportLocale(state: any, locale: any) {
-      state.locale = locale;
+    setReportLocale(state: any, reportLocale: any) {
+      state.reportLocale = reportLocale;
     },
   },
   getters: {},
@@ -140,7 +140,7 @@ export default {
             .collection("objects")
             .doc(oid)
             .collection("reports")
-            .orderBy("created")
+            .orderBy("created", "desc")
             .get();
           if (!reportsSnap.empty) {
             const reports = [];
@@ -364,33 +364,26 @@ export default {
 
         const data = [];
         for (const damage of damages) {
-          const firstRow: any = {
-            damage: damage.id,
-          };
-
-          if (damage.measurement1Name) {
-            firstRow.measurement1 = damage.measurement1Name;
-          }
-
-          if (damage.states.length > 0) {
-            firstRow.limit = toMillimetre(
-              damage.states[damage.states.length - 1].limit
-            );
-          }
-
-          if (damage.measurement2Name) {
-            firstRow.measurement2 = damage.measurement2Name;
-          }
-
-          data.push(firstRow);
-
           for (const state of damage.states) {
             const newRow: any = {
+              damage: damage.id,
               date: state.date,
             };
 
+            if (damage.measurement1Name) {
+              newRow.measurement1Name = damage.measurement1Name;
+            }
+
             if (damage.measurement1Name && state.measurement1) {
               newRow.measurement1 = toMillimetre(state.measurement1);
+            }
+
+            if (state.limit) {
+              newRow.limit = toMillimetre(state.limit);
+            }
+
+            if (damage.measurement2Name) {
+              newRow.measurement2Name = damage.measurement2Name;
             }
 
             if (damage.measurement2Name && state.measurement2) {
@@ -404,8 +397,10 @@ export default {
         const fields = [
           "damage",
           "date",
+          "measurement1Name",
           "measurement1",
           "limit",
+          "measurement2Name",
           "measurement2",
         ];
         const opts = { fields };

@@ -32,7 +32,7 @@
             color="primary"
             class="ion-justify-content-center height-100"
           >
-            <ion-col size-md="6" size-lg="6" size-xs="12" class="height-100">
+            <ion-col size-md="12" size-lg="6" size-xs="12" class="height-100">
               <h2 v-if="$route.name === 'ObjectReports'">
                 {{ $t("objectReports") }}
               </h2>
@@ -68,7 +68,12 @@
                     interface="popover"
                     @ionChange="changeLocale"
                   >
-                    <ion-select-option value="de">de</ion-select-option>
+                    <ion-select-option
+                      v-for="locale in $i18n.availableLocales"
+                      :key="locale"
+                      :value="locale"
+                      >{{ locale }}</ion-select-option
+                    >
                   </ion-select>
                 </ion-item>
                 <ion-row class="ion-align-items-center">
@@ -301,9 +306,9 @@ export default defineComponent({
     const locale = computed(() => store.state.object.reportLocale);
 
     const changeLocale = function(event) {
-      const locale = event?.detail?.value;
-      if (locale !== locale.value) {
-        store.commit("object/setReportLocale", locale);
+      const newLocale = event?.detail?.value;
+      if (newLocale !== locale.value) {
+        store.commit("object/setReportLocale", newLocale);
       }
     };
 

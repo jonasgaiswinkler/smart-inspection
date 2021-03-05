@@ -24,6 +24,7 @@ export default createStore({
     user: null,
     users: null,
     userRole: null,
+    name: "",
     isLoading: true,
     redirect: null,
     loginIsLoading: false,
@@ -46,6 +47,9 @@ export default createStore({
     },
     setLoginIsLoading(state, loginIsLoading) {
       state.loginIsLoading = loginIsLoading;
+    },
+    setName(state, name) {
+      state.name = name;
     },
   },
   actions: {
@@ -78,6 +82,42 @@ export default createStore({
           context.commit("setLoginIsLoading", false);
           throw error;
         });
+    },
+    async loadName(context) {
+      if (context.state.user) {
+        const userDoc = await firebase
+          .firestore()
+          .collection("users")
+          // @ts-ignore
+          .doc(context.state.user.uid)
+          .get();
+        if (userDoc.exists) {
+          // @ts-ignore
+          context.commit("setName", userDoc.data().name);
+        } else {
+          context.commit("setName", "");
+        }
+      } else {
+        context.commit("setName", "");
+      }
+    },
+    async updateName(context) {
+      if (context.state.name && context.state.user) {
+        await firebase
+          .firestore()
+          .collection("users")
+          // @ts-ignore
+          .doc(context.state.user.uid)
+          .set(
+            {
+              name: context.state.name,
+            },
+            {
+              merge: true,
+            }
+          );
+        await context.dispatch("loadName");
+      }
     },
     async loadUsers(context) {
       const usersSnap = await firebase

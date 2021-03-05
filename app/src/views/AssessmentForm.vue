@@ -35,7 +35,7 @@
             color="primary"
             class="ion-justify-content-center height-100"
           >
-            <ion-col size-md="6" size-lg="6" size-xs="12">
+            <ion-col size-md="12" size-lg="6" size-xs="12">
               <h1>{{ $t("assessments.substructure") }}</h1>
               <assessment-input
                 :value="assessmentParams.substructure"

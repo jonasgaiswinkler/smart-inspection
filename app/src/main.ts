@@ -4,6 +4,7 @@ import router from "./router";
 
 import { IonicVue } from "@ionic/vue";
 import { Plugins } from "@capacitor/core";
+import { VueCookieNext } from "vue-cookie-next";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/vue/css/core.css";
@@ -81,6 +82,10 @@ router.beforeEach(async function(to, from, next) {
   } else if (store.state.user !== null && to.name == "Login") {
     next({ name: "Home" });
   } else {
+    if (to.name === "Home") {
+      store.dispatch("loadName");
+    }
+
     if (to.name === "ObjectList") {
       store.dispatch("object/loadList");
     }
@@ -194,7 +199,8 @@ const app = createApp(App)
   .use(store)
   .use(IonicVue, { mode: "md", animated: false })
   .use(router)
-  .use(i18n);
+  .use(i18n)
+  .use(VueCookieNext);
 
 router.isReady().then(() => {
   app.mount("#app");

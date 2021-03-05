@@ -1,0 +1,281 @@
+{
+  "welcomeText": "Welcome to Smart Inspection!",
+  "login": "Login",
+  "logout": "Logout",
+  "email": "E-Mail",
+  "password": "Password",
+  "displayName": "Display name",
+  "updateDisplayName": "Change display name",
+  "displayNameUpdated": "Display name changed!",
+  "ok": "Ok",
+  "newObject": "New Object",
+  "newInspection": "New Inspection",
+  "newDamage": "New Damage/Defect",
+  "list": "List",
+  "objectList": "Object List",
+  "inspectionList": "Inspection List",
+  "bridgeObject": "Bridge List",
+  "settings": "Settings",
+  "profile": "Profile",
+  "objectData": "Object Data",
+  "objectDocuments": "Object Documents",
+  "inspectionData": "Inspection Data",
+  "damageData": "Damage/Defect Data",
+  "damageState": "Damage/Defect State",
+  "damageList": "Damage/Defect List",
+  "plans": "Plans",
+  "additionalResources": "Additional Resources",
+  "generateReport": "Generate Report",
+  "assessment": "Assessment",
+  "editObject": "Edit Object",
+  "editInspection": "Edit Inspection",
+  "editDamage": "Edit Damage/Defect",
+  "updateDamageState": "Update Damage/Defect State",
+  "deleteObject": "Delete Object",
+  "restoreObject": "Restore Object",
+  "objectRestored": "Object restored!",
+  "deleteInspection": "Delete Inspection",
+  "confirmDeleteObject": "Please confirm the deletion of Object #{oid}.",
+  "confirmDeleteInspection": "Please confirm the deletion of the Inspection.",
+  "confirmDeletionRequest": "Please confirm, that you want to mark this Object for deletion by an administrator.",
+  "pleasechoose": "Please choose",
+  "idAssigned": "ID already taken!",
+  "dateAssigned": "Date already assigned!",
+  "resetPassword": "Reset password",
+  "resetEmailSend": "An E-Mail with information on how to reset you passwort was sent.",
+  "noEmailAddress": "Please enter an E-Mail-Address",
+  "filesAmount": "No file chosen | One file chosen | {n} files chosen",
+  "wrongFileType": "Wrong file type!",
+  "fileTooBig": "File too big! (max. 2 MB)",
+  "pleaseChooseOption": "Please choose an option.",
+  "next": "Next",
+  "back": "Back",
+  "save": "Save",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "search": "Search",
+  "download": "Download",
+  "confirm": "Confirm",
+  "close": "Close",
+  "reset": "Reset",
+  "selectFile": "Select file",
+  "selectFiles": "Select files",
+  "localization": "Localization",
+  "objectSaved": "Object saved!",
+  "objectDeleted": "Object deleted!",
+  "deletionRequested": "Deletion requested!",
+  "requestObjectDeletion": "Request Object deletion",
+  "requestedDeletions": "Requested deletions",
+  "inspectionSaved": "Inspection saved!",
+  "inspectionDeleted": "Inspection deleted!",
+  "damageSaved": "Damage/Defect saved!",
+  "deleteDamage": "Delete Damage/Defect",
+  "fixDamage": "Fix Damage/Defect",
+  "unfixDamage": "Unfix Damage/Defect",
+  "damageUnfixed": "Damage/Defect unfixed!",
+  "damageFixed": "Damage/Defect fixed!",
+  "thisDamageIsFixed": "This Damage/Defect is already fixed.",
+  "confirmDeleteDamage": "Please confirm the deletion of the Damage/Defect.",
+  "damageDeleted": "Damage/Defect deleted!",
+  "objectPhoto": "Object Photo",
+  "inspectionPhoto": "Inspection photo",
+  "measurements": "Measurements",
+  "locationOnlyNecessary": "Location is only necessary when there are no plans.",
+  "filter": "Filter",
+  "placeholderLocation": "{name} location",
+  "damageGroundPlan": "Ground plan location",
+  "damageLongitudinalSection": "Longitudinal section location",
+  "damageCrossSection": "Cross section location",
+  "damageModel": "3D-Model location",
+  "assessmentSaved": "Assessment saved!",
+  "nItems": "No entries | One entry | {n} entries",
+  "reports": "Reports",
+  "newReport": "New Report",
+  "objectReport": "Object Report",
+  "objectReports": "Object Reports",
+  "inspectionReport": "Inspection Report",
+  "creationDate": "Creation date",
+  "language": "Language",
+  "deleteReport": "Delete Report",
+  "confirmDeleteReport": "Please confirm the deletion of the Report.",
+  "reportDeleted": "Report deleted!",
+  "noEntries": "No entries",
+  "exportAsCSV": "Export as CSV",
+  "object": {
+    "name": "Object",
+    "id": "ID",
+    "materials": {
+      "name": "Material",
+      "data": {
+        "stone": "Stone",
+        "wood": "Wood",
+        "brickwork": "Brickwork",
+        "steel": "Steel",
+        "reinforcedConcrete": "Reinforced concrete",
+        "prestressedConcrete": "Prestressed concrete",
+        "compositeConstruction": "Composite construction"
+      }
+    },
+    "types": {
+      "name": "Bridge type",
+      "data": {
+        "railwayBridge": "Railway bridge",
+        "roadBridge": "Road bridge"
+      }
+    },
+    "systems": {
+      "name": "Static system",
+      "data": {
+        "singleSpanBeam": "Single span beam",
+        "continuousBeam": "Continous beam",
+        "frameStructure": "Frame structure",
+        "archedStructure": "Arched structure",
+        "trussStructure": "Truss structure",
+        "suspensionBridge": "Suspension bridge",
+        "ropeBridge": "Rope bridge",
+        "specialConstruction": "Special construction"
+      }
+    },
+    "crossSectionShapes": {
+      "name": "Cross section shape",
+      "data": {
+        "slabs": "Slabs",
+        "beams": "Beams",
+        "slabBeams": "Slab beams",
+        "boxGirder": "Box girder",
+        "frame": "Frame",
+        "rolledBeams": "Rolled beams",
+        "trough": "trough"
+      }
+    },
+    "constructionYear": "Construction year",
+    "routeCode": "Route code",
+    "routeName": "Route name",
+    "chainage": "Chainage [km]",
+    "coords": "Coordinates",
+    "spanLength": "Span length [m]",
+    "width": "Width [m]",
+    "trafficRoutes": "Amount of traffic routes",
+    "shortDescription": "Short description",
+    "photo": "Photo",
+    "groundPlan": "Ground plan",
+    "longitudinalSection": "Longitudinal section",
+    "crossSection": "Cross section",
+    "techDescription": "Technical description",
+    "model": "3D-Model",
+    "files": "Files"
+  },
+  "inspection": {
+    "name": "Inspection",
+    "inspector": "Inspector",
+    "date": "Date",
+    "types": {
+      "name": "Type of Inspection",
+      "data": {
+        "continuousMonitoring": "Continous monitoring",
+        "check": "Check",
+        "inspection": "Inspection",
+        "specialInspection": "Special Inspection"
+      }
+    },
+    "weather": {
+      "name": "Weather",
+      "data": {
+        "dry": "dry",
+        "wet": "wet",
+        "snow": "snow"
+      }
+    },
+    "temperature": "Temperature [°C]",
+    "photo": "Overview photo",
+    "additionalInfo": "Additional info"
+  },
+  "damage": {
+    "name": "Damage/Defect",
+    "allocations": {
+      "name": "Allocation",
+      "data": {
+        "substructure": {
+          "name": "Substructure",
+          "data": {
+            "pile": "Pile",
+            "flatFoundation": "Flat foundation",
+            "abutment": "Abutment",
+            "pileFoundation": "Pile foundation",
+            "embankmentSurface": "Embankment surface"
+          }
+        },
+        "superstructure": {
+          "name": "Superstructure"
+        },
+        "equipment": {
+          "name": "Equipment",
+          "data": {
+            "bearing": "Bearing",
+            "sealing": "Sealing",
+            "trafficSurface": "Traffic surface",
+            "drainage": "Drainage",
+            "edgeBeam": "Edge beam",
+            "vehicleRestraintSystem": "Vehicle restraint systen",
+            "railing": "Railing",
+            "noiseProtection": "Noise protection"
+          }
+        }
+      }
+    },
+    "component": "Component",
+    "componentDetail": "Component detail",
+    "types": {
+      "name": "Damage/Defect type",
+      "data": {
+        "deformation": "Deformation",
+        "crack": "Crack",
+        "rust": "Rust",
+        "wetSpot": "Wet spot",
+        "leaching": "Leaching",
+        "exposedReinforcement": "Exposed reinforcement",
+        "weathering": "Weathering",
+        "spalling": "Spalling",
+        "gap": "Gap",
+        "orientation": "Orientation",
+        "tightness": "Tightness",
+        "corrosion": "Corrosion",
+        "otherDamage": "Other damage"
+      }
+    },
+    "typeDetail": "Type detail",
+    "location": "Location",
+    "cause": "Cause",
+    "description": "Description",
+    "photo": "Photo",
+    "measurement1": "Measurement 1",
+    "measurement1Sm": "Meas. 1",
+    "measurement2": "Measurement 2",
+    "measurement2Sm": "Meas. 2",
+    "limit": "Limit for {msg}",
+    "limitSm": "Limit",
+    "impact": "Impact",
+    "categories": {
+      "name": "Category",
+      "data": {
+        "immediateActionLimit": "Immediate action limit",
+        "interventionLimit": "Intervention limit",
+        "alertLimit": "Alert limit"
+      }
+    },
+    "action": "Action",
+    "period": "Period",
+    "additionalInfo": "Addition information"
+  },
+  "assessments": {
+    "substructure": "Substructure Assessment",
+    "superstructure": "Superstructure Assessment",
+    "equipment": "Equipment Assessment",
+    "object": "Object Assessment",
+    "1": "Very good condition",
+    "2": "Good condition",
+    "3": "Sufficient condition",
+    "4": "Insufficient condition",
+    "5": "Poor condition"
+  }
+}

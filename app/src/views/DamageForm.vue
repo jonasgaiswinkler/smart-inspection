@@ -29,7 +29,7 @@
           style="height: 100%;"
           class="ion-justify-content-center"
         >
-          <ion-col size-md="6" size-lg="6" size-xs="12">
+          <ion-col size-md="12" size-lg="6" size-xs="12">
             <damage-data
               v-if="
                 selectedSegment === 'damageData' && routeName != 'UpdateDamage'
@@ -95,14 +95,9 @@
               @saveedit="saveDamage"
             ></damage-location>
             <damage-model
-              v-if="
-                selectedSegment == 'damageModel' &&
-                  object.model != null
-              "
+              v-if="selectedSegment == 'damageModel' && object.model != null"
               @next="selectedSegment = getNavigation('damageModel').next"
-              @back="
-                selectedSegment = getNavigation('damageModel').previous
-              "
+              @back="selectedSegment = getNavigation('damageModel').previous"
               :nextPage="getNavigation('damageModel').next"
               :previousPage="getNavigation('damageModel').previous"
               name="damageModel"

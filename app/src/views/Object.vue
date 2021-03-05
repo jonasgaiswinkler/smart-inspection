@@ -32,7 +32,7 @@
             color="primary"
             class="ion-justify-content-center height-100"
           >
-            <ion-col size-md="6" size-lg="6" size-xs="12" class="height-100">
+            <ion-col size-md="12" size-lg="6" size-xs="12" class="height-100">
               <ion-row class="height-100">
                 <ion-col
                   size-lg="8"
@@ -335,21 +335,15 @@ import { useI18n } from "vue-i18n";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { arrowBack } from "ionicons/icons";
-import {
-  FontAwesomeIcon,
-  FontAwesomeLayers,
-} from "@fortawesome/vue-fontawesome";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import {
   faPlus,
   faFile,
   faTools,
   faTrash,
-  faList,
   faSquare,
-  faExclamationTriangle,
   faFileCsv,
 } from "@fortawesome/free-solid-svg-icons";
-import { faWpforms } from "@fortawesome/free-brands-svg-icons";
 import "viewerjs/dist/viewer.css";
 import Viewer from "viewerjs";
 import { faInspectionList, faDamageList } from "@/icons";
@@ -574,6 +568,13 @@ export default defineComponent({
   /* white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis; */
+}
+
+@media (max-width: 576px) {
+  .text-overflow {
+    line-height: 1em;
+    height: 3em;
+  }
 }
 
 @media (min-width: 576px) {
