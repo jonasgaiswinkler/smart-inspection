@@ -17,6 +17,7 @@
           slot="end"
           style="margin-right: 20px; color: white"
         ></ion-spinner>
+        <nav-popover></nav-popover>
       </ion-toolbar>
     </ion-header>
 
@@ -138,6 +139,7 @@ import { faTrash, faRedo } from "@fortawesome/free-solid-svg-icons";
 import * as firebase from "firebase/app";
 import "firebase/firestore";
 import { useRouter } from "vue-router";
+import NavPopover from "@/components/NavPopover";
 
 export default defineComponent({
   name: "ObjectDeletion",
@@ -165,6 +167,7 @@ export default defineComponent({
     IonSpinner,
     //IonTextarea,
     "font-awesome-icon": FontAwesomeIcon,
+    "nav-popover": NavPopover,
   },
   setup() {
     // Define store

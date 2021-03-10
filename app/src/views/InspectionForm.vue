@@ -21,6 +21,7 @@
           slot="end"
           style="margin-right: 20px; color: white"
         ></ion-spinner>
+        <nav-popover></nav-popover>
       </ion-toolbar>
     </ion-header>
 
@@ -192,6 +193,7 @@ import { faFile } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "vue-router";
 import { arrowBack } from "ionicons/icons";
 import FileInput from "@/components/FileInput";
+import NavPopover from "@/components/NavPopover";
 
 export default defineComponent({
   name: "InspectionForm",
@@ -216,6 +218,7 @@ export default defineComponent({
     IonTextarea,
     IonSpinner,
     "file-input": FileInput,
+    "nav-popover": NavPopover,
   },
   setup() {
     // Define store

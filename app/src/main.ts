@@ -82,7 +82,7 @@ router.beforeEach(async function(to, from, next) {
   } else if (store.state.user !== null && to.name == "Login") {
     next({ name: "Home" });
   } else {
-    if (to.name === "Home") {
+    if (to.name === "Settings") {
       store.dispatch("loadName");
     }
 

@@ -19,6 +19,7 @@
           slot="end"
           style="margin-right: 20px; color: white"
         ></ion-spinner>
+        <nav-popover></nav-popover>
       </ion-toolbar>
     </ion-header>
 
@@ -76,6 +77,7 @@ import { Plugins } from "@capacitor/core";
 import { arrowBack } from "ionicons/icons";
 import ObjectData from "@/components/ObjectData";
 import ObjectDocuments from "@/components/ObjectDocuments";
+import NavPopover from "@/components/NavPopover";
 
 export default defineComponent({
   name: "NewObject",
@@ -100,6 +102,7 @@ export default defineComponent({
     //IonTextarea
     "object-data": ObjectData,
     "object-documents": ObjectDocuments,
+    "nav-popover": NavPopover,
   },
   setup() {
     // define router

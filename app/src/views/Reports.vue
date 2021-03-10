@@ -22,6 +22,7 @@
           slot="end"
           style="margin-right: 20px; color: white"
         ></ion-spinner>
+        <nav-popover></nav-popover>
       </ion-toolbar>
     </ion-header>
 
@@ -231,7 +232,7 @@ import {
   faDownload,
   faExclamationTriangle,
 } from "@fortawesome/free-solid-svg-icons";
-import { faWpforms } from "@fortawesome/free-brands-svg-icons";
+import NavPopover from "@/components/NavPopover";
 
 export default defineComponent({
   name: "Reports",
@@ -263,6 +264,7 @@ export default defineComponent({
     //IonTextarea,
     "font-awesome-icon": FontAwesomeIcon,
     //"font-awesome-layers": FontAwesomeLayers,
+    "nav-popover": NavPopover,
   },
   setup() {
     // Define store

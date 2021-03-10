@@ -24,6 +24,7 @@
           slot="end"
           style="margin-right: 20px; color: white"
         ></ion-spinner>
+        <nav-popover></nav-popover>
       </ion-toolbar>
     </ion-header>
 
@@ -408,6 +409,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "viewerjs/dist/viewer.css";
 import Viewer from "viewerjs";
+import NavPopover from "@/components/NavPopover";
 
 export default defineComponent({
   name: "Damage",
@@ -434,6 +436,7 @@ export default defineComponent({
     //IonSpinner,
     //IonTextarea,
     "font-awesome-icon": FontAwesomeIcon,
+    "nav-popover": NavPopover,
   },
   setup() {
     // Define store

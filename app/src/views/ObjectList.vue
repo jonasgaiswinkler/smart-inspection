@@ -17,6 +17,7 @@
           slot="end"
           style="margin-right: 20px; color: white"
         ></ion-spinner>
+        <nav-popover></nav-popover>
       </ion-toolbar>
     </ion-header>
 
@@ -286,6 +287,7 @@ import {
   FontAwesomeLayersText,
 } from "@fortawesome/vue-fontawesome";
 import { faFilter, faTimes, faRedo } from "@fortawesome/free-solid-svg-icons";
+import NavPopover from "@/components/NavPopover";
 
 export default defineComponent({
   name: "ObjectList",
@@ -318,6 +320,7 @@ export default defineComponent({
     "font-awesome-icon": FontAwesomeIcon,
     "font-awesome-layers": FontAwesomeLayers,
     "font-awesome-layers-text": FontAwesomeLayersText,
+    "nav-popover": NavPopover,
   },
   setup() {
     // Define store
@@ -437,6 +440,6 @@ export default defineComponent({
 }
 
 .filter-modal {
-  --background: rgba(255, 255, 255, 0.9);
+  /* --background: rgba(255, 255, 255, 0.9); */
 }
 </style>

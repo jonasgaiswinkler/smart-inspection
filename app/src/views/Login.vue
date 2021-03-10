@@ -8,6 +8,7 @@
           slot="end"
           style="margin-right: 20px; color: white"
         ></ion-spinner>
+        <nav-popover></nav-popover>
       </ion-toolbar>
     </ion-header>
 
@@ -127,7 +128,7 @@
   </ion-page>
 </template>
 
-<script lang="ts">
+<script>
 // Imports
 import { computed, ref } from "vue";
 import {
@@ -150,6 +151,7 @@ import { defineComponent } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { useI18n } from "vue-i18n";
+import NavPopover from "@/components/NavPopover";
 
 export default defineComponent({
   name: "Login",
@@ -167,6 +169,7 @@ export default defineComponent({
     IonButton,
     IonImg,
     IonSpinner,
+    "nav-popover": NavPopover,
   },
   setup() {
     // Define router

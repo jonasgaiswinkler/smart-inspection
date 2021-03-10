@@ -21,6 +21,7 @@
           slot="end"
           style="margin-right: 20px; color: white"
         ></ion-spinner>
+        <nav-popover></nav-popover>
       </ion-toolbar>
     </ion-header>
 
@@ -109,6 +110,7 @@ import { faFile } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "vue-router";
 import { arrowBack } from "ionicons/icons";
 import AssessmentInput from "@/components/AssessmentInput";
+import NavPopover from "@/components/NavPopover";
 
 export default defineComponent({
   name: "AssessmentForm",
@@ -133,6 +135,7 @@ export default defineComponent({
     // IonTextarea,
     IonSpinner,
     "assessment-input": AssessmentInput,
+    "nav-popover": NavPopover,
   },
   setup() {
     // Define store

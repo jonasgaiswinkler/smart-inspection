@@ -19,6 +19,7 @@
           slot="end"
           style="margin-right: 20px; color: white"
         ></ion-spinner>
+        <nav-popover></nav-popover>
       </ion-toolbar>
     </ion-header>
 
@@ -156,6 +157,7 @@ import DamageData from "@/components/DamageData.vue";
 import DamageLocation from "@/components/DamageLocation.vue";
 import DamageState from "@/components/DamageState.vue";
 import DamageModel from "@/components/DamageModel.vue";
+import NavPopover from "@/components/NavPopover";
 
 export default defineComponent({
   name: "DamageForm",
@@ -182,6 +184,7 @@ export default defineComponent({
     "damage-location": DamageLocation,
     "damage-state": DamageState,
     "damage-model": DamageModel,
+    "nav-popover": NavPopover,
   },
   setup() {
     // Define store

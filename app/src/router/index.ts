@@ -14,6 +14,7 @@ import Damage from "@/views/Damage.vue";
 import DamageList from "@/views/DamageList.vue";
 import AssessmentForm from "@/views/AssessmentForm.vue";
 import Reports from "@/views/Reports.vue";
+import Settings from "@/views/Settings.vue";
 
 const base = "/";
 
@@ -121,6 +122,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/object/:oid/inspection/:idate/damage/:did/update",
     name: "UpdateDamage",
     component: DamageForm,
+  },
+  {
+    path: "/settings",
+    name: "Settings",
+    component: Settings,
   },
 ];
 
