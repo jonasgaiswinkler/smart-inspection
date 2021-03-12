@@ -1,6 +1,10 @@
 <template>
   <ion-button @click="openPopover" fill="clear" slot="end"
-    ><ion-icon slot="icon-only" :icon="ellipsisVertical"></ion-icon
+    ><ion-icon
+      class="ellipsis"
+      slot="icon-only"
+      :icon="ellipsisVertical"
+    ></ion-icon
   ></ion-button>
 </template>
 
@@ -37,7 +41,7 @@ export default defineComponent({
 </script>
 
 <style>
-ion-icon {
+.ellipsis {
   color: white;
 }
 </style>
