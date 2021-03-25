@@ -368,6 +368,7 @@ export default {
             const newRow: any = {
               damage: damage.id,
               date: state.date,
+              isFixed: damage.isFixed ? "true" : "false",
             };
 
             if (damage.measurement1Name) {
@@ -396,6 +397,7 @@ export default {
 
         const fields = [
           "damage",
+          "isFixed",
           "date",
           "measurement1Name",
           "measurement1",

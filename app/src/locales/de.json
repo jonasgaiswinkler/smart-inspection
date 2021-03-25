@@ -101,6 +101,7 @@
   "reportDeleted": "Bericht gelöscht!",
   "noEntries": "Keine Einträge",
   "exportAsCSV": "Exportieren als CSV",
+  "manual": "Bedienungsanleitung",
   "object": {
     "name": "Objekt",
     "id": "ID",

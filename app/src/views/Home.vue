@@ -26,7 +26,7 @@
                 v-for="button in buttons"
                 :key="button.name"
                 :size-lg="isAdmin ? 6 : 4"
-                :size-md="isAdmin ? 6 : 12"
+                :size-md="isAdmin ? 6 : 4"
                 :size-xs="isAdmin ? 6 : 12"
               >
                 <div class="tile height-100">
@@ -54,7 +54,7 @@
               <ion-col
                 v-if="isAdmin"
                 :size-lg="isAdmin ? 6 : 4"
-                :size-md="isAdmin ? 6 : 12"
+                :size-md="isAdmin ? 6 : 4"
                 :size-xs="isAdmin ? 6 : 12"
                 key="requestDeletion"
               >

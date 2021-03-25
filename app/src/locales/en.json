@@ -101,6 +101,7 @@
   "reportDeleted": "Report deleted!",
   "noEntries": "No entries",
   "exportAsCSV": "Export as CSV",
+  "manual": "Manual",
   "object": {
     "name": "Object",
     "id": "ID",
