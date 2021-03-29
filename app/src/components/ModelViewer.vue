@@ -48,9 +48,11 @@ export default defineComponent({
     },
     getImage() {
       if (this.viewer) {
-        return this.b64toBlob(this.viewer.getSnapshot({
-          format: "png"
-        }));
+        return this.b64toBlob(
+          this.viewer.getSnapshot({
+            format: "png",
+          })
+        );
       } else {
         return null;
       }
@@ -145,8 +147,6 @@ export default defineComponent({
         canvasPos: coords,
         pickSurface: true, // <<------ This causes picking to find the intersection point on the entity
       });
-
-      console.log(pickResult.worldPos);
 
       if (pickResult) {
         vm.placeMarker({

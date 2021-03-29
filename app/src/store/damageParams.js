@@ -193,6 +193,26 @@ export default {
         },
         async loadEdit(context) {
             const params = context.rootState.damage.data;
+            const object = context.rootState.object.data;
+            if (!object.groundPlan) {
+                params.imageGroundPlan = null;
+                params.locationGroundPlan = null;
+            }
+
+            if (!object.longitudinalSection) {
+                params.imageLongitudinalSection = null;
+                params.locationLongitudinalSection = null;
+            }
+
+            if (!object.crossSection) {
+                params.imageCrossSection = null;
+                params.locationCrossSection = null;
+            }
+
+            if (!object.model) {
+                params.imageModel = null;
+                params.locationModel = null;
+            }
             const editParams = Object.assign(DamageParams(), params);
             context.commit("setEditParams", editParams);
         },
@@ -333,7 +353,7 @@ function Measurement(showName) {
         value: null,
         unit: "mm"
     } : {
-            value: null,
-            unit: "mm"
-        };
+        value: null,
+        unit: "mm"
+    };
 }

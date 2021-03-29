@@ -113,9 +113,6 @@ export default defineComponent({
         this.zoom = 1;
         await this.renderFile();
 
-        console.log("getBlob");
-        console.log(this.renderTask);
-
         if (this.renderTask != null) {
           await this.renderTask.promise;
         }

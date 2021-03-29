@@ -125,7 +125,6 @@ export default {
             }
 
             const snapshot = await db.collection("objects").doc(oid).collection('inspections').where('date', '==', params.date).get();
-            console.log(snapshot)
             if (!snapshot.empty) {
                 return true;
             } else {

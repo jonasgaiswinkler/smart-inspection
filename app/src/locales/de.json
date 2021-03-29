@@ -102,6 +102,8 @@
   "noEntries": "Keine Einträge",
   "exportAsCSV": "Exportieren als CSV",
   "manual": "Bedienungsanleitung",
+  "name": "Name",
+  "value": "Wert",
   "object": {
     "name": "Objekt",
     "id": "ID",

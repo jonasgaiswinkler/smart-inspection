@@ -5,13 +5,13 @@
     <ion-input
       v-if="showName"
       v-model="name"
-      placeholder="Name"
+      :placeholder="$t('name')"
       class="ion-text-right"
       :required="required && showName"
     ></ion-input>
     <ion-input
       v-model="number"
-      placeholder="Wert"
+      :placeholder="$t('value')"
       type="number"
       step="any"
       class="ion-text-right"

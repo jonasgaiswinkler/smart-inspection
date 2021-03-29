@@ -531,9 +531,6 @@ export default defineComponent({
       faFileCsv,
     };
   },
-  mounted() {
-    console.log();
-  },
 });
 </script>
 

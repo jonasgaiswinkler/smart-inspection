@@ -73,6 +73,16 @@ exports.deleteObject = functions
 exports.deleteInspection = functions.https.onCall(async (data, context) => {
     if (context.auth && data.oid !== undefined && data.iid !== undefined) {
         await admin.firestore().collection("objects").doc(data.oid).collection('inspections').doc(data.iid).delete();
+        const damagesSnap = await admin.firestore().collection("objects").doc(data.oid).collection("damages").get();
+        const promises = [];
+        for (const damageDoc of damagesSnap.docs) {
+            promises.push(async function () {
+                await damageDoc.ref.collection("states").doc(data.iid).delete();
+                await admin.storage().bucket().deleteFiles({ prefix: `objects/${data.oid}/damages/${damageDoc.id}/states/${data.iid}` });
+            }())
+        }
+        await Promise.all(promises);
+        await admin.firestore().collection("objects").doc(data.oid).collection('assessments').doc(data.iid).delete();
         await admin.storage().bucket().deleteFiles({ prefix: `objects/${data.oid}/inspections/${data.iid}` });
         return { status: 200 };
     } else {
@@ -146,8 +156,10 @@ exports.createReport = functions.https.onCall(async (data, context) => {
 
 
             for (const damage of damages) {
-                // eslint-disable-next-line no-await-in-loop
-                await addDamageContent(content, locale, title, damage, data.oid, data.iid, damage.did);
+                if (damage.states.length !== 0) {
+                    // eslint-disable-next-line no-await-in-loop
+                    await addDamageContent(content, locale, title, damage, data.oid, data.iid, damage.did);
+                }
             }
 
             const doc = printer.createPdfKitDocument({
