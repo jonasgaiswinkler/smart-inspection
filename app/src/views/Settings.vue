@@ -17,6 +17,7 @@
           slot="end"
           style="margin-right: 20px; color: white"
         ></ion-spinner>
+        <nav-popover></nav-popover>
       </ion-toolbar>
     </ion-header>
 
