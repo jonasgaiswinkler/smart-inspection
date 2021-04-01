@@ -104,6 +104,7 @@ import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faSave } from "@fortawesome/free-solid-svg-icons";
+import NavPopover from "@/components/NavPopover";
 
 export default defineComponent({
   name: "Settings",
@@ -127,6 +128,7 @@ export default defineComponent({
     IonSelectOption,
     IonInput,
     "font-awesome-icon": FontAwesomeIcon,
+    "nav-popover": NavPopover,
   },
   setup() {
     // Define router
