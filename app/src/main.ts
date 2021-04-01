@@ -86,6 +86,10 @@ router.beforeEach(async function(to, from, next) {
       store.dispatch("loadName");
     }
 
+    if (to.name === "Users") {
+      await store.dispatch("loadUsers");
+    }
+
     if (to.name === "ObjectList") {
       store.dispatch("object/loadList");
     }

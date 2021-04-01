@@ -28,6 +28,7 @@ export default createStore({
     isLoading: true,
     redirect: null,
     loginIsLoading: false,
+    isLoadingUsers: false,
   },
   mutations: {
     setUser(state, user) {
@@ -50,6 +51,9 @@ export default createStore({
     },
     setName(state, name) {
       state.name = name;
+    },
+    setIsLoadingUsers(state, isLoadingUsers) {
+      state.isLoadingUsers = isLoadingUsers;
     },
   },
   actions: {
@@ -120,6 +124,7 @@ export default createStore({
       }
     },
     async loadUsers(context) {
+      context.commit("setIsLoadingUsers", true);
       const usersSnap = await firebase
         .firestore()
         .collection("users")
@@ -129,6 +134,29 @@ export default createStore({
         users.push({ id: userDoc.id, ...userDoc.data() });
       }
       context.commit("setUsers", users);
+      context.commit("setIsLoadingUsers", false);
+    },
+    async createUser(context, payload) {
+      context.commit("setIsLoadingUsers", true);
+      const functions = firebase.functions();
+      try {
+        await functions.httpsCallable("createUser")(payload);
+        context.dispatch("loadUsers");
+      } catch (error) {
+        console.error(error);
+      }
+      context.commit("setIsLoadingUsers", false);
+    },
+    async deleteUser(context, uid) {
+      context.commit("setIsLoadingUsers", true);
+      const functions = firebase.functions();
+      try {
+        await functions.httpsCallable("deleteUser")({ uid: uid });
+        context.dispatch("loadUsers");
+      } catch (error) {
+        console.error(error);
+      }
+      context.commit("setIsLoadingUsers", false);
     },
     setPermissions(context, payload) {
       if (payload.uid !== undefined && payload.role !== undefined) {
@@ -141,13 +169,6 @@ export default createStore({
     async setUserRole(context, userRole) {
       context.commit("setUserRole", userRole);
       context.dispatch("object/getRequestedObjects", null, { root: true });
-    },
-    testPdf(context) {
-      const functions = firebase.functions();
-      return functions.httpsCallable("createInspectionReport")({
-        oid: "2837",
-        iid: "uWjxlFUmQv3wcMDcrtST",
-      });
     },
   },
   modules: {

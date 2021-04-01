@@ -23,10 +23,10 @@
           >
             <ion-row class="height-100">
               <ion-col
-                v-for="button in buttons"
+                v-for="(button, i) in buttons"
                 :key="button.name"
-                :size-lg="isAdmin ? 6 : 4"
-                :size-md="isAdmin ? 6 : 4"
+                :size-lg="isAdmin ? (i > 1 ? 4 : 6) : 4"
+                :size-md="isAdmin ? (i > 1 ? 4 : 6) : 4"
                 :size-xs="isAdmin ? 6 : 12"
               >
                 <div class="tile height-100">
@@ -53,8 +53,8 @@
               </ion-col>
               <ion-col
                 v-if="isAdmin"
-                :size-lg="isAdmin ? 6 : 4"
-                :size-md="isAdmin ? 6 : 4"
+                :size-lg="isAdmin ? 4 : 4"
+                :size-md="isAdmin ? 4 : 4"
                 :size-xs="isAdmin ? 6 : 12"
                 key="requestDeletion"
               >
@@ -84,6 +84,32 @@
                   </div>
                   <div class="ion-hide-sm-up text-overflow text-height">
                     {{ $t("requestedDeletions") }}
+                  </div>
+                </div>
+              </ion-col>
+              <ion-col
+                v-if="isAdmin"
+                :size-lg="isAdmin ? 4 : 4"
+                :size-md="isAdmin ? 4 : 4"
+                :size-xs="isAdmin ? 6 : 12"
+                key="users"
+              >
+                <div class="tile height-100">
+                  <ion-button
+                    @click="push('Users')"
+                    class="flex-grow-1 width-100"
+                    fill="outline"
+                    expand="block"
+                    :aria-label="$t('users')"
+                    :title="$t('users')"
+                  >
+                    <font-awesome-icon :icon="faUser" class="button-icon" />
+                  </ion-button>
+                  <div class="ion-hide-sm-down text-overflow">
+                    <h1 class="text-height">{{ $t("users") }}</h1>
+                  </div>
+                  <div class="ion-hide-sm-up text-overflow text-height">
+                    {{ $t("users") }}
                   </div>
                 </div>
               </ion-col>
@@ -123,6 +149,7 @@ import {
   faTrash,
   faSave,
   faCog,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { useStore } from "vuex";
 import { faObjectList, faInspectionList } from "@/icons";
@@ -193,6 +220,7 @@ export default defineComponent({
       faTimes,
       faSave,
       faCog,
+      faUser,
     };
   },
 });

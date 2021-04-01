@@ -30,6 +30,58 @@ let transporter = nodemailer.createTransport({
 exports.setPermissions = functions.https.onCall(async (data, context) => {
     if (context.auth && context.auth.uid === "Thej8pt0ilXGQwLp3vnmqarxpog2" && data.uid !== undefined && data.role !== undefined) {
         await admin.auth().setCustomUserClaims(data.uid, { role: data.role });
+        await admin.firestore().collection("users").doc(data.uid).update({
+            role: data.role
+        });
+        return { status: 200 };
+    } else {
+        return { status: 401 };
+    }
+});
+
+exports.createUser = functions.https.onCall(async (data, context) => {
+    if (context.auth && context.auth.token.role === "admin" && data.email && data.username && data.role) {
+        const user = await admin.auth().createUser({
+            email: data.email
+        });
+
+        await admin.auth().setCustomUserClaims(user.uid, { role: data.role });
+
+        await admin.firestore().collection("users").doc(user.uid).create({
+            name: data.username,
+            email: data.email,
+            role: data.role,
+            deleted: false
+        });
+
+        const link = await admin.auth().generatePasswordResetLink(data.email, {
+            url: "https://smart-inspection.jonasgaiswinkler.eu"
+        });
+
+        const mailOptions = {
+            from: 'Smart Inspection <smart-inspection@jonasgaiswinkler.eu>', // Something like: Jane Doe <janedoe@gmail.com>
+            to: data.email,
+            subject: 'Passwort für Smart Inspection ', // email subject
+            html: `<p>Mit Ihrer E-Mail-Adresse wurde eine Account unter dem Namen "${data.username}" für <a href="https://smart-inspection.jonasgaiswinkler.eu">Smart Inspection</a> erstellt. Bitte legen Sie ein Password für Ihren Account fest.</p>
+                <p><a href="${link}">Link zur Passwortfestlegung.</a></p>
+                <p>Bei Problemen antworten Sie bitte auf diese E-Mail.</p>`
+        };
+
+        // returning result
+        await transporter.sendMail(mailOptions);
+        return { status: 200 };
+    } else {
+        return { status: 401 };
+    }
+});
+
+exports.deleteUser = functions.https.onCall(async (data, context) => {
+    if (context.auth && context.auth.token.role === "admin" && data.uid) {
+        await admin.auth().deleteUser(data.uid);
+        await admin.firestore().collection("users").doc(data.uid).update({
+            deleted: true
+        });
+
         return { status: 200 };
     } else {
         return { status: 401 };

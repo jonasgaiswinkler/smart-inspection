@@ -235,7 +235,13 @@ export default defineComponent({
     const routeName = router.currentRoute.value.name;
 
     // define users getter
-    const users = computed(() => store.state.users);
+    const users = computed(function() {
+      if (store.state.users) {
+        return store.state.users.filter((user) => user.deleted !== true);
+      } else {
+        return [];
+      }
+    });
 
     // define bridge options
     const inspectionOptions = messages.inspection;

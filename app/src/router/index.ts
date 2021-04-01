@@ -15,6 +15,7 @@ import DamageList from "@/views/DamageList.vue";
 import AssessmentForm from "@/views/AssessmentForm.vue";
 import Reports from "@/views/Reports.vue";
 import Settings from "@/views/Settings.vue";
+import Users from "@/views/Users.vue";
 
 const base = "/";
 
@@ -127,6 +128,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/settings",
     name: "Settings",
     component: Settings,
+  },
+  {
+    path: "/users",
+    name: "Users",
+    component: Users,
   },
 ];
 
