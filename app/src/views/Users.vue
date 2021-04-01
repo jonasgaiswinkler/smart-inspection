@@ -158,6 +158,7 @@
                     ></font-awesome-icon>
                   </ion-button>
                   <ion-button
+                    v-if="$store.state.user.uid !== user.id"
                     @click="deleteUser(user)"
                     fill="clear"
                     slot="end"
