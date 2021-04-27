@@ -39,24 +39,28 @@
             <ion-col size-md="12" size-lg="6" size-xs="12">
               <h1>{{ $t("assessments.substructure") }}</h1>
               <assessment-input
+                :title="$t('assessments.substructure')"
                 :value="assessmentParams.substructure"
                 @input="setAssessmentParam('substructure', $event)"
                 :error="errorSubstructure"
               ></assessment-input>
               <h1>{{ $t("assessments.superstructure") }}</h1>
               <assessment-input
+                :title="$t('assessments.superstructure')"
                 :value="assessmentParams.superstructure"
                 @input="setAssessmentParam('superstructure', $event)"
                 :error="errorSuperstructure"
               ></assessment-input>
               <h1>{{ $t("assessments.equipment") }}</h1>
               <assessment-input
+                :title="$t('assessments.equipment')"
                 :value="assessmentParams.equipment"
                 @input="setAssessmentParam('equipment', $event)"
                 :error="errorEquipment"
               ></assessment-input>
               <h1>{{ $t("assessments.object") }}</h1>
               <assessment-input
+                :title="$t('assessments.object')"
                 :value="assessmentParams.object"
                 @input="setAssessmentParam('object', $event)"
                 :error="errorObject"

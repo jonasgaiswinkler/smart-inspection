@@ -138,7 +138,7 @@
         step="any"
         :value="objectParams.coords.latitude"
         class="ion-text-right"
-        placeholder="Latitude"
+        :placeholder="$t('latitude')"
         @ionInput="setObjectCoord('latitude', $event.target.value)"
       ></ion-input>
       <ion-input
@@ -147,7 +147,7 @@
         step="any"
         :value="objectParams.coords.longitude"
         class="ion-text-right"
-        placeholder="Longitude"
+        :placeholder="$t('longitude')"
         @ionInput="setObjectCoord('longitude', $event.target.value)"
       ></ion-input>
       <ion-button

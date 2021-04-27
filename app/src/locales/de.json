@@ -46,7 +46,7 @@
   "noEmailAddress": "Bitte geben Sie eine E-Mail-Adresse ein.",
   "filesAmount": "Keine Datei gewählt | Eine Datei gewählt | {n} Dateien gewählt",
   "wrongFileType": "Falscher Dateityp!",
-  "fileTooBig": "Datei zu groß! (max. 2 MB)",
+  "fileTooBig": "Datei zu groß! (max. 10 MB)",
   "pleaseChooseOption": "Bitte eine Option auswählen.",
   "next": "Weiter",
   "back": "Zurück",
@@ -115,6 +115,8 @@
   "userDeleted": "Benutzer gelöscht!",
   "changeRole": "Rolle ändern",
   "roleChanged": "Nutzerrolle wurde geändert! Möglicherweise muss sich der betroffene Nutzer neueinloggen, damit die Änderung wirksam wird.",
+  "longitude": "Longitude",
+  "latitude": "Latitude",
   "object": {
     "name": "Objekt",
     "id": "ID",

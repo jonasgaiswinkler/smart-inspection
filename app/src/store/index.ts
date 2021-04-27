@@ -18,6 +18,8 @@ import damageParams from "./damageParams.js";
 import damage from "./damage.js";
 // @ts-ignore
 import assessmentParams from "./assessmentParams.js";
+//@ts-ignore
+import tests from "./tests.js";
 
 export default createStore({
   state: {
@@ -179,5 +181,6 @@ export default createStore({
     damageParams: damageParams,
     damage: damage,
     assessmentParams: assessmentParams,
+    tests,
   },
 });

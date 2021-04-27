@@ -35,6 +35,7 @@ const i18n = setupI18n();
 
 /* vuex */
 import store from "@/store";
+
 defineCustomElements(window);
 
 /* firebase */
@@ -209,3 +210,12 @@ const app = createApp(App)
 router.isReady().then(() => {
   app.mount("#app");
 });
+
+// @ts-ignore
+if (window.Cypress) {
+  // Add `store` to the window object only when testing with Cypress
+  // @ts-ignore
+  window.store = store;
+  // @ts-ignore
+  window.i18n = i18n.global;
+}

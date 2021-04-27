@@ -46,7 +46,7 @@
   "noEmailAddress": "Please enter an E-Mail-Address",
   "filesAmount": "No file chosen | One file chosen | {n} files chosen",
   "wrongFileType": "Wrong file type!",
-  "fileTooBig": "File too big! (max. 2 MB)",
+  "fileTooBig": "File too big! (max. 10 MB)",
   "pleaseChooseOption": "Please choose an option.",
   "next": "Next",
   "back": "Back",
@@ -115,6 +115,8 @@
   "userDeleted": "User deleted!",
   "changeRole": "Change role",
   "roleChanged": "User role changed! The user might have to relogin for the change to take effect.",
+  "longitude": "Longitude",
+  "latitude": "Latitude",
   "object": {
     "name": "Object",
     "id": "ID",

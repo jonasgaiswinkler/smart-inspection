@@ -232,7 +232,7 @@ export default defineComponent({
         return false;
       } else if (objectParams.value[param].same) {
         return false;
-      } else if (objectParams.value[param].size < 2097152) {
+      } else if (objectParams.value[param].size < 10485760) {
         return false;
       } else {
         return true;
