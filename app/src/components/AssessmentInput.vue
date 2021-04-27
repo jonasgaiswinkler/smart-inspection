@@ -8,6 +8,7 @@
       '--border-width': '3px',
     }"
     :disabled="disabled"
+    :title="title"
   >
     <ion-select
       :placeholder="$t('pleasechoose')"
@@ -59,7 +60,7 @@ export default defineComponent({
     IonSelect,
     IonSelectOption,
   },
-  props: ["value", "disabled", "error"],
+  props: ["value", "disabled", "error", "title"],
   emits: ["input"],
   setup(props, { emit }) {
     const getColor = function(grade) {
