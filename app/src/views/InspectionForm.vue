@@ -29,7 +29,7 @@
       <form
         class="height-100"
         id="inspection-form"
-        @submit.stop.prevent="saveInspection"
+        @submit.prevent="saveInspection"
       >
         <ion-grid class="height-100">
           <ion-row
