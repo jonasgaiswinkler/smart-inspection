@@ -33,7 +33,7 @@
             color="primary"
             class="ion-justify-content-center height-100"
           >
-            <ion-col size-md="12" size-lg="6" size-xs="12" class="height-100">
+            <ion-col size-md="12" size-lg="9" size-xs="12" class="height-100">
               <h2 v-if="$route.name === 'ObjectReports'">
                 {{ $t("objectReports") }}
               </h2>

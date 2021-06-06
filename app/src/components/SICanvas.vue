@@ -14,14 +14,14 @@
     style="position: absolute; bottom: 20px; right: 20px; background: white; padding: 3px; border-radius: 3px; z-index: 2"
   >
     <ion-button @click="clearMarker">{{ $t("reset") }}</ion-button>
-    <ion-button @click="doZoom(false)"
+    <ion-button @click="doZoom(false)" title="zoomOut"
       ><font-awesome-icon
         slot="icon-only"
         :icon="faMinus"
         full-width
       ></font-awesome-icon
     ></ion-button>
-    <ion-button @click="doZoom(true)"
+    <ion-button @click="doZoom(true)" title="zoomIn"
       ><font-awesome-icon
         slot="icon-only"
         :icon="faPlus"

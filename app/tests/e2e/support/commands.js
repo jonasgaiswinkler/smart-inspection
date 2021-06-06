@@ -88,7 +88,7 @@ Cypress.Commands.add("setTextarea", (item, value) => {
 });
 
 Cypress.Commands.add("setSelect", (item, label, value) => {
-  cy.contains(item)
+  cy.contains("ion-label", item)
     .parent()
     .find("ion-select")
     .click();
@@ -97,8 +97,54 @@ Cypress.Commands.add("setSelect", (item, label, value) => {
     .contains(label)
     .parent()
     .click();
-  cy.contains(item)
+  cy.contains("ion-label", item)
     .parent()
     .find("ion-select")
     .should("have.value", value);
+});
+
+Cypress.Commands.add("setAssessmentSelect", (item, label, value) => {
+  cy.get(`[title='${item}']`)
+    .children()
+    .click();
+  cy.get("ion-radio")
+    .parent()
+    .contains(label)
+    .parent()
+    .click();
+  cy.get(`[title='${item}']`)
+    .children()
+    .invoke("val")
+    .then((val) => cy.wrap(val).should("eq", value));
+});
+
+Cypress.Commands.add("setMeasurement", (label, i18n, name, value, unit) => {
+  if (name)
+    cy.contains(label)
+      .parent()
+      .find(`[placeholder='${i18n.name}']`)
+      .clear()
+      .type(name)
+      .should("have.value", name);
+  cy.contains(label)
+    .parent()
+    .find(`[placeholder='${i18n.value}']`)
+    .clear()
+    .type(value)
+    .should("have.value", value);
+  if (unit !== "mm") {
+    cy.contains(label)
+      .parent()
+      .find("ion-select")
+      .click();
+    cy.get("ion-radio")
+      .parent()
+      .contains(unit)
+      .parent()
+      .click();
+  }
+  cy.contains(label)
+    .parent()
+    .find("ion-select")
+    .should("have.value", unit);
 });

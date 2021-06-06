@@ -24,7 +24,7 @@
     <ion-content :fullscreen="true">
       <ion-grid class="height-100">
         <ion-row color="primary" class="ion-justify-content-center height-100">
-          <ion-col size-md="12" size-lg="6" size-xs="12">
+          <ion-col size-md="12" size-lg="9" size-xs="12">
             <h2>{{ $t("settings") }}</h2>
             <ion-item>
               <ion-label>{{ $t("language") }}</ion-label>

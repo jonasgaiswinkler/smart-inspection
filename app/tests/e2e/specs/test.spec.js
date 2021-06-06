@@ -41,14 +41,14 @@ describe("Login", () => {
 });
 
 describe("Object", () => {
-  // it("Resets Firebase", () => {
-  //   cy.visit("/home");
-  //   cy.window().then((win) => {
-  //     cy.resetFirebase(win.store).then((result) =>
-  //       cy.wrap(result.data.status).should("eq", 200)
-  //     );
-  //   });
-  // });
+  it("Resets Firebase", () => {
+    cy.visit("/home");
+    cy.window().then((win) => {
+      cy.resetFirebase(win.store).then((result) =>
+        cy.wrap(result.data.status).should("eq", 200)
+      );
+    });
+  });
   it("Creates a new Object", () => {
     cy.visit("/home");
     cy.window().then((win) => {
@@ -389,6 +389,242 @@ describe("Assessment", () => {
         "include",
         "/object/1234/inspection/2021-04-21/assessment"
       );
+      cy.setAssessmentSelect(de.assessments.substructure, de.assessments[1], 1);
+      cy.setAssessmentSelect(
+        de.assessments.superstructure,
+        de.assessments[2],
+        2
+      );
+      cy.setAssessmentSelect(de.assessments.equipment, de.assessments[4], 4);
+      cy.setAssessmentSelect(de.assessments.object, de.assessments[3], 3);
+      cy.contains(de.save).click();
+      cy.url({
+        timeout: 30000,
+      }).should("include", "/object/1234/inspection/2021-04-21");
+      cy.getFirestoreSnap(
+        win.store,
+        "objects/1234/assessments",
+        "date",
+        "2021-04-21"
+      ).then((snap) => {
+        cy.wrap(snap.empty).should("eq", false);
+        cy.wrap(snap.docs[0].data().substructure).should("eq", 1);
+        cy.wrap(snap.docs[0].data().superstructure).should("eq", 2);
+        cy.wrap(snap.docs[0].data().equipment).should("eq", 4);
+        cy.wrap(snap.docs[0].data().object).should("eq", 3);
+      });
+    });
+  });
+});
+
+describe("Damage/Defect", () => {
+  it("Creates an Damage/Defect", () => {
+    cy.visit("/object/1234/inspection/2021-04-21");
+    cy.window().then((win) => {
+      cy.contains("Jonas Gaiswinkler").should("exist");
+      cy.contains(`${de.inspection.date}: 21.4.2021`).should("exist");
+      cy.contains(de.newDamage)
+        .parent()
+        .find("ion-button")
+        .click();
+      cy.url().should(
+        "include",
+        "/object/1234/inspection/2021-04-21/new-damage"
+      );
+      cy.contains("h2", de.damageData).should("be.visible");
+      cy.setSelect(
+        de.damage.allocations.name + "*",
+        de.damage.allocations.data.superstructure.name,
+        "superstructure"
+      );
+      cy.contains(de.damage.component + "*").should("not.exist");
+      cy.setSelect(
+        de.damage.allocations.name + "*",
+        de.damage.allocations.data.substructure.name,
+        "substructure"
+      );
+      cy.contains(de.damage.component + "*").should("exist");
+      cy.setSelect(
+        de.damage.component + "*",
+        de.damage.allocations.data.substructure.data.flatFoundation,
+        "flatFoundation"
+      );
+      cy.setInput(de.damage.componentDetail, "Test");
+      cy.setSelect(
+        de.damage.types.name + "*",
+        de.damage.types.data.crack,
+        "crack"
+      );
+      cy.setInput(de.damage.cause, "Wassereintritt");
+      cy.contains(de.damageGroundPlan).click();
+      cy.contains("h2", de.damageGroundPlan).should("be.visible");
+      cy.waitUntil(() =>
+        cy
+          .wrap(win.store.state.damageParams.isLoading)
+          .then((isLoading) => !isLoading)
+      );
+      cy.get("[title='zoomIn']").click();
+      cy.waitUntil(() =>
+        cy
+          .wrap(win.store.state.damageParams.isLoading)
+          .then((isLoading) => !isLoading)
+      );
+      cy.get("#canvas").click(300, 300, { force: true });
+      cy.contains(de.damageState).click();
+      cy.contains("h2", de.damageState, {
+        timeout: 10000,
+      }).should("be.visible");
+      cy.setMeasurement(de.damage.measurement1 + "*", de, "Breite", "7", "mm");
+      cy.setMeasurement(
+        de.damage.limit.replace("{msg}", de.damage.measurement1Sm) + "*",
+        de,
+        false,
+        "9",
+        "mm"
+      );
+      cy.setMeasurement(de.damage.measurement2, de, "Länge", "3", "cm");
+      cy.setInput(de.damage.impact, "Keine");
+      cy.setSelect(
+        de.damage.categories.name + "*",
+        de.damage.categories.data.alertLimit,
+        "alertLimit"
+      );
+      cy.contains(de.save).click();
+      cy.url({
+        timeout: 20000,
+      }).should("include", "/object/1234/inspection/2021-04-21/damage/1");
+      cy.contains(de.damage.allocations.data.substructure.name).should("exist");
+      cy.contains("7 mm").should("exist");
+      cy.contains(`${de.damage.limit.replace("{msg}", "Breite")}: 9 mm`).should(
+        "exist"
+      );
+      cy.wrap(win.store.state.damage).then((damage) => {
+        cy.wrap(Math.round(damage.data.locationGroundPlan.x)).should("eq", 848);
+        cy.wrap(Math.round(damage.data.locationGroundPlan.x)).should("eq", 848);
+      });
+      cy.wrap(win.store.state.inspection).then((inspection) => {
+        cy.getFirestoreDoc(win.store, `objects/1234/damages/1`).then((doc) => {
+          cy.wrap(Math.round(doc.data().locationGroundPlan.x)).should(
+            "eq",
+            848
+          );
+          cy.wrap(Math.round(doc.data().locationGroundPlan.x)).should(
+            "eq",
+            848
+          );
+        });
+        cy.getFirestoreDoc(
+          win.store,
+          `objects/1234/damages/1/states/${inspection.iid}`
+        ).then((doc) => {
+          cy.wrap(doc.data().measurement1.value).should("eq", 7);
+        });
+      });
+    });
+  });
+
+  it("Opens the Damage/Defect from the Inspection List", () => {
+    cy.visit("/object/1234/inspection/2021-04-21");
+    cy.window().then((win) => {
+      cy.contains(de.damageList)
+        .parent()
+        .find("ion-button")
+        .click();
+      cy.url().should(
+        "include",
+        "/object/1234/inspection/2021-04-21/damage-list"
+      );
+      cy.contains("1").should("exist");
+      cy.contains(de.damage.types.data.crack).should("exist");
+      cy.get(`[title='${de.filter}']`).click();
+      cy.contains(de.filter).should("exist");
+      cy.setSelect(
+        de.damage.types.name,
+        de.damage.types.data.deformation,
+        "deformation"
+      );
+      cy.contains(de.ok).click();
+      cy.contains(de.damage.types.data.crack).should("not.exist");
+      cy.get(`[title='${de.filter}']`).click();
+      cy.contains(de.filter).should("exist");
+      cy.contains(de.damage.types.data.deformation).should("exist");
+      cy.get(`[title='${de.reset}']`).click();
+      cy.contains(de.damage.types.data.deformation).should("not.be.visible");
+      cy.contains(de.ok).click();
+      cy.contains(de.damage.types.data.crack)
+        .should("exist")
+        .click();
+      cy.url({
+        timeout: 10000,
+      }).should("include", "/object/1234/inspection/2021-04-21/damage/1");
+      cy.contains(de.damage.allocations.data.substructure.name).should("exist");
+      cy.contains("7 mm").should("exist");
+      cy.contains(`${de.damage.limit.replace("{msg}", "Breite")}: 9 mm`).should(
+        "exist"
+      );
+    });
+  });
+
+  it("Edits an Damage/Defect", () => {
+    cy.visit("/object/1234/inspection/2021-04-21/damage/1");
+    cy.window().then((win) => {
+      cy.url({
+        timeout: 20000,
+      }).should("include", "/object/1234/inspection/2021-04-21/damage/1");
+      cy.getFirestoreDoc(win.store, `objects/1234/damages/1`).then((doc) => {
+        cy.wrap(Math.round(doc.data().locationGroundPlan.x)).should("eq", 848);
+        cy.wrap(Math.round(doc.data().locationGroundPlan.x)).should("eq", 848);
+      });
+      cy.contains(de.damage.allocations.data.substructure.name).should("exist");
+      cy.contains("7 mm").should("exist");
+      cy.contains(de.damage.types.data.crack).should("exist");
+      cy.contains(`${de.damage.limit.replace("{msg}", "Breite")}: 9 mm`).should(
+        "exist"
+      );
+      cy.contains(de.editDamage)
+        .parent()
+        .find("ion-button")
+        .click();
+      cy.url().should(
+        "include",
+        "/object/1234/inspection/2021-04-21/damage/1/edit"
+      );
+      cy.contains("h2", de.damageData).should("be.visible");
+      cy.setSelect(
+        de.damage.types.name + "*",
+        de.damage.types.data.corrosion,
+        "corrosion"
+      );
+      cy.contains(de.damageGroundPlan).click();
+      cy.contains("h2", de.damageGroundPlan).should("be.visible");
+      cy.waitUntil(() =>
+        cy
+          .wrap(win.store.state.damageParams.isLoading)
+          .then((isLoading) => !isLoading)
+      );
+      cy.get("#canvas").click(200, 200, { force: true });
+      cy.contains(de.save).click();
+      cy.url({
+        timeout: 20000,
+      }).should(
+        "eq",
+        Cypress.config().baseUrl + "object/1234/inspection/2021-04-21/damage/1"
+      );
+      cy.contains(de.damage.types.data.corrosion).should("exist");
+      cy.wrap(win.store.state.damage).then((damage) => {
+        cy.wrap(Math.round(damage.data.locationGroundPlan.x)).should(
+          "eq",
+          1026
+        );
+        cy.wrap(Math.round(damage.data.locationGroundPlan.x)).should(
+          "eq",
+          1026
+        );
+      });
+      cy.getFirestoreDoc(win.store, `objects/1234/damages/1`).then((doc) => {
+        cy.wrap(Math.round(doc.data().locationGroundPlan.x)).should("eq", 1026);
+        cy.wrap(Math.round(doc.data().locationGroundPlan.x)).should("eq", 1026);
+      });
     });
   });
 });
@@ -404,7 +640,7 @@ describe("Settings", () => {
       .click();
     cy.url().should("include", "/settings");
   });
-  it("Changed language", () => {
+  it("Changes language", () => {
     cy.visit("/settings");
     cy.window().then((win) => {
       cy.waitUntil(() =>

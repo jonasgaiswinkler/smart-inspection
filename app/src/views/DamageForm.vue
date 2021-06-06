@@ -30,7 +30,7 @@
           style="height: 100%;"
           class="ion-justify-content-center"
         >
-          <ion-col size-md="12" size-lg="6" size-xs="12">
+          <ion-col size-md="12" size-lg="9" size-xs="12">
             <damage-data
               v-if="
                 selectedSegment === 'damageData' && routeName != 'UpdateDamage'

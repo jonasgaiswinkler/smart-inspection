@@ -1,4 +1,5 @@
 {
   "pluginsFile": "tests/e2e/plugins/index.js",
-  "nodeVersion": "system"
+  "nodeVersion": "system",
+  "watchForFileChanges": false
 }
