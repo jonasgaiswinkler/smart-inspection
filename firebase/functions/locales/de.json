@@ -46,7 +46,7 @@
   "noEmailAddress": "Bitte geben Sie eine E-Mail-Adresse ein.",
   "filesAmount": "Keine Datei gewählt | Eine Datei gewählt | {n} Dateien gewählt",
   "wrongFileType": "Falscher Dateityp!",
-  "fileTooBig": "Datei zu groß! (max. 2 MB)",
+  "fileTooBig": "Datei zu groß! (max. 10 MB)",
   "pleaseChooseOption": "Bitte eine Option auswählen.",
   "next": "Weiter",
   "back": "Zurück",
@@ -104,6 +104,19 @@
   "manual": "Bedienungsanleitung",
   "name": "Name",
   "value": "Wert",
+  "user": "Benutzer",
+  "users": "Benutzer",
+  "admin": "Administrator",
+  "role": "Rolle",
+  "newUser": "Neuer Benutzer",
+  "userCreated": "Neuer Benutzer wurde angelegt. Ein Link zur Passworterstellung wurde an die angegebene E-Mail-Adresse versendet",
+  "deleteUser": "Benutzer löschen",
+  "confirmDeleteUser": "Bitte bestätigen Sie die Löschung des Benutzers '{username}'.",
+  "userDeleted": "Benutzer gelöscht!",
+  "changeRole": "Rolle ändern",
+  "roleChanged": "Nutzerrolle wurde geändert! Möglicherweise muss sich der betroffene Nutzer neueinloggen, damit die Änderung wirksam wird.",
+  "longitude": "Longitude",
+  "latitude": "Latitude",
   "object": {
     "name": "Objekt",
     "id": "ID",
@@ -263,7 +276,8 @@
       "data": {
         "immediateActionLimit": "Soforteingriffsschwelle",
         "interventionLimit": "Eingriffsschwelle",
-        "alertLimit": "Auslösewert"
+        "alertLimit": "Auslösewert",
+        "noLimit": "Keine Schwelle"
       }
     },
     "action": "Maßnahmen",

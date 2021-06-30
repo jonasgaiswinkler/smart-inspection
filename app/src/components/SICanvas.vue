@@ -120,7 +120,7 @@ export default defineComponent({
         this.drawMarker(this.bctx, this.location.x, this.location.y);
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         const vm = this;
-        return await new Promise(function(resolve, reject) {
+        return new Promise(function(resolve, reject) {
           vm.background.toBlob(function(blob) {
             vm.bctx.clearRect(0, 0, vm.background.width, vm.background.height);
             vm.renderFile();
@@ -132,7 +132,43 @@ export default defineComponent({
         return null;
       }
     },
-    drawMarker(ctx, x, y) {
+    async getBlobMultipleMarkers(markers, did) {
+      if (this.location != null) {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        this.zoom = 1;
+        await this.renderFile();
+
+        if (this.renderTask != null) {
+          await this.renderTask.promise;
+        }
+
+        this.drawMarker(this.bctx, this.location.x, this.location.y, did);
+        for (const marker of markers) {
+          if (marker) {
+            this.drawMarker(this.bctx, marker.x, marker.y, marker.did);
+          }
+        }
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
+        const vm = this;
+        return new Promise(function(resolve, reject) {
+          vm.background.toBlob(function(blob) {
+            vm.bctx.clearRect(0, 0, vm.background.width, vm.background.height);
+            vm.renderFile();
+            vm.drawMarker(vm.ctx, vm.location.x, vm.location.y, did);
+            for (const marker of markers) {
+              if (marker) {
+                vm.drawMarker(vm.ctx, marker.x, marker.y, marker.did);
+              }
+            }
+            resolve(blob);
+          });
+        });
+      } else {
+        return null;
+      }
+    },
+    drawMarker(ctx, x, y, text) {
       ctx.save();
       ctx.translate(x * this.scale, y * this.scale);
       this.$refs.frame.scrollLeft =
@@ -145,15 +181,20 @@ export default defineComponent({
       ctx.bezierCurveTo(25, -35, -2, -10, 0, 0);
       ctx.fillStyle = "#005096";
       ctx.fill();
-      ctx.strokeStyle = "white";
-      ctx.lineWidth = 0;
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.arc(0, -29, 5, 0, Math.PI * 2);
-      ctx.closePath();
-      ctx.fillStyle = "white";
-      ctx.fill();
-
+      if (!text) {
+        ctx.strokeStyle = "white";
+        ctx.lineWidth = 0;
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(0, -29, 5, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.fillStyle = "white";
+        ctx.fill();
+      } else {
+        ctx.fillStyle = "white";
+        ctx.font = "16px Arial";
+        ctx.fillText(text, -5, -22);
+      }
       ctx.restore();
     },
     renderFile: async function() {

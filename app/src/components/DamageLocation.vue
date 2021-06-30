@@ -155,7 +155,25 @@ export default defineComponent({
     const submit = async function() {
       if (canvasRef.value != null) {
         store.commit("damageParams/setIsLoading", true);
+        store.commit(
+          "damage/setDid",
+          await store.dispatch("damageParams/getDid", routeName == "NewDamage")
+        );
         setDamageParam(props.saveParam, await canvasRef.value.getBlob());
+        const markers = await store.dispatch(
+          "damageParams/getDamageLocations",
+          {
+            damageParam: props.damageParam,
+          }
+        );
+        store.commit("damageParams/setObjectParam", {
+          key: props.saveParam,
+          value: await canvasRef.value.getBlobMultipleMarkers(
+            markers,
+            store.state.damage.did
+          ),
+        });
+
         store.commit("damageParams/setIsLoading", false);
       }
       if (routeName == "NewDamage" || props.nextPage != "damageState") {

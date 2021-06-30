@@ -36,6 +36,7 @@
                 selectedSegment === 'damageData' && routeName != 'UpdateDamage'
               "
               :nextPage="getNavigation('damageData').next"
+              @saveedit="saveDamage"
               @next="selectedSegment = getNavigation('damageData').next"
             ></damage-data>
             <damage-location

@@ -162,22 +162,27 @@
               ></ion-progress-bar>
               <ion-list>
                 <template
-                  v-for="(inspection, i) in inspections"
+                  v-for="inspection in inspections"
                   :key="inspection.oid + '/' + inspection.iid"
                 >
-                  <ion-list-header
-                    v-if="i == 0 || inspections[i - 1].oid != inspection.oid"
-                  >
-                    {{ $t("object.name") + ": " + inspection.oid }}
-                  </ion-list-header>
                   <ion-item
                     button
                     @click="
-                      $router.push({
-                        name: 'Inspection',
-                        params: { oid: inspection.oid, idate: inspection.date },
-                        query: { from: $route.name },
-                      })
+                      $router.push(
+                        routeName == 'InspectionListObject'
+                          ? {
+                              name: 'Inspection',
+                              params: {
+                                oid: $route.params.oid,
+                                idate: inspection.date,
+                              },
+                              query: { from: $route.name },
+                            }
+                          : {
+                              name: 'ObjectList',
+                              query: { idate: inspection.date },
+                            }
+                      )
                     "
                   >
                     <ion-label>{{ inspection.text }}</ion-label>
@@ -261,7 +266,6 @@ export default defineComponent({
     IonLabel,
     IonModal,
     IonList,
-    IonListHeader,
     IonIcon,
     //IonBackButton,
     IonButtons,

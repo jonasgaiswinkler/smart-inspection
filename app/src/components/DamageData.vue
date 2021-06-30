@@ -128,6 +128,7 @@
       <div style="flex: 1"></div>
       <ion-spinner v-if="isLoading" color="primary"></ion-spinner>
       <ion-button
+        v-if="$route.name == 'NewDamage' || nextPage != 'damageState'"
         :disabled="isLoading"
         type="submit"
         class="ion-margin-start"
@@ -139,6 +140,15 @@
           style="margin-left: 10px"
         ></font-awesome-icon
       ></ion-button>
+      <ion-button
+        v-if="$route.name == 'EditDamage' && nextPage == 'damageState'"
+        :disabled="isLoading"
+        type="submit"
+        class="ion-margin-start"
+        :aria-label="$t('save')"
+        :title="$t('save')"
+        >{{ $t("save") }}</ion-button
+      >
     </ion-row>
   </form>
 </template>
@@ -198,7 +208,7 @@ export default defineComponent({
     //"file-input": FileInput,
     //"measurement-input": MeasurementInput,
   },
-  emits: ["next"],
+  emits: ["next", "saveedit"],
   setup(props, { emit }) {
     // Define store
     const store = useStore();
@@ -264,7 +274,14 @@ export default defineComponent({
       errorType.value = damageParams.value.type == null;
 
       if (!errorAllocation.value && !errorComponent.value && !errorType.value) {
-        emit("next");
+        if (routeName == "NewDamage" || props.nextPage != "damageState") {
+          emit("next");
+        } else if (
+          routeName == "EditDamage" &&
+          props.nextPage == "damageState"
+        ) {
+          emit("saveedit");
+        }
       }
     };
 

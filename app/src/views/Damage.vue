@@ -126,28 +126,33 @@
                       :key="state.date"
                       :class="state.date == idate ? 'background-primary' : ''"
                     >
-                      <ion-col size="4">{{
-                        new Date(state.date).toLocaleDateString("de-DE")
-                      }}</ion-col>
-                      <ion-col
-                        v-if="state.measurement1 != null"
-                        :class="
-                          selectedDamageState != null &&
-                          toMillimetre(state.measurement1) >=
-                            toMillimetre(selectedDamageState.limit)
-                            ? 'color-danger'
-                            : ''
-                        "
-                        size="4"
-                        >{{
-                          state.measurement1.value +
+                      <template v-if="state.measurement1 || state.measurement2">
+                        <ion-col size="4">{{
+                          new Date(state.date).toLocaleDateString("de-DE")
+                        }}</ion-col>
+                        <ion-col
+                          v-if="state.measurement1 != null"
+                          :class="
+                            selectedDamageState != null &&
+                            selectedDamageState.limit &&
+                            toMillimetre(state.measurement1) >=
+                              toMillimetre(selectedDamageState.limit)
+                              ? 'color-danger'
+                              : ''
+                          "
+                          size="4"
+                          >{{
+                            state.measurement1.value +
+                              " " +
+                              state.measurement1.unit
+                          }}</ion-col
+                        >
+                        <ion-col v-if="state.measurement2 != null" size="4">{{
+                          state.measurement2.value +
                             " " +
-                            state.measurement1.unit
-                        }}</ion-col
+                            state.measurement2.unit
+                        }}</ion-col></template
                       >
-                      <ion-col v-if="state.measurement2 != null" size="4">{{
-                        state.measurement2.value + " " + state.measurement2.unit
-                      }}</ion-col>
                     </ion-row>
                   </ion-grid>
                   <ul v-if="selectedDamageState != null && damageData != null">

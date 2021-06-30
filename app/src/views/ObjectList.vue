@@ -211,11 +211,22 @@
                   button
                   :disabled="doc.deletionRequested"
                   @click="
-                    $router.push({
-                      name: 'Object',
-                      params: { oid: doc.id },
-                      query: { from: $route.name },
-                    })
+                    $router.push(
+                      $route.query?.idate
+                        ? {
+                            name: 'Inspection',
+                            params: {
+                              oid: doc.id,
+                              idate: $route.query?.idate,
+                            },
+                            query: { from: $route.name },
+                          }
+                        : {
+                            name: 'Object',
+                            params: { oid: doc.id },
+                            query: { from: $route.name },
+                          }
+                    )
                   "
                 >
                   <div style="float: left; width: 18%">

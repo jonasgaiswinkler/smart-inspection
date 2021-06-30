@@ -3,6 +3,7 @@
 
 import de from "../../../src/locales/de.json";
 import en from "../../../src/locales/en.json";
+import auth from "../auth.js";
 
 describe("Login", () => {
   it("Logs into the app", () => {
@@ -17,8 +18,8 @@ describe("Login", () => {
         .type("id@jonasgaiswinkler.eu")
         .should("have.value", "id@jonasgaiswinkler.eu");
       cy.get("[type='password']")
-        .type("!W0JhZIB@2rx")
-        .should("have.value", "!W0JhZIB@2rx");
+        .type(auth.pass)
+        .should("have.value", auth.pass);
       cy.get("ion-button")
         .get("[title='" + de.login + "']")
         .click();
@@ -74,7 +75,7 @@ describe("Object", () => {
         de.object.crossSectionShapes.data.beams,
         "beams"
       );
-      cy.setInput(de.object.constructionYear + "*", "1987");
+      cy.setInput(de.object.constructionYear, "1987");
       cy.setInput(de.object.routeName, "10192");
       cy.setInput(de.object.chainage + "*", "76.291");
       cy.get(`[placeholder='${de.latitude}']`)
@@ -83,9 +84,9 @@ describe("Object", () => {
       cy.get(`[placeholder='${de.longitude}']`)
         .type("15.953")
         .should("have.value", "15.953");
-      cy.setInput(de.object.spanLength + "*", "231");
-      cy.setInput(de.object.width + "*", "20");
-      cy.setTextarea(de.object.shortDescription + "*", "Eine Brücke");
+      cy.setInput(de.object.spanLength, "231");
+      cy.setInput(de.object.width, "20");
+      cy.setTextarea(de.object.shortDescription, "Eine Brücke");
       cy.contains(de.objectDocuments)
         .parent()
         .click();
@@ -134,7 +135,9 @@ describe("Object", () => {
         .click();
       cy.url().should("include", "/object-list");
       cy.contains("1234").should("exist");
-      cy.get(`[title='${de.filter}']`).click();
+      cy.get(`[title='${de.filter}']`)
+        .scrollIntoView()
+        .click();
       cy.contains(de.filter).should("exist");
       cy.setSelect(
         de.object.types.name,
@@ -151,7 +154,7 @@ describe("Object", () => {
       cy.contains(de.ok).click();
       cy.contains("1234")
         .should("exist")
-        .click();
+        .click({ force: true });
       cy.url({
         timeout: 10000,
       }).should("include", "/object/1234");
@@ -259,15 +262,12 @@ describe("Inspection", () => {
       }).should("include", "/object/1234/inspection/2021-04-24");
       cy.contains("Jonas Gaiswinkler").should("exist");
       cy.contains(`${de.inspection.date}: 24.4.2021`).should("exist");
-      cy.getFirestoreSnap(
-        win.store,
-        "objects/1234/inspections",
-        "date",
-        "2021-04-24"
-      ).then((snap) => {
-        cy.wrap(snap.empty).should("eq", false);
-        cy.wrap(snap.docs[0].data().type).should("eq", "check");
-      });
+      cy.getFirestoreSnap(win.store, "inspections", "date", "2021-04-24").then(
+        (snap) => {
+          cy.wrap(snap.empty).should("eq", false);
+          cy.wrap(snap.docs[0].data().type).should("eq", "check");
+        }
+      );
     });
   });
 
@@ -281,7 +281,7 @@ describe("Inspection", () => {
       cy.url().should("include", "/object/1234/inspection-list");
       cy.contains("1234").should("exist");
       cy.contains("24.4.2021").should("exist");
-      cy.get(`[title='${de.filter}']`).click();
+      cy.get(`[title='${de.filter}']`).click({ force: true });
       cy.contains(de.filter).should("exist");
       cy.setSelect(
         de.inspection.types.name,
@@ -300,7 +300,7 @@ describe("Inspection", () => {
       cy.contains(de.ok).click();
       cy.contains("24.4.2021")
         .should("exist")
-        .click();
+        .click({ force: true });
       cy.url({
         timeout: 10000,
       }).should("include", "/object/1234/inspection/2021-04-24");
@@ -312,15 +312,12 @@ describe("Inspection", () => {
   it("Edits the Inspection", () => {
     cy.visit("/object/1234/inspection/2021-04-24");
     cy.window().then((win) => {
-      cy.getFirestoreSnap(
-        win.store,
-        "objects/1234/inspections",
-        "date",
-        "2021-04-24"
-      ).then((snap) => {
-        cy.wrap(snap.empty).should("eq", false);
-        cy.wrap(snap.docs[0].data().type).should("eq", "check");
-      });
+      cy.getFirestoreSnap(win.store, "inspections", "date", "2021-04-24").then(
+        (snap) => {
+          cy.wrap(snap.empty).should("eq", false);
+          cy.wrap(snap.docs[0].data().type).should("eq", "check");
+        }
+      );
       cy.contains("Jonas Gaiswinkler").should("exist");
       cy.contains(`${de.inspection.date}: 24.4.2021`).should("exist");
       cy.contains(
@@ -346,23 +343,20 @@ describe("Inspection", () => {
       cy.contains(
         `${de.inspection.types.name}: ${de.inspection.types.data.continuousMonitoring}`
       ).should("exist");
-      cy.getFirestoreSnap(
-        win.store,
-        "objects/1234/inspections",
-        "date",
-        "2021-04-24"
-      ).then((snap) => {
-        cy.wrap(snap.empty).should("eq", true);
-      });
-      cy.getFirestoreSnap(
-        win.store,
-        "objects/1234/inspections",
-        "date",
-        "2021-04-21"
-      ).then((snap) => {
-        cy.wrap(snap.empty).should("eq", false);
-        cy.wrap(snap.docs[0].data().type).should("eq", "continuousMonitoring");
-      });
+      cy.getFirestoreSnap(win.store, "inspections", "date", "2021-04-24").then(
+        (snap) => {
+          cy.wrap(snap.empty).should("eq", true);
+        }
+      );
+      cy.getFirestoreSnap(win.store, "inspections", "date", "2021-04-21").then(
+        (snap) => {
+          cy.wrap(snap.empty).should("eq", false);
+          cy.wrap(snap.docs[0].data().type).should(
+            "eq",
+            "continuousMonitoring"
+          );
+        }
+      );
     });
   });
 });
@@ -470,7 +464,7 @@ describe("Damage/Defect", () => {
           .then((isLoading) => !isLoading)
       );
       cy.get("#canvas").click(300, 300, { force: true });
-      cy.contains(de.damageState).click();
+      cy.contains(de.damageState).click({ force: true });
       cy.contains("h2", de.damageState, {
         timeout: 10000,
       }).should("be.visible");
@@ -536,7 +530,7 @@ describe("Damage/Defect", () => {
       );
       cy.contains("1").should("exist");
       cy.contains(de.damage.types.data.crack).should("exist");
-      cy.get(`[title='${de.filter}']`).click();
+      cy.get(`[title='${de.filter}']`).click({ force: true });
       cy.contains(de.filter).should("exist");
       cy.setSelect(
         de.damage.types.name,
@@ -553,7 +547,7 @@ describe("Damage/Defect", () => {
       cy.contains(de.ok).click();
       cy.contains(de.damage.types.data.crack)
         .should("exist")
-        .click();
+        .click({ force: true });
       cy.url({
         timeout: 10000,
       }).should("include", "/object/1234/inspection/2021-04-21/damage/1");

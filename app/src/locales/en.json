@@ -276,7 +276,8 @@
       "data": {
         "immediateActionLimit": "Immediate action limit",
         "interventionLimit": "Intervention limit",
-        "alertLimit": "Alert limit"
+        "alertLimit": "Alert limit",
+        "noLimit": "No limit"
       }
     },
     "action": "Action",

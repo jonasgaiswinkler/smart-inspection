@@ -211,6 +211,42 @@
                         {{ currentAssessment.object }}
                       </ion-col>
                     </ion-row>
+                    <img
+                      v-if="
+                        objectData.groundPlan &&
+                          objectData.imageGroundPlan &&
+                          objectData.imageGroundPlanUrl
+                      "
+                      :src="objectData.imageGroundPlanUrl"
+                      :alt="$t('damageGroundPlan')"
+                      id="imageGroundPlan"
+                      @click="showImage('imageGroundPlan')"
+                      style="cursor: pointer;"
+                    />
+                    <img
+                      v-if="
+                        objectData &&
+                          objectData.imageLongitudinalSection &&
+                          objectData.imageLongitudinalSectionUrl
+                      "
+                      :src="objectData.imageLongitudinalSectionUrl"
+                      :alt="$t('damageLongitudinalSection')"
+                      id="imageLongitudinalSection"
+                      @click="showImage('imageLongitudinalSection')"
+                      style="cursor: pointer;"
+                    />
+                    <img
+                      v-if="
+                        objectData.crossSection &&
+                          objectData.imageCrossSection &&
+                          objectData.imageCrossSectionUrl
+                      "
+                      :src="objectData.imageCrossSectionUrl"
+                      :alt="$t('damageCrossSection')"
+                      id="imageCrossSection"
+                      @click="showImage('imageCrossSection')"
+                      style="cursor: pointer;"
+                    />
                   </ion-grid>
                 </ion-col>
                 <ion-col

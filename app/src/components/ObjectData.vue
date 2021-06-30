@@ -94,13 +94,12 @@
       </ion-select>
     </ion-item>
     <ion-item :disabled="isLoading">
-      <ion-label>{{ $t("object.constructionYear") }}*</ion-label>
+      <ion-label>{{ $t("object.constructionYear") }}</ion-label>
       <ion-input
         @ionInput="setObjectParam('constructionYear', $event.target.value)"
         type="number"
         :value="objectParams.constructionYear"
         class="ion-text-right"
-        required
       ></ion-input>
     </ion-item>
     <ion-item :disabled="isLoading">
@@ -162,25 +161,23 @@
       </ion-button>
     </ion-item>
     <ion-item :disabled="isLoading">
-      <ion-label>{{ $t("object.spanLength") }}*</ion-label>
+      <ion-label>{{ $t("object.spanLength") }}</ion-label>
       <ion-input
         @ionInput="setObjectParam('spanLength', $event.target.value)"
         type="number"
         step="any"
         :value="objectParams.spanLength"
         class="ion-text-right"
-        required
       ></ion-input>
     </ion-item>
     <ion-item :disabled="isLoading">
-      <ion-label>{{ $t("object.width") }}*</ion-label>
+      <ion-label>{{ $t("object.width") }}</ion-label>
       <ion-input
         @ionInput="setObjectParam('width', $event.target.value)"
         type="number"
         step="any"
         :value="objectParams.width"
         class="ion-text-right"
-        required
       ></ion-input>
     </ion-item>
     <ion-item :disabled="isLoading">
@@ -193,12 +190,11 @@
       ></ion-input>
     </ion-item>
     <ion-item :disabled="isLoading">
-      <ion-label>{{ $t("object.shortDescription") }}*</ion-label>
+      <ion-label>{{ $t("object.shortDescription") }}</ion-label>
       <ion-textarea
         @ionInput="setObjectParam('shortDescription', $event.target.value)"
         :value="objectParams.shortDescription"
         class="ion-text-right"
-        required
       ></ion-textarea>
     </ion-item>
     <ion-row class="ion-float-right ion-align-items-center">

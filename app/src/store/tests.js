@@ -23,10 +23,51 @@ export default {
         .where(key, "==", value)
         .get();
     },
-    resetFirebase() {
+    async resetFirebase(context) {
+      {
+        const snap = await context.dispatch("getFirestoreSnap", {
+          path: "inspections",
+          key: "date",
+          value: "2021-04-24",
+        });
+        if (snap.docs.length > 0) {
+          await firebase.functions().httpsCallable("deleteInspection")({
+            oid: "1234",
+            iid: snap.docs[0].id,
+          });
+        }
+      }
+      {
+        const snap = await context.dispatch("getFirestoreSnap", {
+          path: "inspections",
+          key: "date",
+          value: "2021-04-21",
+        });
+        if (snap.docs.length > 0) {
+          await firebase.functions().httpsCallable("deleteInspection")({
+            oid: "1234",
+            iid: snap.docs[0].id,
+          });
+        }
+      }
+
       return firebase.functions().httpsCallable("deleteObject")({
         oid: "1234",
       });
+    },
+    async copyInspections() {
+      const db = firebase.firestore();
+
+      const objects = await db.collection("objects").get();
+      for (const object of objects.docs) {
+        const inspections = await object.ref.collection("inspections").get();
+        for (const inspection of inspections.docs) {
+          await db
+            .collection("inspections")
+            .doc(inspection.id)
+            .set(inspection.data());
+        }
+      }
     },
   },
 };

@@ -100,6 +100,15 @@ export default {
           promises.push(getFile("longitudinalSection"));
           promises.push(getFile("crossSection"));
           promises.push(getFile("model"));
+          if (data["groundPlan"]) {
+            promises.push(getFile("imageGroundPlan"));
+          }
+          if (data["longitudinalSection"]) {
+            promises.push(getFile("imageLongitudinalSection"));
+          }
+          if (data["crossSection"]) {
+            promises.push(getFile("imageCrossSection"));
+          }
           await Promise.all(promises);
 
           context.commit("setData", data);

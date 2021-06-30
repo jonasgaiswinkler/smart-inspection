@@ -276,7 +276,8 @@
       "data": {
         "immediateActionLimit": "Soforteingriffsschwelle",
         "interventionLimit": "Eingriffsschwelle",
-        "alertLimit": "Auslösewert"
+        "alertLimit": "Auslösewert",
+        "noLimit": "Keine Schwelle"
       }
     },
     "action": "Maßnahmen",

@@ -132,19 +132,17 @@ router.beforeEach(async function(to, from, next) {
       if (to.params.idate != undefined && loadObject.status == 200) {
         let loadInspection = { status: 200 };
         // @ts-ignore
-        if (store.state.inspection.idate !== to.params.idate) {
-          loadInspection = await store.dispatch(
-            "inspection/search",
-            to.params.idate
-          );
-          if (loadInspection.status === 200) {
-            loadInspection = await store.dispatch("inspection/load");
-            if (loadInspection.status !== 200) {
-              next({ name: "Home" });
-            }
-          } else {
+        loadInspection = await store.dispatch(
+          "inspection/search",
+          to.params.idate
+        );
+        if (loadInspection.status === 200) {
+          loadInspection = await store.dispatch("inspection/load");
+          if (loadInspection.status !== 200) {
             next({ name: "Home" });
           }
+        } else {
+          next({ name: "Home" });
         }
 
         if (to.name === "EditInspection") {
@@ -157,14 +155,12 @@ router.beforeEach(async function(to, from, next) {
             status: 200,
           };
           // @ts-ignore
-          if (store.state.damage.did !== to.params.did) {
-            store.commit("damage/setDid", to.params.did);
-            loadDamage = await store.dispatch("damage/load");
-            if (loadDamage.status !== 200) {
-              next({
-                name: "Home",
-              });
-            }
+          store.commit("damage/setDid", to.params.did);
+          loadDamage = await store.dispatch("damage/load");
+          if (loadDamage.status !== 200) {
+            next({
+              name: "Home",
+            });
           }
 
           if (to.name === "EditDamage") {

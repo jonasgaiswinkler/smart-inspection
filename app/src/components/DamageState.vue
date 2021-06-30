@@ -10,20 +10,20 @@
     ></file-input>
     <measurement-input
       :disabled="isLoading"
-      :label="$t('damage.measurement1') + '*'"
-      :labelSm="$t('damage.measurement1Sm') + '*'"
+      :label="$t('damage.measurement1')"
+      :labelSm="$t('damage.measurement1Sm')"
       :value="damageParams.measurement1"
       :showName="true"
-      :required="true"
+      :required="false"
       @input="setDamageParam('measurement1', $event)"
     ></measurement-input>
     <measurement-input
       :disabled="isLoading"
-      :label="$t('damage.limit', { msg: $t('damage.measurement1Sm') }) + '*'"
-      :labelSm="$t('damage.limitSm') + '*'"
+      :label="$t('damage.limit', { msg: $t('damage.measurement1Sm') })"
+      :labelSm="$t('damage.limitSm')"
       :value="damageParams.limit"
       :showName="false"
-      :required="true"
+      :required="false"
       @input="setDamageParam('limit', $event)"
     ></measurement-input>
     <measurement-input
